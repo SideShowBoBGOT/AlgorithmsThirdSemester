@@ -1,0 +1,175 @@
+8       1       7
+0       4       3
+2       5       6
+Number of Nodes: 0
+Number of DeadEnds: 674811
+Number of States: 664197
+Number of Iterations: 0
+
+5       1       3
+7       0       2
+8       6       4
+Number of Nodes: 0
+Number of DeadEnds: 239931
+Number of States: 236951
+Number of Iterations: 0
+
+0       5       7
+2       3       1
+6       8       4
+Number of Nodes: 0
+Number of DeadEnds: 480357
+Number of States: 473480
+Number of Iterations: 0
+
+4       3       7
+6       5       0
+1       8       2
+Number of Nodes: 0
+Number of DeadEnds: 2343437
+Number of States: 2300868
+Number of Iterations: 0
+
+5       1       6
+4       7       8
+2       3       0
+Number of Nodes: 0
+Number of DeadEnds: 3462337
+Number of States: 3396593
+Number of Iterations: 0
+
+5       3       1
+7       0       4
+2       8       6
+Number of Nodes: 0
+Number of DeadEnds: 490014
+Number of States: 482495
+Number of Iterations: 0
+
+1       8       5
+2       4       6
+3       7       0
+Number of Nodes: 0
+Number of DeadEnds: 353998
+Number of States: 348709
+Number of Iterations: 0
+
+4       2       0
+7       3       6
+5       8       1
+Number of Nodes: 0
+Number of DeadEnds: 993907
+Number of States: 977385
+Number of Iterations: 0
+
+7       5       2
+8       1       6
+3       0       4
+Number of Nodes: 0
+Number of DeadEnds: 2381027
+Number of States: 2337995
+Number of Iterations: 0
+
+5       0       3
+4       8       6
+7       2       1
+Number of Nodes: 0
+Number of DeadEnds: 2009213
+Number of States: 1973679
+Number of Iterations: 0
+
+7       0       8
+1       2       6
+3       4       5
+Number of Nodes: 0
+Number of DeadEnds: 2861256
+Number of States: 2808241
+Number of Iterations: 0
+
+2       8       0
+6       1       3
+5       7       4
+Number of Nodes: 0
+Number of DeadEnds: 16657
+Number of States: 16537
+Number of Iterations: 0
+
+5       8       6
+3       1       0
+2       7       4
+Number of Nodes: 0
+Number of DeadEnds: 370449
+Number of States: 365616
+Number of Iterations: 0
+
+2       3       4
+7       6       1
+0       8       5
+Number of Nodes: 0
+Number of DeadEnds: 20048
+Number of States: 19910
+Number of Iterations: 0
+
+3       2       5
+0       4       1
+6       8       7
+Number of Nodes: 0
+Number of DeadEnds: 676853
+Number of States: 666198
+Number of Iterations: 0
+
+2       4       5
+0       7       1
+8       6       3
+Number of Nodes: 0
+Number of DeadEnds: 133514
+Number of States: 132136
+Number of Iterations: 0
+
+6       1       0
+2       7       3
+4       8       5
+Number of Nodes: 0
+Number of DeadEnds: 117561
+Number of States: 115917
+Number of Iterations: 0
+
+0       1       5
+7       4       6
+3       8       2
+Number of Nodes: 0
+Number of DeadEnds: 54892
+Number of States: 54338
+Number of Iterations: 0
+
+7       1       3
+0       5       4
+6       2       8
+Number of Nodes: 0
+Number of DeadEnds: 9960
+Number of States: 9906
+Number of Iterations: 0
+
+6       0       8
+3       4       5
+2       7       1
+Number of Nodes: 0
+Number of DeadEnds: 652903
+Number of States: 642543
+Number of Iterations: 0
+
+2       0       5
+6       4       8
+1       7       3
+Number of Nodes: 0
+Number of DeadEnds: 266698
+Number of States: 263125
+Number of Iterations: 0
+
+7       4       0
+8       2       5
+3       6       1
+Number of Nodes: 0
+Number of DeadEnds: 528463
+Number of States: 520923
+Number of Iterations: 0

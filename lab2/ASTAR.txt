@@ -1,0 +1,175 @@
+3 5 0
+2 4 1
+8 7 6
+Total nodes generated: 13382
+Dead Ends: 8569
+Max nodes in memory: 4814
+Iterations: 8569
+
+7 3 2
+5 4 8
+1 6 0
+Total nodes generated: 5944
+Dead Ends: 3727
+Max nodes in memory: 2218
+Iterations: 3727
+
+7 4 0
+5 2 8
+1 3 6
+Total nodes generated: 3641
+Dead Ends: 2276
+Max nodes in memory: 1366
+Iterations: 2276
+
+8 6 2
+7 3 4
+5 0 1
+Total nodes generated: 15388
+Dead Ends: 9891
+Max nodes in memory: 5498
+Iterations: 9891
+
+1 8 7
+5 6 0
+2 4 3
+Total nodes generated: 16401
+Dead Ends: 10569
+Max nodes in memory: 5833
+Iterations: 10569
+
+2 8 4
+6 5 3
+0 7 1
+Total nodes generated: 1264
+Dead Ends: 791
+Max nodes in memory: 474
+Iterations: 791
+
+3 4 7
+0 6 1
+2 8 5
+Total nodes generated: 6274
+Dead Ends: 3978
+Max nodes in memory: 2297
+Iterations: 3978
+
+2 0 1
+8 5 3
+6 7 4
+Total nodes generated: 8435
+Dead Ends: 5347
+Max nodes in memory: 3089
+Iterations: 5347
+
+3 5 7
+1 4 8
+2 0 6
+Total nodes generated: 2672
+Dead Ends: 1657
+Max nodes in memory: 1016
+Iterations: 1657
+
+1 8 2
+6 0 5
+3 7 4
+Total nodes generated: 5666
+Dead Ends: 3609
+Max nodes in memory: 2058
+Iterations: 3609
+
+1 6 7
+2 5 0
+3 4 8
+Total nodes generated: 17452
+Dead Ends: 11229
+Max nodes in memory: 6225
+Iterations: 11229
+
+5 0 2
+4 8 3
+7 1 6
+Total nodes generated: 11062
+Dead Ends: 7064
+Max nodes in memory: 3999
+Iterations: 7064
+
+1 2 5
+7 8 4
+0 6 3
+Total nodes generated: 2958
+Dead Ends: 1850
+Max nodes in memory: 1109
+Iterations: 1850
+
+6 0 5
+4 8 2
+3 1 7
+Total nodes generated: 14779
+Dead Ends: 9539
+Max nodes in memory: 5241
+Iterations: 9539
+
+7 6 3
+5 2 4
+0 1 8
+Total nodes generated: 12417
+Dead Ends: 7975
+Max nodes in memory: 4443
+Iterations: 7975
+
+4 5 1
+0 3 8
+7 2 6
+Total nodes generated: 1655
+Dead Ends: 1014
+Max nodes in memory: 642
+Iterations: 1014
+
+4 6 8
+7 2 1
+5 3 0
+Total nodes generated: 22033
+Dead Ends: 14365
+Max nodes in memory: 7669
+Iterations: 14365
+
+4 8 0
+6 1 2
+7 5 3
+Total nodes generated: 2080
+Dead Ends: 1291
+Max nodes in memory: 790
+Iterations: 1291
+
+2 1 7
+0 4 5
+8 6 3
+Total nodes generated: 22816
+Dead Ends: 14901
+Max nodes in memory: 7916
+Iterations: 14901
+
+7 1 3
+2 6 5
+4 0 8
+Total nodes generated: 69
+Dead Ends: 39
+Max nodes in memory: 31
+Iterations: 39
+
+1 2 6
+7 5 3
+4 8 0
+Total nodes generated: 1547
+Dead Ends: 959
+Max nodes in memory: 589
+Iterations: 959
+
+0 3 7
+8 6 2
+4 1 5
+Total nodes generated: 10282
+Dead Ends: 6565
+Max nodes in memory: 3718
+Iterations: 6565
