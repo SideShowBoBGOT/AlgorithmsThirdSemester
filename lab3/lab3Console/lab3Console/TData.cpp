@@ -54,14 +54,14 @@ void TData::RebuildIndexes() {
     auto pos = seqfile.tellg()/sizeof(SRec);
     do {
         if(i!=0 && i%m_iIndexSize==0) {
-            index.Id = val.Id;
+            index.Id = m_xRecord.Id;
             index.Position = pos;
             indexfile.write(reinterpret_cast<char*>(&index), sizeof(index));
         }
         pos = seqfile.tellg()/sizeof(SRec);
         i++;
-    } while(seqfile.read(reinterpret_cast<char*>(&val), sizeof(val)));
-
+        val = m_xRecord;
+    } while(seqfile.read(reinterpret_cast<char*>(&m_xRecord), sizeof(m_xRecord)));
 }
 bool TData::Update(int id, const char record[30]) {
     auto seqfile = std::fstream(m_sRecordsFile,std::ios::in|std::ios::out|std::ios::binary);
@@ -134,42 +134,52 @@ void TData::Append(int id, const char record[30]) {
     
     Sort();
     RebuildIndexes();
+
+    ++m_iSize;
     
 }
-bool TData::Search(int id) {
-    auto indexfile = std::fstream(m_sIndexFile,std::ios::in|std::ios::binary);
-    auto offset = 0;
-    auto pos = -1;
-    //reading index file to obtain the index of desired record
-    while(indexfile.read(reinterpret_cast<char*>(&m_xIndex), sizeof(m_xIndex))) {
-        //desired record found
-        if(id==m_xIndex.Id) {
-            pos=m_xIndex.Position;//seeking the Position
-            break;
-        }
-    }
-    if(pos==-1) {
-        return false;
-    }
-    //calculate offset using Position obtained from ind. file
-    offset = pos*sizeof(m_xRecord);
+bool TData::Search(int id, SRec& rec) {
     auto seqfile = std::fstream(m_sRecordsFile,std::ios::in|std::ios::binary);
-    //seeking the record from seq. file using calculated offset
-    seqfile.seekg(offset,std::ios::beg);//seeking for reading purpose
-    seqfile.read(reinterpret_cast<char*>(&m_xRecord), sizeof(m_xRecord));
-    if(m_xRecord.Id==-1) {
-        return false;
-        //Id=desired record’s id
-    } else {
-        std::cout<<"\n The Record is present in the file and it is...";
-        std::cout<<"\n Record: "<<m_xRecord.Record;
-        std::cout<<"\n Id: "<<m_xRecord.Id;
+    auto indexfile = std::fstream(m_sIndexFile,std::ios::in|std::ios::binary);
+    
+    auto i = -1;
+    auto prevI = -1;
+    m_xIndex = SIndex();
+    while(indexfile.read(reinterpret_cast<char*>(&m_xIndex), sizeof(m_xIndex))) {
+        prevI = i;
+        i = m_xIndex.Id;
+        if(m_xIndex.Id>id) break;
     }
-    return true;
+    auto recs = std::vector<SRec>();
+
+    if(i==-1) { //no indexes in indexFile
+        // copy all the seqFile to RAM
+        while(seqfile.read(reinterpret_cast<char*>(&m_xRecord), sizeof(m_xRecord))) {
+            recs.push_back(m_xRecord);
+        }
+        SharrahSearch(id, rec, recs);
+    } else if(id>i) { // if id in the last block
+        // copy the rest of the seqFile to RAM
+        seqfile.seekg((m_xIndex.Position+1)*sizeof(SRec), std::ios::beg);
+        while(seqfile.read(reinterpret_cast<char*>(&m_xRecord), sizeof(m_xRecord))) {
+            if(m_xRecord.Id>i)
+            recs.push_back(m_xRecord);
+        }
+        SharrahSearch(id, rec, recs);
+    } else {
+        // copy specific block to RAM
+        seqfile.seekg((m_xIndex.Position-m_iIndexSize+1)*sizeof(SRec), std::ios::beg);
+        for(int i=0;i<m_iIndexSize;++i) {
+            seqfile.read(reinterpret_cast<char*>(&m_xRecord), sizeof(m_xRecord));
+            recs.push_back(m_xRecord);
+        }
+        SharrahSearch(id, rec, recs);
+    }
+    return m_pSentinelRec!=rec;
 }
 
-bool TData::SharrahSearch(int id) {
-    return false;
+void TData::SharrahSearch(int id, SRec& rec, const std::vector<SRec>& records) {
+    
 }
 
 void TData::Sort() {

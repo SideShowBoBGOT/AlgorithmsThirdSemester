@@ -11,20 +11,23 @@
 
 class TData {
     public:
+    struct SRec;
+    struct SIndex;
+
+    public:
     TData();
     virtual void Create();
     virtual void Display();
     virtual bool Update(int id, const char record[30]);
     virtual bool Delete(int id);
     virtual void Append(int id, const char record[30]);
-    virtual bool Search(int id);
-    virtual bool SharrahSearch(int id);
+    virtual bool Search(int id, SRec& rec);
     virtual void Sort();
-
 
     protected:
     virtual void RebuildIndexes();
-
+    virtual void SharrahSearch(int id, SRec& rec, const std::vector<SRec>& records);
+    
     public:
     struct SRec {
         SRec()=default;
@@ -75,8 +78,13 @@ class TData {
             return Id<other.Id;
         }
     };
+
+
     protected:
-    int m_iIndexSize = 8;
+    int m_iIndexSize = 10;
+
+    protected:
+    int m_iSize = 0;
 
     protected:
     SRec m_pSentinelRec = SRec(-1, "SENTINEL");
