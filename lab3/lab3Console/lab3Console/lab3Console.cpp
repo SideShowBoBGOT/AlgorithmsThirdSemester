@@ -9,7 +9,7 @@ void main() {
 	auto indexFile = std::fstream("indexFile.txt", std::ios::out);
 	indexFile.close();
     TData List = TData();
-	for(int i=0;i<300;i++) {
+	for(int i=0;i<50;i++) {
 		auto val = rand()%30000;
 		char str[30] = "";
 		for(int j=0;j<29;j++) {
@@ -18,14 +18,15 @@ void main() {
 		str[29] = '\0';
 		List.Append(val, str);
 	}
-	auto file = std::ifstream("recordsFile.txt", std::ios::in|std::ios::binary);
+	/*auto file = std::ifstream("recordsFile.txt", std::ios::in|std::ios::binary);
 	TData::SRec val;
 	while(file.read(reinterpret_cast<char*>(&val), sizeof(val))) {
 		std::cout<<std::endl;
-		
 		std::cout<<val.Record<<std::endl;
 		std::cout<<val.Id;
-
 	}
+	std::cout<<std::endl<<"==================="<<std::endl;*/
+	List.Display();
+	
 	
 }

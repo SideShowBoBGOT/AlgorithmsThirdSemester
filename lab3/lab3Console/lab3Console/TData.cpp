@@ -25,16 +25,24 @@ void TData::Display() {
     auto i = 0;
     auto seqfile = std::fstream(m_sRecordsFile,std::ios::in|std::ios::binary);
     auto indexfile = std::fstream(m_sIndexFile,std::ios::in|std::ios::binary);
+    auto prevI = 0;
     while(indexfile.read(reinterpret_cast<char*>(&m_xIndex), sizeof(m_xIndex))) {
         i = m_xIndex.Position*sizeof(SRec);//getting pos from index file
-        seqfile.seekg(i,std::ios::beg);//seeking record of that pos from seq.file
-        seqfile.read(reinterpret_cast<char*>(&m_xRecord),sizeof(m_xRecord));//reading record
-        //if rec. is not deleted logically
-        if(m_xRecord.Id!=-1) {   //then display it
+
+        seqfile.seekg(prevI,std::ios::beg);//seeking record of that pos from seq.file
+        do {
+            seqfile.read(reinterpret_cast<char*>(&m_xRecord), sizeof(m_xRecord));//reading record
             std::cout<<"\nRecord: "<<m_xRecord.Record<<std::flush;
             std::cout<<"\nId: "<<m_xRecord.Id;
             std::cout<<"\n";
-        }
+        } while(seqfile.tellg()!=i);
+        prevI = i;
+    }
+    seqfile.seekg(prevI,std::ios::beg);//seeking record of that pos from seq.file
+    while(seqfile.read(reinterpret_cast<char*>(&m_xRecord), sizeof(m_xRecord))) {
+        std::cout<<"\nRecord: "<<m_xRecord.Record<<std::flush;
+        std::cout<<"\nId: "<<m_xRecord.Id;
+        std::cout<<"\n";
     }
 }
 void TData::RebuildIndexes() {
@@ -44,7 +52,7 @@ void TData::RebuildIndexes() {
 	auto val = TData::SRec();
     auto index = TData::SIndex();
     auto pos = seqfile.tellg()/sizeof(SRec);
-    while(seqfile.read(reinterpret_cast<char*>(&val), sizeof(val))) {
+    do {
         if(i!=0 && i%m_iIndexSize==0) {
             index.Id = val.Id;
             index.Position = pos;
@@ -52,7 +60,7 @@ void TData::RebuildIndexes() {
         }
         pos = seqfile.tellg()/sizeof(SRec);
         i++;
-	}
+    } while(seqfile.read(reinterpret_cast<char*>(&val), sizeof(val)));
 
 }
 bool TData::Update(int id, const char record[30]) {
@@ -125,7 +133,7 @@ void TData::Append(int id, const char record[30]) {
 
     
     Sort();
-    //RebuildIndexes();
+    RebuildIndexes();
     
 }
 bool TData::Search(int id) {
