@@ -179,7 +179,61 @@ bool TData::Search(int id, SRec& rec) {
 }
 
 void TData::SharrahSearch(int id, SRec& rec, const std::vector<SRec>& records) {
-    
+    auto flag = true;
+    auto num = records.size();
+    auto k = int(std::log2(num));
+    auto i = std::pow(2, k) - 1;
+    if(id<records[int(i)].Id) {
+        auto b = i + 1;
+        while(flag) {
+            if(b>=0) {
+                if(i>=num) {
+                    i -= (int(b)/2) + 1;
+                    b = int(b)/2;
+                } else if(i<0) {
+                    i += (int(b)/2) + 1;
+                    b = int(b)/2;
+                } else if(records[int(i)].Id==id) {
+                    rec = records[int(i)];
+                    flag = false;
+                } else if(records[int(i)].Id<id) {
+                    i += (int(b)/2) + 1;
+                    b = int(b)/2;
+                } else {
+                    i -= (int(b)/2) + 1;
+                    b = int(b)/2;
+                }
+            } else {
+                flag = false;
+            }
+        }
+    } else {
+        auto l = std::log2(num - i);
+        i = num - std::pow(2, l);
+        auto b = std::pow(2, l);
+        while(flag) {
+            if(b>=0) {
+                if(i>=num) {
+                    i -= (int(b)/2) + 1;
+                    b = int(b)/2;
+                } else if(i<0) {
+                    i += (int(b)/2) + 1;
+                    b = int(b)/2;
+                } else if(records[int(i)].Id==id) {
+                    rec = records[int(i)];
+                    flag = false;
+                } else if(records[int(i)].Id<id) {
+                    i += (int(b)/2) + 1;
+                    b = int(b)/2;
+                } else {
+                    i -= (int(b)/2) + 1;
+                    b = int(b)/2;
+                }
+            } else {
+                flag = false;
+            }
+        }
+    }
 }
 
 void TData::Sort() {

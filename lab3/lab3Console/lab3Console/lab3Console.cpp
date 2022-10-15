@@ -28,6 +28,6 @@ void main() {
 	std::cout<<std::endl<<"==================="<<std::endl;*/
 	List.Display();
 	auto val = TData::SRec();
-	List.Search(10458, val);
+	List.Search(215, val);
 	
 }
