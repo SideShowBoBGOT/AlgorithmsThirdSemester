@@ -1,5 +1,5 @@
 ﻿#include "BalancedMultiwayMergeSort.h"
-#include "ModifiedSort.h"
+
 #include "Timer.h"
 #include <iostream>
 #include <fstream>
@@ -7,27 +7,23 @@
 #include <thread>
 #include <future>
 
-int main() {
-    // тут сам код
-    
-    Timer timer;
-    timer.start();
-    
-    auto bsort = ModifiedSort("monster.txt", 20000, 14, true);
-    timer.stop();
-    std::cout << "Seconds: " << timer.elapsedSeconds() << std::endl;
-    std::cout << "Milliseconds: " << timer.elapsedMilliseconds() << std::endl;
+int main() {    
+    srand(time(NULL));
+    auto file = std::fstream("tiny.txt", std::ios::out|std::ios::binary);
 
-
-    
-    
-   /* auto file = std::fstream("lab.txt", std::ios::out|std::ios::app);
-    std::default_random_engine generator;
-    generator.seed(std::time(0));
-    
-    std::uniform_real_distribution<double> distribution(0.0, 1.0);
-
-    while(true) {
-        file<<distribution(generator)<<"\n";
-    }*/
+    for(int i=0;i<1000;i++) {
+		auto val = double(rand()%60000);
+        file.write(reinterpret_cast<char*>(&val), sizeof(double));
+		
+	}
+    file.close();
+    auto bsort = BalancedMultiwayMergeSort<double>("tiny.txt", 10, 14);
+    bsort.SentinelValue = -1.0;
+    bsort.Sort();
+    file.open("result_binary.txt", std::ios::in|std::ios::binary);
+    auto val = 0.0;
+    for(;!file.eof();) {
+        file.read(reinterpret_cast<char*>(&val), sizeof(val));
+        std::cout<<val<<std::endl;
+    }
 }

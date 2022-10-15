@@ -84,6 +84,7 @@ AStar::Node* AStar::ExploreFrontier() noexcept {
 		m_vExploredStates.insert(&currentNode->State);
 
 		if(currentNode->State==m_xGoalState) {
+			TracePath(currentNode);
 			return currentNode;
 			break;
 		}
@@ -103,15 +104,14 @@ AStar::Node* AStar::ExploreFrontier() noexcept {
 	return nullptr;
 }
 
-void AStar::TracePath() noexcept {
-	m_iNumMoves = m_xEndNode->Depth;
-	while(m_xEndNode->Parent!=nullptr) {
-		m_vActions.push_back(ReverseAction(m_xEndNode->Action));
-		m_xEndNode = m_xEndNode->Parent;
+void AStar::TracePath(AStar::Node* node) noexcept {
+	m_iNumMoves = node->Depth;
+	while(node->Parent!=nullptr) {
+		m_vActions.push_back(ReverseAction(node->Action));
+		node = node->Parent;
 	}
 	m_vActions.reverse();
 }
-
 
 void AStar::PrintStatistic() const noexcept {
 	std::cout<<"Total nodes generated: " << m_iTotalNodesGenerated<<"\n";

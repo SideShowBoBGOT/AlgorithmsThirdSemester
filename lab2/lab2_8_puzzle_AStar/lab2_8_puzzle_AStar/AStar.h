@@ -71,7 +71,7 @@ class AStar {
 	AStar(state initialState, state goalState) noexcept;
 	virtual bool Solve() noexcept;
 	virtual void ShowAnswer() const noexcept;
-	virtual void TracePath() noexcept;
+	virtual void TracePath(Node* node) noexcept;
 
 	protected:
 	virtual Node* ExploreFrontier() noexcept;

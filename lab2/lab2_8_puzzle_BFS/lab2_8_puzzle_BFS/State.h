@@ -16,7 +16,7 @@ class State {
 
 	public:
 	static constexpr int BoardSize = 9;
-	static constexpr std::array<int, BoardSize> Goal = {1, 2, 3, 8, 0, 4, 7, 6, 5};
+	static constexpr std::array<int, BoardSize> Goal = {1, 2, 3, 4, 5, 6, 7, 8, 0};
 	std::array<int, BoardSize> Board = {1, 2, 3, 4, 5, 6, 7, 8, 0};
 
 	
