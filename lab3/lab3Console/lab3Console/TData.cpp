@@ -1,58 +1,72 @@
 #include "TData.h"
+#include <fstream>
+#include <iostream>
+#include <algorithm>
 void TData::Display() {
-    auto i = 0;
-    auto seqfile = std::fstream(m_sRecordsFile,std::ios::in|std::ios::binary);
-    auto indexfile = std::fstream(m_sIndexFile,std::ios::in|std::ios::binary);
-    auto prevI = 0;
-    while(indexfile.read(reinterpret_cast<char*>(&m_xIndex), sizeof(m_xIndex))) {
-        i = m_xIndex.Position*sizeof(SRecord);//getting pos from index file
-
-        seqfile.seekg(prevI,std::ios::beg);//seeking record of that pos from seq.file
-        do {
-            seqfile.read(reinterpret_cast<char*>(&m_xRecord), sizeof(m_xRecord));//reading record
-            std::cout<<"\nRecord: "<<m_xRecord.Data<<std::flush;
-            std::cout<<"\nId: "<<m_xRecord.Id;
-            std::cout<<"\n";
-        } while(seqfile.tellg()!=i);
-        prevI = i;
-    }
-    seqfile.seekg(prevI,std::ios::beg);//seeking record of that pos from seq.file
-    while(seqfile.read(reinterpret_cast<char*>(&m_xRecord), sizeof(m_xRecord))) {
-        std::cout<<"\nRecord: "<<m_xRecord.Data<<std::flush;
-        std::cout<<"\nId: "<<m_xRecord.Id;
-        std::cout<<"\n";
+    auto seqfile = std::fstream(m_sRecordsFile, std::ios::out|std::ios::in|std::ios::binary);
+    auto indexfile = std::fstream(m_sIndexFile, std::ios::out|std::ios::in|std::ios::binary);
+    auto index = SIndex();
+    while(indexfile.read(reinterpret_cast<char*>(&index), sizeof(index))) {
+        auto corPosition = GetCorPosition(index.Id);
+        auto blockStart = GetBlockStart(corPosition);
+        auto block = ReadBlock(blockStart);
+        for(const auto& record : block) {
+            if(record.Id!=-1) {
+                std::cout<<"ID: "<<record.Id<<"\n";
+                std::cout<<"Data: "<<record.Data<<"\n";
+            }
+        }
     }
 }
 void TData::RebuildIndexes(int corIndex, int lastIndex) {
-    auto indexFile = std::fstream(m_sIndexFile, std::ios::out|std::ios::binary);
-    auto recordsFile = std::fstream(m_sRecordsFile, std::ios::out|std::ios::binary);
+    auto indexFile = std::fstream(m_sIndexFile, std::ios::out|std::ios::in|std::ios::binary);
+    auto recordsFile = std::fstream(m_sRecordsFile, std::ios::out|std::ios::in|std::ios::binary);
     indexFile.seekp(0, std::ios::end);
     recordsFile.seekp(0, std::ios::end);
     auto index = SIndex();
-    auto record = SRecord();
-    index.Id = lastIndex + m_iIndexSize;
+    
+    index.Id = lastIndex + m_iIndexSize - 1;
     for(;index.Id<=corIndex;index.Id+=m_iIndexSize) {
-        indexFile.write(reinterpret_cast<char*>(&index), sizeof(index));
+        auto record = SRecord();
         for(auto i=0;i<m_iIndexSize-1;++i) {
             recordsFile.write(reinterpret_cast<char*>(&record), sizeof(record));
         }
         record.Id = index.Id;
+        index.Position = recordsFile.tellp();
         recordsFile.write(reinterpret_cast<char*>(&record), sizeof(record));
+        indexFile.write(reinterpret_cast<char*>(&index), sizeof(index));
     }
 }
-bool TData::Update(int id, const char record[30]) {
-    
-    return true;
-}
 bool TData::Delete(int id) {
-   
+    auto corID = 0;
+    auto lastID = 0;
+    if(!IsCorrespondingIDExists(id, corID, lastID))
+        return false;
+    
+    auto corPosition = GetCorPosition(corID);
+    auto blockStart = GetBlockStart(corPosition);
+
+    auto position = blockStart + (id%m_iIndexSize)*sizeof(SRecord);
+    auto recordsFile = std::fstream(m_sRecordsFile, std::ios::out|std::ios::in|std::ios::binary);
+    recordsFile.seekg(position, std::ios::beg);
+    auto record = SRecord();
+    recordsFile.read(reinterpret_cast<char*>(&record), sizeof(record));
+
+    if(record.Id==-1)
+        return false;
+    
+    record.Id = -1;
+    const char data[30] = {0};
+    memcpy(record.Data, data, 30*sizeof(char));
+    recordsFile.seekp(position, std::ios::beg);
+    recordsFile.write(reinterpret_cast<char*>(&record), sizeof(record));
+
     return true;
 }
 bool TData::IsCorrespondingIDExists(int id, int& corID, int& lastID) {
-    auto indexFile = std::fstream(m_sIndexFile, std::ios::in|std::ios::binary);
-    corID = (id/m_iIndexSize + 1)*m_iIndexSize;
+    auto indexFile = std::fstream(m_sIndexFile, std::ios::out|std::ios::in|std::ios::binary);
+    corID = (id/m_iIndexSize + 1)*m_iIndexSize - 1;
     auto index = SIndex();
-
     while(indexFile.read(reinterpret_cast<char*>(&index), sizeof(index))) {
         lastID = index.Id;
         if(index.Id==corID) {
@@ -65,24 +79,40 @@ bool TData::IsCorrespondingIDExists(int id, int& corID, int& lastID) {
 
 std::vector<TData::SRecord> TData::ReadBlock(int blockStart) {
     auto block = std::vector<SRecord>(m_iIndexSize);
-    auto recordsFile = std::fstream(m_sRecordsFile, std::ios::in|std::ios::binary);
+    auto recordsFile = std::fstream(m_sRecordsFile, std::ios::out|std::ios::in|std::ios::binary);
     recordsFile.seekg(blockStart, std::ios::beg);
     auto record = SRecord();
     for(auto i=0;i<m_iIndexSize;++i) {
         recordsFile.read(reinterpret_cast<char*>(&record), sizeof(record));
-        block.push_back(record);
+        block[i] = record;
     }
     return block;
 }
 
+void TData::WriteBlock(int blockStart, std::vector<SRecord>& block) {
+    auto recordsFile = std::fstream(m_sRecordsFile, std::ios::out|std::ios::in|std::ios::binary);
+    recordsFile.seekp(blockStart, std::ios::beg);
+    for(auto i=0;i<m_iIndexSize;++i) {
+        recordsFile.write(reinterpret_cast<char*>(&block[i]), sizeof(block[i]));
+    }
+}
 
-void TData::Append(int id, const char record[30]) {
+void TData::Update(int id, const char data[30]) {
     auto corID = 0;
     auto lastID = 0;
     if(!IsCorrespondingIDExists(id, corID, lastID))
         RebuildIndexes(corID, lastID); 
     
+    auto corPosition = GetCorPosition(corID);
+    auto blockStart = GetBlockStart(corPosition);
 
+    auto writePosition = blockStart + (id%m_iIndexSize)*sizeof(SRecord);
+    auto record = SRecord();
+    record.Id = id;
+    memcpy(record.Data, data, 30*sizeof(char));
+    auto recordsFile = std::fstream(m_sRecordsFile, std::ios::out|std::ios::in|std::ios::binary);
+    recordsFile.seekp(writePosition, std::ios::beg);
+    recordsFile.write(reinterpret_cast<char*>(&record), sizeof(record));
 }
 
 bool TData::Search(int id, const char data[30]) {
@@ -99,20 +129,24 @@ bool TData::SearchInIndexFile(int id, const char data[30], int& position) {
     if(!IsCorrespondingIDExists(id, corID, lastID))
         return false;
 
-    auto indexFile = std::fstream(m_sIndexFile, std::ios::in|std::ios::binary);
-    auto indexPosition = corID/m_iIndexSize*sizeof(SIndex);
-    indexFile.seekg(indexPosition, std::ios::beg);
-    auto index = SIndex();
-    indexFile.read(reinterpret_cast<char*>(&index), sizeof(index));
-    auto corPosition = index.Position;
+    auto corPosition = GetCorPosition(corID);
 
     return SearchInRecordsFile(id, corPosition, data, position);
 }
 
 int TData::GetBlockStart(int corPosition) {
-    return corPosition - m_iIndexSize + 1;
+    return corPosition - (m_iIndexSize - 1)*sizeof(SRecord);
 }
 
+int TData::GetCorPosition(int corID) {
+    auto indexFile = std::fstream(m_sIndexFile, std::ios::out|std::ios::in|std::ios::binary);
+    auto indexPosition = (corID/m_iIndexSize)*sizeof(SIndex);
+    indexFile.seekg(indexPosition, std::ios::beg);
+    auto index = SIndex();
+    indexFile.read(reinterpret_cast<char*>(&index), sizeof(index));
+    auto corPosition = index.Position;
+    return corPosition;
+}
 
 bool TData::SearchInRecordsFile(int id, int corPosition, const char data[30], int& position) {
     position = GetBlockStart(corPosition);
