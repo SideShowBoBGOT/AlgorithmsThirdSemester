@@ -79,7 +79,7 @@ AStar::Node* AStar::ExploreFrontier() noexcept {
 		auto currentNode = m_vFrontier.top();
 		m_vFrontier.pop();
 
-		m_iNumNodesExplored++;
+		
 
 		m_vExploredStates.insert(&currentNode->State);
 
@@ -92,6 +92,7 @@ AStar::Node* AStar::ExploreFrontier() noexcept {
 
 		auto children = GenerateChildren(currentNode);
 
+		if(children.empty()) m_iNumNodesExplored++;
 
 		for(const auto& child:children) {
 			m_vFrontier.push(child);

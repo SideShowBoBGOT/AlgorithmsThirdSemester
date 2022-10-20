@@ -1,37 +1,47 @@
-﻿#include "TData.h"
-#include <iostream>
-#include <fstream>
-#include <filesystem>
+﻿#include <iostream>
+#include <vector>
+#include <cassert>
+
+bool SharrahSearch(int id, std::vector<int>& block) {
+    auto flag = true;
+    auto num = int(block.size());
+    auto k = int(std::log2(num));
+    auto i = int(std::pow(2, k));
+    auto b = 0;
+    if(id<block[i]) {
+        b = int(std::pow(2, k - 1));
+    } else {
+        auto l = int(std::log2(num - int(std::pow(2, k)) + 1));
+        i = num + 1 - int(std::pow(2, l));
+        b = int(std::pow(2, l - 1));
+    }  
+    while(flag) {
+        if(b>=0) {
+            if(block[i]==id) {
+                return true;
+            } else if(block[i]<id) {
+                i += b/2 + 1;
+                b = b/2;
+            } else if(block[i]>id){
+                i -= b/2 + 1;
+                b = b/2;
+            }
+        } else {
+            flag = false;
+        }
+    }
+    return false;
+}
 void main() {
 	srand(time(NULL));
-	/*std::filesystem::remove("indexFile.txt");
-	std::filesystem::remove("recordsFile.txt");
-	auto seqFile = std::fstream("recordsFile.txt", std::ios::out);
-	seqFile.close();
-	auto indexFile = std::fstream("indexFile.txt", std::ios::out);
-	indexFile.close();*/
-    TData List = TData();
-	for(int i=0;i<1;i++) {
-		auto val = 990;
-		char str[30] = "";
-		for(int j=0;j<29;j++) {
-			str[j] = static_cast<char>(rand()%60+20);
-		}
-		str[29] = '\0';
-		List.Update(val, str);
-	}
-	//List.Delete(990);
-	/*auto file = std::ifstream("recordsFile.txt", std::ios::in|std::ios::binary);
-	TData::SRec val;
-	while(file.read(reinterpret_cast<char*>(&val), sizeof(val))) {
-		std::cout<<std::endl;
-		std::cout<<val.Record<<std::endl;
-		std::cout<<val.Id;
-	}
-	std::cout<<std::endl<<"==================="<<std::endl;*/
-	List.Display();
-	/*auto val = TData::SRec();
-	auto cursor = std::streampos();
-	List.Search(215, val, cursor);*/
-	
+    auto vec = std::vector<int>(1000);
+    for(int i = 0; i < 1000; i++) {
+        vec[i] = i;
+    }
+
+    for(int i = 0; i < 1000; i++) {
+        std::cout<<"Search: "<<i<<std::endl;
+        const auto res = SharrahSearch(i, vec);
+        assert(res);
+    }
 }

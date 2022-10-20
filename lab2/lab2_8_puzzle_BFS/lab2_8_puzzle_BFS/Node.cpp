@@ -15,6 +15,27 @@ void Node::Print() const noexcept {
 	m_xState.Print();
 }
 
+bool Node::IsSolvable() {
+	auto inversion = 0;
+	for(int i=0;i<9;i++) {
+		auto y1 = i / 3;
+		auto x1 = i % 3;
+		for(int j=i+1;j<9;j++) {
+			auto y2 = j / 3;
+			auto x2 = j % 3;
+
+			if(m_xState.Board[3*y1 + x1]>0) {
+				if(m_xState.Board[y2*3 + x2]>0) {
+					if(m_xState.Board[y2*3 + x2] < m_xState.Board[y1*3 + x1]) {
+						inversion++;
+					}
+				}
+			}
+		}
+	}
+
+	return (inversion % 2)==0;
+}
 
 void  Node::ShowPath() const noexcept {
 	auto actions = std::list<std::string>();
@@ -74,6 +95,10 @@ bool Node::IsExpanded(const std::deque<State>& deq) const noexcept {
 
 
 int Node::BFS() noexcept {
+	if(!IsSolvable()) {
+		std::cout<<"NOT SOLVABLE"<<std::endl;
+		return 0;
+	}
 	auto ToExpand = std::deque<Node*>();
 	auto expanded = std::deque<State>();
 
@@ -89,11 +114,12 @@ int Node::BFS() noexcept {
 			return m_iCost;
 		} else {
 			Iterations++;
-			DeadEnd++;
 			if(!(ToExpand.front()->IsExpanded(expanded))) {
 				ToExpand.front()->Expand(ToExpand);
 				expanded.push_front(ToExpand.front()->m_xState);
 				ToExpand[1]->m_iCost = ToExpand[0]->m_iCost+1;
+			} else {
+				DeadEnd++;
 			}
 			ToExpand.pop_front();
 		}

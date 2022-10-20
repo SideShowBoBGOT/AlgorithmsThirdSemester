@@ -2,22 +2,25 @@
 #include <fstream>
 #include <iostream>
 #include <algorithm>
-
-void TData::Display() {
+std::vector<std::pair<int, const char[30]>> TData::Display() {
     auto seqfile = std::fstream(m_sRecordsFile, std::ios::out|std::ios::in|std::ios::binary);
     auto indexfile = std::fstream(m_sIndexFile, std::ios::out|std::ios::in|std::ios::binary);
     auto index = SIndex();
+    auto records = std::vector<std::pair<int, const char[30]>>();
     while(indexfile.read(reinterpret_cast<char*>(&index), sizeof(index))) {
         auto corPosition = GetCorPosition(index.Id);
         auto blockStart = GetBlockStart(corPosition);
         auto block = ReadBlock(blockStart);
         for(const auto& record : block) {
             if(record.Id!=-1) {
-                std::cout<<"ID: "<<record.Id<<"\n";
-                std::cout<<"Data: "<<record.Data<<"\n";
+                auto p = std::pair<int, const char[30]>();
+                p.first = record.Id;
+                memcpy((void*)p.second, record.Data, 30*sizeof(char));
+                records.push_back(p);
             }
         }
     }
+    return records;
 }
 void TData::RebuildIndexes(int corIndex, int lastIndex) {
     auto indexFile = std::fstream(m_sIndexFile, std::ios::out|std::ios::in|std::ios::binary);
@@ -26,7 +29,7 @@ void TData::RebuildIndexes(int corIndex, int lastIndex) {
     recordsFile.seekp(0, std::ios::end);
     auto index = SIndex();
     
-    index.Id = lastIndex + m_iIndexSize - 1;
+    index.Id = lastIndex + m_iIndexSize;
     for(;index.Id<=corIndex;index.Id+=m_iIndexSize) {
         auto record = SRecord();
         for(auto i=0;i<m_iIndexSize-1;++i) {
@@ -65,6 +68,7 @@ bool TData::Delete(int id) {
     return true;
 }
 bool TData::IsCorrespondingIDExists(int id, int& corID, int& lastID) {
+    lastID = -1;
     auto indexFile = std::fstream(m_sIndexFile, std::ios::out|std::ios::in|std::ios::binary);
     corID = (id/m_iIndexSize + 1)*m_iIndexSize - 1;
     auto index = SIndex();
@@ -116,13 +120,13 @@ void TData::Update(int id, const char data[30]) {
     recordsFile.write(reinterpret_cast<char*>(&record), sizeof(record));
 }
 
-bool TData::Search(int id, const char data[30]) {
+bool TData::Search(int id, const char data[30], int& comparisions) {
     auto position = 0;
-    return SearchInIndexFile(id, data, position);
+    return SearchInIndexFile(id, data, position, comparisions);
 }
 
 
-bool TData::SearchInIndexFile(int id, const char data[30], int& position) {
+bool TData::SearchInIndexFile(int id, const char data[30], int& position, int& comparisions) {
     auto corID = 0;
     auto lastID = 0;
     position = 0;
@@ -132,7 +136,7 @@ bool TData::SearchInIndexFile(int id, const char data[30], int& position) {
 
     auto corPosition = GetCorPosition(corID);
 
-    return SearchInRecordsFile(id, corPosition, data, position);
+    return SearchInRecordsFile(id, corPosition, data, position, comparisions);
 }
 
 int TData::GetBlockStart(int corPosition) {
@@ -149,74 +153,51 @@ int TData::GetCorPosition(int corID) {
     return corPosition;
 }
 
-bool TData::SearchInRecordsFile(int id, int corPosition, const char data[30], int& position) {
+bool TData::SearchInRecordsFile(int id, int corPosition, const char data[30], int& position, int& comparisions) {
     position = GetBlockStart(corPosition);
-    auto block = ReadBlock(position);
-    return SharrahSearch(id, data, block, position);
-}
-
-bool TData::SharrahSearch(int id, const char data[30], const std::vector<SRecord>& rawBlock, int& position) {
-    auto flag = true;
+    auto rawblock = ReadBlock(position);
     auto block = std::vector<SRecord>();
-    for(const auto& r : rawBlock) {
+    for(const auto& r : rawblock) {
         if(r.Id!=-1) {
             block.push_back(r);
         }
     }
-    auto num = block.size();
-    auto k = int(std::log2(num));
-    auto i = std::pow(2, k) - 1;
-    if(id<block[int(i)].Id) {
-        auto b = i + 1;
-        while(flag) {
-            if(b>0) {
-                if(i>=num) {
-                    i -= (int(b)/2) + 1;
-                    b = int(b)/2;
-                } else if(i<0) {
-                    i += (int(b)/2) + 1;
-                    b = int(b)/2;
-                } else if(block[int(i)].Id==id) {
-                    memcpy((void*)data, block[int(i)].Data, sizeof(char)*30);
-                    position += int(i)*sizeof(SRecord);
-                    return true;
-                } else if(block[int(i)].Id<id) {
-                    i += (int(b)/2) + 1;
-                    b = int(b)/2;
-                } else {
-                    i -= (int(b)/2) + 1;
-                    b = int(b)/2;
-                }
-            } else {
-                flag = false;
-            }
+
+    return SharrahSearch(id, data, block, comparisions);
+}
+
+bool TData::SharrahSearch(int id, const char data[30], const std::vector<SRecord>& block, int& comparisions) {
+    auto flag = true;
+    auto num = int(block.size());
+    int i = num/2 + 1;
+    int b = num/2;
+    int counter = 0;
+    while(counter < 2) {
+        if(b<=0) {
+            counter++;
         }
-    } else {
-        auto l = std::log2(num - i);
-        i = num - std::pow(2, l);
-        auto b = std::pow(2, l);
-        while(flag) {
-            if(b>0) {
-                if(i>=num) {
-                    i -= (int(b)/2) + 1;
-                    b = int(b)/2;
-                } else if(i<0) {
-                    i += (int(b)/2) + 1;
-                    b = int(b)/2;
-                } else if(block[int(i)].Id==id) {
-                    memcpy((void*)data, block[int(i)].Data, sizeof(char)*30);
-                    position += int(i)*sizeof(SRecord);
-                    return true;
-                } else if(block[int(i)].Id<id) {
-                    i += (int(b)/2) + 1;
-                    b = int(b)/2;
-                } else {
-                    i -= (int(b)/2) + 1;
-                    b = int(b)/2;
-                }
-            } else {
-                flag = false;
-            }
+        if(i>=num) {
+            i -= b/2 + 1;
+            b /= 2;
+            comparisions++;
+
+        } else if(i<=0) {
+            i += b/2 + 1;
+            b /= 2;
+            comparisions++;
+
+        } else if(block[i].Id< id) {
+            i += b/2 + 1;
+            b /= 2;
+            comparisions++;
+
+        } else if(block[i].Id > id) {
+            i -= b/2 + 1;
+            b /= 2;
+            comparisions++;
+        } else if(block[i].Id == id) {
+            memcpy((void*)data, block[int(i)].Data, sizeof(char)*30);
+            return true;
         }
     }
     return false;

@@ -14,6 +14,7 @@ class Node {
 	virtual void Print() const noexcept;
 	virtual void Expand(std::deque<Node*>& deque) noexcept;
 	virtual bool IsExpanded(const std::deque<State>& deque) const noexcept;
+	virtual bool IsSolvable();
 
 	public:
 	virtual int BFS() noexcept;
