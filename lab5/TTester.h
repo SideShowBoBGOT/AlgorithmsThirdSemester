@@ -25,8 +25,9 @@ class TTester {
 	static constexpr unsigned s_uLWeight = 1;
 	static constexpr unsigned s_uMWeight= 20;
 	static constexpr unsigned s_uInitialPopulation = 10;
+	static constexpr unsigned s_uThreads = 12;
 	static constexpr unsigned s_uStartTime = 100;
-	static constexpr unsigned s_uEndTime = 10000;
+	static constexpr unsigned s_uEndTime = 6000;
 	static constexpr unsigned s_uAddTime = 100;
 
 	protected:
@@ -68,8 +69,8 @@ class TTester {
 		AddAttributeToStr(str, VAR_TO_STR(s_uInitialPopulation), s_uInitialPopulation);
 
 		ADD_FUNC_TO_VECTOR(PointCrossover<2>, m_vCrossovers, str);
-		ADD_FUNC_TO_VECTOR(PointCrossover<1>, m_vCrossovers, str);
-		ADD_FUNC_TO_VECTOR(SequenceCrossover, m_vCrossovers, str);
+//		ADD_FUNC_TO_VECTOR(PointCrossover<1>, m_vCrossovers, str);
+//		ADD_FUNC_TO_VECTOR(SequenceCrossover, m_vCrossovers, str);
 
 
 //		ADD_FUNC_TO_VECTOR(ChangeSignMutator, m_vMutators, str);
@@ -81,19 +82,7 @@ class TTester {
 
 		auto results = Results();
 		auto tasks = Tasks();
-		tasks.push_back(std::async(std::launch::async, DoTest, 100, 3600, 100, m_vCrossovers, m_vMutators, m_vImprovers, m_vInput));
-		tasks.push_back(std::async(std::launch::async, DoTest, 3600, 5000, 100, m_vCrossovers, m_vMutators, m_vImprovers, m_vInput));
-		tasks.push_back(std::async(std::launch::async, DoTest, 5000, 6100, 100, m_vCrossovers, m_vMutators, m_vImprovers, m_vInput));
-		tasks.push_back(std::async(std::launch::async, DoTest, 6100, 7100, 100, m_vCrossovers, m_vMutators, m_vImprovers, m_vInput));
-		tasks.push_back(std::async(std::launch::async, DoTest, 7100, 7700, 100, m_vCrossovers, m_vMutators, m_vImprovers, m_vInput));
-		tasks.push_back(std::async(std::launch::async, DoTest, 7700, 8300, 100, m_vCrossovers, m_vMutators, m_vImprovers, m_vInput));
-		tasks.push_back(std::async(std::launch::async, DoTest, 8300, 8600, 100, m_vCrossovers, m_vMutators, m_vImprovers, m_vInput));
-		tasks.push_back(std::async(std::launch::async, DoTest, 8600, 8950, 100, m_vCrossovers, m_vMutators, m_vImprovers, m_vInput));
-		tasks.push_back(std::async(std::launch::async, DoTest, 8950, 9200, 100, m_vCrossovers, m_vMutators, m_vImprovers, m_vInput));
-		tasks.push_back(std::async(std::launch::async, DoTest, 9200, 9500, 100, m_vCrossovers, m_vMutators, m_vImprovers, m_vInput));
-		tasks.push_back(std::async(std::launch::async, DoTest, 9500, 9800, 100, m_vCrossovers, m_vMutators, m_vImprovers, m_vInput));
-		tasks.push_back(std::async(std::launch::async, DoTest, 9800, 10000, 100, m_vCrossovers, m_vMutators, m_vImprovers, m_vInput));
-
+		DistributeTasks(tasks);
 		auto e = std::vector<wchar_t>();
 		for(auto& t : tasks) {
 			results.push_back(t.get());
@@ -108,7 +97,7 @@ class TTester {
 
 		RGBABitmapImageReference* imageRef = CreateRGBABitmapImageReference();
 		StringReference* errorMessage = CreateStringReference(&e);
-		DrawScatterPlot(imageRef, 640, 480, &x, &y, errorMessage);
+		DrawScatterPlot(imageRef, 1280, 720, &x, &y, errorMessage);
 
 		auto pngData = ConvertToPNG(imageRef->image);
 		WriteToFile(pngData, "plot.png");
@@ -116,8 +105,52 @@ class TTester {
     }
 
 	protected:
-	void DistributeTasksTimeEvenly(Tasks& tasks) {
+	void DistributeTasks(Tasks& tasks) {
+		auto timePoints = std::array<std::pair<unsigned, unsigned>, s_uThreads>();
+		DistributeTimeEvenly(timePoints);
+		for(const auto& t : timePoints) {
+			tasks.push_back(std::async(std::launch::async, DoTest, t.first, t.second, s_uAddTime, m_vCrossovers, m_vMutators, m_vImprovers, m_vInput));
+		}
+	}
 
+	static void DistributeTimeEvenly(std::array<std::pair<unsigned, unsigned>, s_uThreads>& timePoints) {
+		auto initial = std::make_pair(s_uStartTime, s_uEndTime);
+		auto splitOne = SplitArea(initial, 2);
+
+		auto splitTwo = SplitArea(splitOne[0], 3);
+		auto sixthOne = splitTwo[0];
+		auto [sixthTwo, sixthThree] = SplitArea(splitTwo[1], 2);
+
+		auto splitThree = SplitArea(splitOne[1], 3);
+		auto sixthFour = splitThree[0];
+		auto [sixthFive, sixthSix] = SplitArea(splitThree[1], 2);
+
+		auto [one, two] = SplitArea(sixthOne, 2);
+		timePoints[0] = one;
+		timePoints[1] = two;
+		auto [three, four] = SplitArea(sixthTwo, 2);
+		timePoints[2] = three;
+		timePoints[3] = four;
+		auto [five, six] = SplitArea(sixthThree, 2);
+		timePoints[4] = five;
+		timePoints[5] = six;
+		auto [seven, eight] = SplitArea(sixthFour, 2);
+		timePoints[6] = seven;
+		timePoints[7] = eight;
+		auto [nine, ten] = SplitArea(sixthFive, 2);
+		timePoints[8] = nine;
+		timePoints[9] = ten;
+		auto [eleven, twelve] = SplitArea(sixthSix, 2);
+		timePoints[10] = eleven;
+		timePoints[11] = twelve;
+	}
+
+	static std::array<std::pair<unsigned, unsigned>, 2> SplitArea(const std::pair<unsigned, unsigned>& p, unsigned ratio) {
+		auto pairs = std::array<std::pair<unsigned , unsigned>, 2>();
+		auto len = unsigned(double(p.second - p.first) / sqrt(ratio)) + p.first;
+		pairs[0] = std::make_pair(p.first, len);
+		pairs[1] = std::make_pair(len, p.second);
+		return pairs;
 	}
 
 	protected:
