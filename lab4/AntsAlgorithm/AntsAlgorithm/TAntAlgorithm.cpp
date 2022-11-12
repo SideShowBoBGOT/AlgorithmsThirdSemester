@@ -62,7 +62,7 @@ void TAntAlgorithm::CreateAnts() {
 	}
 	for(auto& ant : m_vAnts) {
 		ant->ToVisit.reserve(m_vNodes.size());
-		ant->Path.reserve(m_vNodes.size());
+		ant->path.reserve(m_vNodes.size());
 	}
 }
 
@@ -98,7 +98,7 @@ void TAntAlgorithm::PrepareEdgesForNewIteration() {
 
 void TAntAlgorithm::PrepareAntsForNewIteration() {
 	for(auto& ant : m_vAnts) {
-		ant->Path.clear();
+		ant->path.clear();
 	}
 	DistributeAntsRandomly();
 }
@@ -161,8 +161,8 @@ TAntAlgorithm::Path TAntAlgorithm::GetShortestPath(const std::vector<Path>& path
 void TAntAlgorithm::DoCrawlForAntPerIteration(PAnt& ant) {
 	while(!ant->ToVisit.empty()) {
 		auto choosenEdge = ChooseRandomEdge(ant);
-		ant->Path.push_back(choosenEdge);
-		choosenEdge->AntVisitor.push_back(std::make_pair(ant, GetPathDistance(ant->Path)));
+		ant->path.push_back(choosenEdge);
+		choosenEdge->AntVisitor.push_back(std::make_pair(ant, GetPathDistance(ant->path)));
 		ant->NodeHere = choosenEdge->EndNode;
 		ant->ToVisit.erase(std::remove(ant->ToVisit.begin(), ant->ToVisit.end(), choosenEdge->EndNode), ant->ToVisit.end());
 	}
@@ -193,7 +193,7 @@ unsigned TAntAlgorithm::Solve() {
 		PrepareForNewIteration();
 		for(auto& ant : m_vAnts) {
 			DoCrawlForAntPerIteration(ant);
-			paths.push_back(std::move(ant->Path));
+			paths.push_back(std::move(ant->path));
 		}
 		auto shortestPath = GetShortestPath(std::move(paths));
 		if(BestPath.empty()) {

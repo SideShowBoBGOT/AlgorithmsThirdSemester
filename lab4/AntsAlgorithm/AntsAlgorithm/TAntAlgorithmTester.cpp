@@ -5,15 +5,15 @@
 
 
 void TAntAlgorithmTester::Test() {
-	m_uInputSize = 300;
+	m_uInputSize = 40;
 	m_uRangeStart = 1;
-	m_uRange = 60;
-	m_uTotalAnts = 45;
-	m_uEliteAnts = 15;
+	m_uRange = 40;
+	m_uTotalAnts = 10;
+	m_uEliteAnts = 3;
 	m_uAlpha = 3;
 	m_uBeta = 2;
 	m_uIterationsStart = 20;
-	m_uIterationsEnd = 1000;
+	m_uIterationsEnd = 100;
 	m_dR = 0.6;
 	GenerateInput();
 	DoTest();

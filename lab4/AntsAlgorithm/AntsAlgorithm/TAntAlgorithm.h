@@ -58,7 +58,7 @@ class TAntAlgorithm {
 		PNode NodeHere = nullptr;
 		NodeVec ToVisit;
 		NodeVec Visited;
-		Path Path;
+		Path path;
 		virtual double PheromoneMult() { return 1.0; };
 	};
 	struct SEliteAnt : public SAnt {

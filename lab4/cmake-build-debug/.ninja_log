@@ -1,0 +1,15 @@
+# ninja log v5
+1	458	1667824162728631248	CMakeFiles/lab4.dir/AntsAlgorithm/AntsAlgorithm/AntsAlgorithm.cpp.o	1ef9523751ebef1e
+1	736	1667823904093040818	CMakeFiles/lab4.dir/AntsAlgorithm/AntsAlgorithm/NNHelpFunctions.cpp.o	ade06cb2e3ddb4b6
+639	757	1667824702910863036	lab4	64edc8766ebb8c10
+1	639	1667824702790866319	CMakeFiles/lab4.dir/AntsAlgorithm/AntsAlgorithm/TAntAlgorithmTester.cpp.o	a4895dfd09169c14
+0	20	1668017068890356389	build.ninja	5f7be1ae23ab4949
+2	1162	1667824163432519905	CMakeFiles/lab4.dir/AntsAlgorithm/AntsAlgorithm/TAntAlgorithm.cpp.o	c675851d6efbabec
+2	468	1667823903824953410	CMakeFiles/lab4.dir/AntsAlgorithm/include/supportLib.cpp.o	e2dfd12b7ee90f2d
+1	1092	1667823904449155970	CMakeFiles/lab4.dir/AntsAlgorithm/include/pbPlots.cpp.o	1a93609209d2ea1b
+1	832	1668017170572582441	CMakeFiles/lab4.dir/AntsAlgorithm/AntsAlgorithm/TAntAlgorithmTester.cpp.o	a4895dfd09169c14
+832	996	1668017170732579668	lab4	64edc8766ebb8c10
+0	804	1668017334401768278	CMakeFiles/lab4.dir/AntsAlgorithm/AntsAlgorithm/TAntAlgorithmTester.cpp.o	a4895dfd09169c14
+804	954	1668017334553765688	lab4	64edc8766ebb8c10
+0	836	1668021196889319268	CMakeFiles/lab4.dir/AntsAlgorithm/AntsAlgorithm/TAntAlgorithmTester.cpp.o	a4895dfd09169c14
+836	975	1668021197029323762	lab4	64edc8766ebb8c10
