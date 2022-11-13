@@ -28,9 +28,9 @@ class TTester {
 	static constexpr unsigned s_uMWeight= 20;
 	static constexpr unsigned s_uInitialPopulation = 10;
 	static constexpr unsigned s_uThreads = 12;
-	static constexpr unsigned s_uStartTime = 100;
-	static constexpr unsigned s_uEndTime = 10000;
-	static constexpr unsigned s_uAddTime = 100;
+	static constexpr unsigned s_uStartTime = 20;
+	static constexpr unsigned s_uEndTime = 15000;
+	static constexpr unsigned s_uAddTime = 20;
 
 	protected:
 	using Chromosome = typename TGeneticAlgorithm<s_uInputSize>::Chromosome;
