@@ -5,6 +5,7 @@
 #include <future>
 #include <thread>
 #include <mutex>
+#include <fstream>
 #include <filesystem>
 #include "include/pbPlots.hpp"
 #include "include/supportLib.hpp"
@@ -18,6 +19,7 @@ class TTester {
     virtual ~TTester()=default;
 
 	protected:
+	static constexpr char s_sBasePath[] = "/home/choleraplague/university/Algorithms_KPI_2_Year/lab5/results/";
     static constexpr unsigned s_uInputSize = 100;
 	static constexpr unsigned s_uMaxWeight = 500;
 	static constexpr unsigned s_uLPrice= 2;
@@ -27,7 +29,7 @@ class TTester {
 	static constexpr unsigned s_uInitialPopulation = 10;
 	static constexpr unsigned s_uThreads = 12;
 	static constexpr unsigned s_uStartTime = 100;
-	static constexpr unsigned s_uEndTime = 6000;
+	static constexpr unsigned s_uEndTime = 10000;
 	static constexpr unsigned s_uAddTime = 100;
 
 	protected:
@@ -49,34 +51,46 @@ class TTester {
 	protected:
 
 	#define VAR_TO_STR(x) \
-		#x
+		""#x
 	#define ADD_FUNC_TO_VECTOR(func, vec, str) \
 		vec.push_back(func);                \
 		AddFuncToStr(str, #func)
 
 	static void AddAttributeToStr(std::string& str, std::string&& attrStr, unsigned attr) {
-		str += attrStr + ": " + std::to_string(attr) + "\n";
+		str += attrStr + "_" + std::to_string(attr) + " ";
 	}
 	static void AddFuncToStr(std::string& str, std::string&& funcStr) {
-		str += funcStr + ": " + "\n";
+		str += funcStr + " ";
 	}
 
 	public:
 	void Test() {
-	    auto str = std::string();
-		AddAttributeToStr(str, VAR_TO_STR(s_uInputSize), s_uInputSize);
-		AddAttributeToStr(str, VAR_TO_STR(s_uMaxWeight), s_uMaxWeight);
-		AddAttributeToStr(str, VAR_TO_STR(s_uInitialPopulation), s_uInitialPopulation);
+	    auto legend = std::string();
+		AddAttributeToStr(legend, VAR_TO_STR(s_uInputSize), s_uInputSize);
+		AddAttributeToStr(legend, VAR_TO_STR(s_uMaxWeight), s_uMaxWeight);
+		AddAttributeToStr(legend, VAR_TO_STR(s_uInitialPopulation), s_uInitialPopulation);
+		AddAttributeToStr(legend, VAR_TO_STR(s_uStartTime), s_uStartTime);
+		AddAttributeToStr(legend, VAR_TO_STR(s_uEndTime), s_uEndTime);
+		AddAttributeToStr(legend, VAR_TO_STR(s_uAddTime), s_uAddTime);
 
-		ADD_FUNC_TO_VECTOR(PointCrossover<2>, m_vCrossovers, str);
-//		ADD_FUNC_TO_VECTOR(PointCrossover<1>, m_vCrossovers, str);
-//		ADD_FUNC_TO_VECTOR(SequenceCrossover, m_vCrossovers, str);
+	    auto directory = std::string();
+		ADD_FUNC_TO_VECTOR(PointCrossover<2>, m_vCrossovers, directory);
+		ADD_FUNC_TO_VECTOR(PointCrossover<4>, m_vCrossovers, directory);
+		ADD_FUNC_TO_VECTOR(PointCrossover<1>, m_vCrossovers, directory);
+		ADD_FUNC_TO_VECTOR(SequenceCrossover, m_vCrossovers, directory);
 
 
-//		ADD_FUNC_TO_VECTOR(ChangeSignMutator, m_vMutators, str);
-//		ADD_FUNC_TO_VECTOR(SwapMutator, m_vMutators, str);
-//
-//		ADD_FUNC_TO_VECTOR(BestWeightPriceImprover, m_vImprovers, str);
+		ADD_FUNC_TO_VECTOR(ChangeSignMutator, m_vMutators, directory);
+		ADD_FUNC_TO_VECTOR(SwapMutator, m_vMutators, directory);
+////
+		ADD_FUNC_TO_VECTOR(WorstPriceImprover, m_vImprovers, directory);
+		ADD_FUNC_TO_VECTOR(BestPriceImprover, m_vImprovers, directory);
+
+		auto funcs = s_sBasePath + directory;
+		auto params = funcs + "/" + legend;
+		std::filesystem::create_directory(funcs);
+		std::filesystem::create_directory(params);
+		std::filesystem::current_path(params);
 
 		GenerateInput();
 
@@ -95,16 +109,57 @@ class TTester {
 			y.insert(y.end(), res.second.begin(), res.second.end());
 		}
 
+		auto series = GetDefaultScatterPlotSeriesSettings();
+		series->xs = &x;
+		series->ys = &y;
+		auto vs = std::vector<ScatterPlotSeries*>();
+		vs.push_back(series);
+
+		auto titleVec = std::vector<wchar_t>(legend.begin(), legend.end());
+		auto xlabelVec = std::vector<wchar_t>(directory.begin(), directory.end());
+
+		auto settings = GetDefaultScatterPlotSettings();
+		settings->width = 1280;
+		settings->height = 720;
+		settings->autoBoundaries = true;
+		settings->autoPadding = true;
+		settings->title = &titleVec;
+		settings->xLabel = &xlabelVec;
+		settings->scatterPlotSeries = &vs;
+
 		RGBABitmapImageReference* imageRef = CreateRGBABitmapImageReference();
 		StringReference* errorMessage = CreateStringReference(&e);
-		DrawScatterPlot(imageRef, 1280, 720, &x, &y, errorMessage);
+		DrawScatterPlotFromSettings(imageRef, settings, errorMessage);
 
 		auto pngData = ConvertToPNG(imageRef->image);
-		WriteToFile(pngData, "plot.png");
+
+		auto name = GenerateFileName();
+		WriteToFile(pngData, name+".png");
+		auto file = std::fstream(name+".csv", std::ios::out);
+		for(auto i=0;i<x.size();++i) {
+			file<<std::to_string(x[i])+"\t"+std::to_string(y[i])+"\n";
+		}
+
 		DeleteImage(imageRef->image);
     }
 
 	protected:
+	static std::basic_string<char> GenerateFileName() {
+		auto path = std::filesystem::current_path();
+		auto p = std::filesystem::current_path().string();
+		auto it = std::filesystem::directory_iterator(std::filesystem::current_path());
+		auto paths = std::vector<std::string>();
+		while(it!=std::filesystem::end(it)) {
+			paths.push_back(it->path().string());
+			++it;
+		}
+		auto index = 0;
+		while(std::find(paths.begin(), paths.end(), p + "/" + std::to_string(index) + ".png")!=paths.end()) {
+			++index;
+		}
+		return std::to_string(index) ;
+	}
+
 	void DistributeTasks(Tasks& tasks) {
 		auto timePoints = std::array<std::pair<unsigned, unsigned>, s_uThreads>();
 		DistributeTimeEvenly(timePoints);
@@ -221,7 +276,7 @@ class TTester {
 		chromo[index] = !chromo[index];
 	}
 
-	static void BestWeightPriceImprover(TGeneticAlgorithm<s_uInputSize>* alg, Chromosome& chromo) {
+	static void WorstPriceImprover(TGeneticAlgorithm<s_uInputSize>* alg, Chromosome& chromo) {
 		unsigned index = 0;
 		for(unsigned i=0;i<s_uInputSize;++i) {
 			if(chromo[i] and alg->m_vInput[i].first<alg->m_vInput[index].first) {
@@ -229,10 +284,32 @@ class TTester {
 			}
 		}
 		auto weight = alg->CalculateWeight(chromo);
-		weight -= alg->m_vInput[index].first;
+		weight -= alg->m_vInput[index].second;
 		auto isImproved = false;
 		for(unsigned i=0;i<s_uInputSize and !isImproved;++i) {
-			if(!chromo[i]) {
+			if(!chromo[i] and alg->m_vInput[index].first <= alg->m_vInput[i].first) {
+				auto posWeight = weight + alg->m_vInput[i].second;
+				if(posWeight<=alg->m_uMaxWeight) {
+					chromo[index] = false;
+					chromo[i] = true;
+					isImproved = true;
+				}
+			}
+		}
+	}
+
+	static void BestPriceImprover(TGeneticAlgorithm<s_uInputSize>* alg, Chromosome& chromo) {
+		unsigned index = 0;
+		for(unsigned i=0;i<s_uInputSize;++i) {
+			if(chromo[i] and alg->m_vInput[i].first>alg->m_vInput[index].first) {
+				index = i;
+			}
+		}
+		auto weight = alg->CalculateWeight(chromo);
+		weight -= alg->m_vInput[index].second;
+		auto isImproved = false;
+		for(unsigned i=0;i<s_uInputSize and !isImproved;++i) {
+			if(!chromo[i] and alg->m_vInput[index].first <= alg->m_vInput[i].first) {
 				auto posWeight = weight + alg->m_vInput[i].second;
 				if(posWeight<=alg->m_uMaxWeight) {
 					chromo[index] = false;
@@ -243,4 +320,5 @@ class TTester {
 		}
 	}
 };
+
 #endif //LAB5_TTESTER_H

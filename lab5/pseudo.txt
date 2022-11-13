@@ -1,0 +1,155 @@
+def Solve() 
+        StartInitialGeneration()
+        SortGeneration()
+        bestChromosome = generation[size-1]
+        while timer :
+            parentOne = Generation[size - 1]
+            index = rand() % (size - 1)
+            parentTwo = Generation[index]
+            chrome = Crossover(parentOne, parentTwo)
+            if not isValid(chrome) skip
+            chromeCopy = chrome
+            Mutate(chrome)
+            if not isValid(chrome): chrome = chromeCopy
+            chromeCopy = chrome
+            Improve(chrome)
+            if not isValid(chrome): chrome = chromeCopy
+            if CalculatePrice(chrome)>CalculatePrice(BestChromosome):
+                BestChromosome = chrome
+            add BestChromosome to generation
+            SortGeneration()
+            erase first element from Generation
+        
+    
+    def isValid(chrome): 
+        return CalculateWeight(chrome)<=m_uMaxWeight
+    
+
+    def Crossover(one, two) 
+        index = rand() % Crossovers.size()
+        return Crossovers[index](one, two)
+    
+
+    def Mutate(chrome) 
+    	if Mutators:
+            index = rand() % Mutators.size()
+            Mutators[index](this, chrome)
+    
+
+    def Improve(chrome):
+		if Improvers:
+            index = rand() % Improvers.size()
+            Improvers[index](chrome)
+    
+
+    def StartInitialGeneration():
+        for i in m_uInitialPopulationNumber: 
+           add FindFirstPossibleSolution() to generation
+        
+    
+
+    def SortGeneration(): 
+        sort generation by CalculatePrice(chromeOne)<CalculatePrice(chromeTwo)
+
+    def CalculatePrice(chrome): 
+        price = 0
+        for i in inputSize: 
+            if chrome[i]: 
+                price += Input[i].price
+        return price
+    
+
+    def CalculateWeight(chrome) 
+        weight = 0
+        for i in inputSize: 
+            if chrome[i]: 
+                weight += Input[i].weight
+        return weight
+    
+
+    def FindFirstPossibleSolution() 
+        chromo = Chromosome()
+        curWeight = 0
+        while true: 
+            index = rand() % inputSize
+            curWeight += Input[index].weight
+            if curWeight>m_uMaxWeight: break
+            chromo[index] = true
+        return chromo
+    
+
+    def PointCrossover(one, two) 
+        chromo = Chromosome()
+        if inputSize<pointNumber:
+            number = inputSize
+        else:
+            number = pointNumber
+        partition = inputSize / (number + 1)
+        for i in number: 
+            for index in i*partition: 
+                chromo[index] = (i%2)?one[index]:two[index]
+        for index in inputSize:
+        if i%2 == 0:
+            chromo[index] = one[index]
+        else:
+            chromo[index] = two[index]
+        return chromo
+    
+
+    def SequenceCrossover(one, two) 
+        chromo = Chromosome()
+        for i in inputSize:
+            if i%2==0:
+                chromo[i] = one[i]
+            else
+                chromo[i] = two[i]
+        return chromo
+    
+
+    def SwapMutator(chromo): 
+        indexOne = rand() % inputSize
+        indexTwo = rand() % inputSize
+        swap(chromo[indexOne], chromo[indexTwo])
+    
+
+    def ChangeSignMutator(chromo) 
+        index = rand() % inputSize
+        chromo[index] = not chromo[index]
+    
+
+    def WorstPriceImprover(chromo) 
+        for i in inputSize: 
+            if chromo[i] and input[i].price<input[index].price: 
+                index = i
+        weight = CalculateWeight(chromo)
+        weight -= m_vInput[index].weight
+        isImproved = false
+        for i in inputSize and not isImproved: 
+            if not chromo[i] and input[index].price <= input[i].price: 
+                posWeight = weight + m_vInput[i].weight
+                if posWeight <= m_uMaxWeight:
+                    chromo[index] = false
+                    chromo[i] = true
+                    isImproved = true
+
+    def BestPriceImprover(chromo) 
+        index = 0
+        for i in inputSize:
+            if chromo[i] and input[i].price > m_vInput[index].price:
+                index = i
+            
+        
+        weight = CalculateWeight(chromo)
+        weight -= m_vInput[index].weight
+        isImproved = false
+        for i in inputSize and not isImproved: 
+            if not chromo[i] and input[index].price <= input[i].price: 
+                posWeight = weight + m_vInput[i].weight
+                if posWeight <= m_uMaxWeight:
+                    chromo[index] = false
+                    chromo[i] = true
+                    isImproved = true
+                
+            
+        
+    

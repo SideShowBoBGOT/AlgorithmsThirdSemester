@@ -46,7 +46,8 @@ class TGeneticAlgorithm {
             // pick parent
             auto size = m_vGeneration.size();
             auto& parentOne = m_vGeneration[size - 1];
-            auto& parentTwo = m_vGeneration[size - 2];
+            auto index = rand() % (size - 1);
+            auto& parentTwo = m_vGeneration[index];
             // crossover
             auto chrome = Crossover(parentOne, parentTwo);
             if(!isValid(chrome)) continue;
