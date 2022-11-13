@@ -10,8 +10,9 @@ class TAntAlgorithm {
 	TAntAlgorithm()=delete;
 	virtual ~TAntAlgorithm()=default;
 	TAntAlgorithm(const std::vector<std::vector<unsigned>>& inputMat, unsigned totalAnts, unsigned eliteAnts,
-		unsigned alpha, unsigned beta, double density, unsigned iterations);
-	unsigned Solve();
+		unsigned alpha, unsigned beta, double density);
+	unsigned Solve(unsigned iterations);
+	void PrepareLMin(unsigned iterations);
 
 	protected:
 	struct SAnt;

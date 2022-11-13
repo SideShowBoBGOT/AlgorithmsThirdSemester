@@ -5,7 +5,7 @@
 
 
 void TAntAlgorithmTester::Test() {
-	m_uInputSize = 40;
+	m_uInputSize = 60;
 	m_uRangeStart = 1;
 	m_uRange = 40;
 	m_uTotalAnts = 10;
@@ -38,10 +38,11 @@ void TAntAlgorithmTester::DoTest() {
 	auto x = std::vector<double>();
 	auto y = std::vector<double>();
 	auto e = std::vector<wchar_t>();
+	auto alg = TAntAlgorithm(m_mInputMat, m_uTotalAnts, m_uEliteAnts, m_uAlpha, m_uBeta, m_dR);
 	for(unsigned i=m_uIterationsStart;i<m_uIterationsEnd;++i) {
 		x.push_back(i);
-		auto alg = TAntAlgorithm(m_mInputMat, m_uTotalAnts, m_uEliteAnts, m_uAlpha, m_uBeta, m_dR, i);
-		auto l = alg.Solve();
+		alg.PrepareLMin(i);
+		auto l = alg.Solve(i);
 		std::cout<<"Iterations "<<i<<"\t"<<"Length: "<<l<<"\t"<<"LMin: "<<alg.m_uLMin<<"\n";
 		y.push_back(l);
 	}

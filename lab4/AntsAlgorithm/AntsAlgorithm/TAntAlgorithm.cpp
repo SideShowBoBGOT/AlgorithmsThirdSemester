@@ -3,16 +3,11 @@
 #include <chrono>
 #include "TAntAlgorithm.h"
 TAntAlgorithm::TAntAlgorithm(const std::vector<std::vector<unsigned>>& inputMat, unsigned totalAnts, unsigned eliteAnts,
-	unsigned alpha, unsigned beta, double density, unsigned iterations): m_uTotalAnts{totalAnts},
-	m_uEliteAnts{eliteAnts}, m_uAlpha{alpha}, m_uBeta{beta}, m_uIterations{iterations} {
+	unsigned alpha, unsigned beta, double density): m_uTotalAnts{totalAnts},
+	m_uEliteAnts{eliteAnts}, m_uAlpha{alpha}, m_uBeta{beta}, m_dR{density} {
 	CreateNodes(inputMat);
 	CreateEdges(inputMat);
 	CreateAnts();
-	auto saveAlpha = alpha;
-	alpha = 0;
-	m_uLMin = Solve();
-	RenewPheromones();
-	alpha = saveAlpha;
 }
 
 void TAntAlgorithm::RenewPheromones() {
@@ -22,7 +17,6 @@ void TAntAlgorithm::RenewPheromones() {
 		}
 	}
 }
-
 
 void TAntAlgorithm::CreateNodes(const std::vector<std::vector<unsigned>>& inputMat) {
 	auto inputSize = static_cast<unsigned>(inputMat.size());
@@ -149,7 +143,6 @@ unsigned TAntAlgorithm::GetPathDistance(const Path& path) const {
 	return totalDistance;
 }
 
-
 TAntAlgorithm::Path TAntAlgorithm::GetShortestPath(const std::vector<Path>& paths) const {
 	return (*(std::min_element(paths.begin(), paths.end(), [this](const Path& one, const Path& two) {
 		auto firstDist = GetPathDistance(one);
@@ -186,7 +179,20 @@ void TAntAlgorithm::UpdatePheromones() {
 	}
 }
 
-unsigned TAntAlgorithm::Solve() {
+void TAntAlgorithm::PrepareLMin(unsigned iterations) {
+	auto saveBest = BestPath;
+	BestPath = Path();
+	auto saveAlpha = m_uAlpha;
+	m_uAlpha = 0;
+	m_uLMin = Solve(iterations);
+	RenewPheromones();
+	m_uAlpha = saveAlpha;
+	BestPath = saveBest;
+}
+
+
+unsigned TAntAlgorithm::Solve(unsigned iterations) {
+	m_uIterations = iterations;
 	auto paths = std::vector<Path>();
 	paths.reserve(m_vAnts.size());
 	for(unsigned i=0;i<m_uIterations;++i) {
