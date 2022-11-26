@@ -16,6 +16,8 @@ GameSingletons/TGameStateMachine.h
 Patterns/TSingleton.h
 VisualModels/TVisualObject.cpp
 VisualModels/TVisualObject.h
+VisualModels/TVisualParent.cpp
+VisualModels/TVisualParent.h
 GameSingletons/TTextureManager.cpp
 GameSingletons/TTextureManager.h
 GameSingletons/TInputHandler.cpp
@@ -24,15 +26,11 @@ States/TSettings.cpp
 States/TSettings.h
 States/TBoardScreen.cpp
 States/TBoardScreen.h
-BoardScreen/TPanel.cpp
-BoardScreen/TPanel.h
-        Other/NNFileSystem.cpp
-        Other/NNFileSystem.h
+Other/NNFileSystem.cpp
+Other/NNFileSystem.h
 BoardScreen/TCardsSelector.cpp
 BoardScreen/TCardsSelector.h
-BoardScreen/TAIPlayersPanel.h
-BoardScreen/TAIPlayersPanel.cpp
-BoardScreen/TVisualCard.cpp
+        BoardScreen/TVisualCard.cpp
 BoardScreen/TVisualCard.h
 GameSingletons/TLogic.cpp
 GameSingletons/TLogic.h

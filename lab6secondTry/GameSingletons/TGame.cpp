@@ -17,8 +17,8 @@
 bool TGame::Init(const char* name, int x, int y, int w, int h, int flags) {
 	if(SDL_Init(SDL_INIT_EVERYTHING)!=0) return false;
 	m_pWindow = SDL_CreateWindow(name, x, y, w, h, flags);
-	m_iWidth = w;
-	m_iHeight = h;
+	m_iScreenWidth = w;
+	m_iScreenHeight = h;
 	if(m_pWindow==nullptr) return false;
 	m_pRenderer = SDL_CreateRenderer(m_pWindow, -1, 0);
 	if(m_pWindow==nullptr) return false;

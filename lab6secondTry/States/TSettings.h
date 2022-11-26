@@ -5,41 +5,35 @@
 #ifndef UNTITLED1_TSETTINGS_H
 #define UNTITLED1_TSETTINGS_H
 
-#include "../VisualModels/IVisual.h"
-#include "../VisualModels/TVisualObject.h"
+#include "../VisualModels/TVisualParent.h"
 #include "../Logic/NNDifficulty.h"
 
-class TSettings : public IVisual {
+class TSettings : public TVisualParent {
 	public:
 	TSettings();
-	virtual ~TSettings() override;
+	virtual ~TSettings() override=default;
 	
 	public:
-	virtual void HandleEvents() override;
-	virtual void Clean() override;
-	virtual void Render() override;
-	
-	public:
-	TVisualObject* TwoPlayers = nullptr;
-	TVisualObject* ThreePlayers = nullptr;
-	TVisualObject* FourPlayers = nullptr;
-	TVisualObject* EasyButton = nullptr;
-	TVisualObject* MediumButton = nullptr;
-	TVisualObject* HardButton = nullptr;
-	TVisualObject* QuitButton = nullptr;
+	std::shared_ptr<TVisualObject> TwoPlayers = nullptr;
+	std::shared_ptr<TVisualObject> ThreePlayers = nullptr;
+	std::shared_ptr<TVisualObject> FourPlayers = nullptr;
+	std::shared_ptr<TVisualObject> EasyButton = nullptr;
+	std::shared_ptr<TVisualObject> MediumButton = nullptr;
+	std::shared_ptr<TVisualObject> HardButton = nullptr;
+	std::shared_ptr<TVisualObject> QuitButton = nullptr;
 	
 	public:
 	int GetNumberOfPlayers();
 	NDifficulty GetDifficulty();
 	
 	public:
-	TVisualObject* DifficultyLabel = nullptr;
-	TVisualObject* PlayersLabel = nullptr;
+	std::shared_ptr<TVisualObject> DifficultyLabel = nullptr;
+	std::shared_ptr<TVisualObject> PlayersLabel = nullptr;
 	
 	protected:
-	void OnQuitButton(TVisualObject* obj);
-	void OnSelectPlayers(TVisualObject* obj);
-	void OnSelectDifficulty(TVisualObject* obj);
+	void OnQuitButton(std::shared_ptr<TVisualObject> obj);
+	void OnSelectPlayers(std::shared_ptr<TVisualObject> obj);
+	void OnSelectDifficulty(std::shared_ptr<TVisualObject> obj);
 };
 
 

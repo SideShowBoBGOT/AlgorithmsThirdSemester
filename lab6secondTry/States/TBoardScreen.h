@@ -6,25 +6,36 @@
 #define UNTITLED1_TBOARDSCREEN_H
 
 #include <memory>
-#include "../VisualModels/TVisualObject.h"
+#include "../VisualModels/TVisualParent.h"
 
-class TBoardScreen : public IVisual {
+class TBoardScreen : public TVisualParent {
 	public:
 	TBoardScreen();
-	virtual ~TBoardScreen() override;
+	virtual ~TBoardScreen() override=default;
 	
 	public:
-	virtual void HandleEvents() override;
-	virtual void Clean() override;
-	virtual void Render() override;
+	std::shared_ptr<TVisualObject> PutButton 		= nullptr;
+	std::shared_ptr<TVisualObject> TakeButton 		= nullptr;
+	std::shared_ptr<TVisualObject> EndTurnButton 	= nullptr;
+	std::shared_ptr<TVisualObject> QuitButton 		= nullptr;
+	std::shared_ptr<TVisualObject> NextPageButton 	= nullptr;
+	std::shared_ptr<TVisualObject> PrevPageButton 	= nullptr;
+	std::shared_ptr<TVisualObject> DeselectButton 	= nullptr;
 	
 	public:
-	std::unique_ptr<TVisualObject> PutButton = nullptr;
-	std::unique_ptr<TVisualObject> TakeButton = nullptr;
-	std::unique_ptr<TVisualObject> EndTurnButton = nullptr;
-	std::unique_ptr<TVisualObject> QuitButton = nullptr;
+	std::shared_ptr<TVisualObject> AIOneLabel 		= nullptr;
+	std::shared_ptr<TVisualObject> AITwoLabel 		= nullptr;
+	std::shared_ptr<TVisualObject> AIThreeLabel 	= nullptr;
 	
 	
+	protected:
+	void OnPutButton(std::shared_ptr<TVisualObject> obj);
+	void OnTakeButton(std::shared_ptr<TVisualObject> obj);
+	void OnEndTurnButton(std::shared_ptr<TVisualObject> obj);
+	void OnQuitButton(std::shared_ptr<TVisualObject> obj);
+	void OnNextPageButton(std::shared_ptr<TVisualObject> obj);
+	void OnPrevPageButton(std::shared_ptr<TVisualObject> obj);
+	void OnDeselectButton(std::shared_ptr<TVisualObject> obj);
 };
 //101x144
 

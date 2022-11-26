@@ -21,6 +21,23 @@
 	DECL(UserData, std::string, s);
 #undef DECL
 
+
+#define INIT_HANDLER(button, type) \
+	void TVisualObject::On##button##type(std::function<void(std::shared_ptr<TVisualObject> obj)>&& func) { \
+		On##button##type##Handler = std::move(func);\
+	} \
+	void TVisualObject::On##button##type() { \
+		if(On##button##type##Handler) On##button##type##Handler(GetThis());\
+	}
+	
+	INIT_HANDLER(Left, Down);
+	INIT_HANDLER(Right, Down);
+	INIT_HANDLER(Middle, Down);
+	INIT_HANDLER(Left, Up);
+	INIT_HANDLER(Right, Up);
+	INIT_HANDLER(Middle, Up);
+#undef INIT_HANDLER
+
 #define BOOL_STATE(xx) \
 	void TVisualObject::xx(bool vv) { \
         m_b##xx = vv;\
@@ -36,6 +53,10 @@
 	BOOL_STATE(Selected);
 	BOOL_STATE(Over);
 #undef BOOL_STATE
+
+std::shared_ptr<TVisualObject> TVisualObject::GetThis() {
+	return std::shared_ptr<TVisualObject>(this);
+}
 
 void TVisualObject::Render() {
 	auto str = m_mMap[m_xState];

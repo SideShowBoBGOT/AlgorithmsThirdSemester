@@ -7,52 +7,35 @@
 #include "../GameSingletons/TTextureManager.h"
 #include "../Other/NNFileSystem.h"
 
+static int constexpr s_iButtonWidth = 158;
+static int constexpr s_iButtonHeigth = 35;
 static std::string s_sSettingsPath = "Settings/";
 
-
-void TSettings::OnSelectPlayers(TVisualObject* obj) {
-	for(auto& btn : {TwoPlayers, ThreePlayers, FourPlayers}) {
-		btn->Selected(btn==obj);
-	}
-}
-
-void TSettings::OnSelectDifficulty(TVisualObject* obj) {
-	for(auto& btn : {EasyButton, MediumButton, HardButton}) {
-		btn->Selected(btn==obj);
-	}
-}
-
-void TSettings::OnQuitButton(TVisualObject* obj) {
-	TGameStateMachine::Get()->PopState();
-}
-
 TSettings::TSettings() {
-	auto buttonWidth = NNFileSystem::ButtonWidth();
-	auto buttonHeigth = NNFileSystem::ButtonHeight();
-	auto center = TGame::Get()->ScreenWidth() / 2 - buttonWidth / 2;
-	auto middle = TGame::Get()->ScreenHeight() / 2 - buttonHeigth / 2;
+	auto center = TGame::Get()->ScreenWidth() / 2 - s_iButtonWidth / 2;
+	auto middle = TGame::Get()->ScreenHeight() / 2 - s_iButtonHeigth / 2;
 	
 	#define INIT_GENERAL(xx, dx, dy) \
-    	xx = new TVisualObject();\
+    	xx = CreateObject();\
 		xx->Dx(dx);\
 		xx->Dy(dy);\
 		xx->Sx(0);\
 		xx->Sx(0);\
-		xx->Width(buttonWidth);\
-		xx->Height(buttonHeigth);\
+		xx->Width(s_iButtonWidth);\
+		xx->Height(s_iButtonHeigth);\
 		xx->Renderer(TGame::Get()->Renderer());\
 	 	TTextureManager::Get()->Load(NNFileSystem::AssetsImagePath(s_sSettingsPath + #xx+"/"+"Normal").c_str(), #xx"Normal", TGame::Get()->Renderer());\
 		xx->StateTexture(NState::Normal, #xx"Normal");
 	
-		INIT_GENERAL(PlayersLabel, center - buttonWidth / 2 - buttonWidth, middle);
-		INIT_GENERAL(TwoPlayers, center - buttonWidth / 2, middle);
-		INIT_GENERAL(ThreePlayers, center + buttonWidth / 2, middle);
-		INIT_GENERAL(FourPlayers, center + buttonWidth / 2 + buttonWidth, middle);
-		INIT_GENERAL(DifficultyLabel, center -  buttonWidth / 2 - buttonWidth, middle + buttonHeigth);
-		INIT_GENERAL(EasyButton, center - buttonWidth / 2, middle + buttonHeigth);
-		INIT_GENERAL(MediumButton, center + buttonWidth / 2, middle + buttonHeigth);
-		INIT_GENERAL(HardButton, center +  buttonWidth / 2 + buttonWidth, middle + buttonHeigth);
-		INIT_GENERAL(QuitButton, center, middle + 2 * buttonHeigth);
+		INIT_GENERAL(PlayersLabel, center - s_iButtonWidth / 2 - s_iButtonWidth, middle);
+		INIT_GENERAL(TwoPlayers, center - s_iButtonWidth / 2, middle);
+		INIT_GENERAL(ThreePlayers, center + s_iButtonWidth / 2, middle);
+		INIT_GENERAL(FourPlayers, center + s_iButtonWidth / 2 + s_iButtonWidth, middle);
+		INIT_GENERAL(DifficultyLabel, center -  s_iButtonWidth / 2 - s_iButtonWidth, middle + s_iButtonHeigth);
+		INIT_GENERAL(EasyButton, center - s_iButtonWidth / 2, middle + s_iButtonHeigth);
+		INIT_GENERAL(MediumButton, center + s_iButtonWidth / 2, middle + s_iButtonHeigth);
+		INIT_GENERAL(HardButton, center +  s_iButtonWidth / 2 + s_iButtonWidth, middle + s_iButtonHeigth);
+		INIT_GENERAL(QuitButton, center, middle + 2 * s_iButtonHeigth);
 	#undef INIT_GENERAL
 	
 	#define INIT_BUTTON(xx, userData, func) \
@@ -64,13 +47,13 @@ TSettings::TSettings() {
 		xx->OnLeftDown(func);                  \
 		xx->UserData(userData);
 		
-		INIT_BUTTON(TwoPlayers, "2", [this](TVisualObject* obj) { OnSelectPlayers(obj); });
-		INIT_BUTTON(ThreePlayers, "3", [this](TVisualObject* obj) { OnSelectPlayers(obj); });
-		INIT_BUTTON(FourPlayers, "4", [this](TVisualObject* obj) { OnSelectPlayers(obj); });
-		INIT_BUTTON(EasyButton, "1", [this](TVisualObject* obj) { OnSelectDifficulty(obj); });
-		INIT_BUTTON(MediumButton, "2", [this](TVisualObject* obj) { OnSelectDifficulty(obj); });
-		INIT_BUTTON(HardButton, "3", [this](TVisualObject* obj) { OnSelectDifficulty(obj); });
-		INIT_BUTTON(QuitButton, "", [this](TVisualObject* obj) { OnQuitButton(obj); obj->Selected(false); });
+		INIT_BUTTON(TwoPlayers, "2", [this](std::shared_ptr<TVisualObject> obj) { OnSelectPlayers(obj); });
+		INIT_BUTTON(ThreePlayers, "3", [this](std::shared_ptr<TVisualObject> obj) { OnSelectPlayers(obj); });
+		INIT_BUTTON(FourPlayers, "4", [this](std::shared_ptr<TVisualObject> obj) { OnSelectPlayers(obj); });
+		INIT_BUTTON(EasyButton, "1", [this](std::shared_ptr<TVisualObject> obj) { OnSelectDifficulty(obj); });
+		INIT_BUTTON(MediumButton, "2", [this](std::shared_ptr<TVisualObject> obj) { OnSelectDifficulty(obj); });
+		INIT_BUTTON(HardButton, "3", [this](std::shared_ptr<TVisualObject> obj) { OnSelectDifficulty(obj); });
+		INIT_BUTTON(QuitButton, "", [this](std::shared_ptr<TVisualObject> obj) { OnQuitButton(obj); obj->Selected(false); });
 	#undef INIT_BUTTON
 	
 	#define INIT_LABEL(xx) \
@@ -84,21 +67,6 @@ TSettings::TSettings() {
 	
 	OnSelectPlayers(TwoPlayers);
 	OnSelectDifficulty(MediumButton);
-}
-
-TSettings::~TSettings() {
-	delete TwoPlayers;
-	delete ThreePlayers;
-	delete FourPlayers;
-	
-	delete EasyButton;
-	delete MediumButton;
-	delete HardButton;
-	
-	delete DifficultyLabel;
-	delete PlayersLabel;
-	
-	delete QuitButton;
 }
 
 int TSettings::GetNumberOfPlayers() {
@@ -119,51 +87,20 @@ NDifficulty TSettings::GetDifficulty() {
 	return NDifficulty::Medium;
 }
 
-
-
-void TSettings::Clean() {
-	TwoPlayers->Clean();
-	ThreePlayers->Clean();
-	FourPlayers->Clean();
-	
-	EasyButton->Clean();
-	MediumButton->Clean();
-	HardButton->Clean();
-	
-	DifficultyLabel->Clean();
-	PlayersLabel->Clean();
-	
-	QuitButton->Clean();
+void TSettings::OnSelectPlayers(std::shared_ptr<TVisualObject> obj) {
+	for(auto& btn : {TwoPlayers, ThreePlayers, FourPlayers}) {
+		btn->Selected(btn==obj);
+	}
 }
 
-void TSettings::HandleEvents() {
-	TwoPlayers->HandleEvents();
-	ThreePlayers->HandleEvents();
-	FourPlayers->HandleEvents();
-	
-	EasyButton->HandleEvents();
-	MediumButton->HandleEvents();
-	HardButton->HandleEvents();
-	
-	DifficultyLabel->HandleEvents();
-	PlayersLabel->HandleEvents();
-	
-	QuitButton->HandleEvents();
+void TSettings::OnSelectDifficulty(std::shared_ptr<TVisualObject> obj) {
+	for(auto& btn : {EasyButton, MediumButton, HardButton}) {
+		btn->Selected(btn==obj);
+	}
 }
 
-void TSettings::Render() {
-	TwoPlayers->Render();
-	ThreePlayers->Render();
-	FourPlayers->Render();
-	
-	EasyButton->Render();
-	MediumButton->Render();
-	HardButton->Render();
-	
-	DifficultyLabel->Render();
-	PlayersLabel->Render();
-	
-	QuitButton->Render();
+void TSettings::OnQuitButton(std::shared_ptr<TVisualObject> obj) {
+	TGameStateMachine::Get()->PopState();
 }
 
 

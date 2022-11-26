@@ -8,24 +8,22 @@
 #include "../GameSingletons/TLogic.h"
 #include "../Other/NNFileSystem.h"
 
-#include <iostream>
-
+static int constexpr s_iButtonWidth = 158;
+static int constexpr s_iButtonHeigth = 35;
 static std::string s_sMainMenuPath = "MainMenu/";
 
 TMainMenu::TMainMenu() {
-	auto buttonWidth = NNFileSystem::ButtonWidth();
-	auto buttonHeigth = NNFileSystem::ButtonHeight();
-	auto center = TGame::Get()->ScreenWidth() / 2 - buttonWidth / 2;
-	auto middle = TGame::Get()->ScreenHeight() / 2 - buttonHeigth / 2;
+	auto center = TGame::Get()->ScreenWidth() / 2 - s_iButtonWidth / 2;
+	auto middle = TGame::Get()->ScreenHeight() / 2 - s_iButtonHeigth / 2;
 
 	#define INIT_BUTTON(xx, dx, dy, func) \
-    	xx = new TVisualObject();\
+    	xx = CreateObject();\
 		xx->Dx(dx);\
 		xx->Dy(dy);\
 		xx->Sx(0);\
 		xx->Sx(0);\
-		xx->Width(buttonWidth);\
-		xx->Height(buttonHeigth);\
+		xx->Width(s_iButtonWidth);\
+		xx->Height(s_iButtonHeigth);\
 		xx->Renderer(TGame::Get()->Renderer()); \
         TTextureManager::Get()->Load(NNFileSystem::AssetsImagePath(s_sMainMenuPath+#xx+"/"+"Normal").c_str(), #xx"Normal", TGame::Get()->Renderer());\
         TTextureManager::Get()->Load(NNFileSystem::AssetsImagePath(s_sMainMenuPath+#xx+"/"+"Over").c_str(), #xx"Over", TGame::Get()->Renderer());\
@@ -35,37 +33,13 @@ TMainMenu::TMainMenu() {
 		xx->StateTexture(NState::OverSelected, #xx"Over");\
 		xx->OnLeftDown(func);
 		
-		INIT_BUTTON(StartButton, center, middle, [this](TVisualObject* obj) { OnStartButton(obj); });
-		INIT_BUTTON(SettingsButton, center, middle + buttonHeigth, [this](TVisualObject* obj) { OnSettigsButton(obj); });
-		INIT_BUTTON(QuitButton, center, middle + 2 * buttonHeigth, [this](TVisualObject* obj) { OnQuitButton(obj); });
+		INIT_BUTTON(StartButton, center, middle, [this](std::shared_ptr<TVisualObject> obj) { OnStartButton(obj); });
+		INIT_BUTTON(SettingsButton, center, middle + s_iButtonHeigth, [this](std::shared_ptr<TVisualObject> obj) { OnSettigsButton(obj); });
+		INIT_BUTTON(QuitButton, center, middle + 2 * s_iButtonHeigth, [this](std::shared_ptr<TVisualObject> obj) { OnQuitButton(obj); });
 	#undef INIT_BUTTON
 }
 
-TMainMenu::~TMainMenu() {
-	delete StartButton;
-	delete SettingsButton;
-	delete QuitButton;
-}
-
-void TMainMenu::HandleEvents() {
-	StartButton->HandleEvents();
-	SettingsButton->HandleEvents();
-	QuitButton->HandleEvents();
-}
-
-void TMainMenu::Clean() {
-	StartButton->Clean();
-	SettingsButton->Clean();
-	QuitButton->Clean();
-}
-
-void TMainMenu::Render() {
-	StartButton->Render();
-	SettingsButton->Render();
-	QuitButton->Render();
-}
-
-void TMainMenu::OnStartButton(TVisualObject* obj) {
+void TMainMenu::OnStartButton(std::shared_ptr<TVisualObject> obj) {
 	auto& settings = TGame::Get()->Settings;
 	auto number = settings->GetNumberOfPlayers();
 	auto diff = settings->GetDifficulty();
@@ -74,11 +48,11 @@ void TMainMenu::OnStartButton(TVisualObject* obj) {
 	TGameStateMachine::Get()->PushState(TGame::Get()->BoardScreen);
 }
 
-void TMainMenu::OnSettigsButton(TVisualObject* obj) {
+void TMainMenu::OnSettigsButton(std::shared_ptr<TVisualObject> obj) {
 	TGameStateMachine::Get()->PushState(TGame::Get()->Settings);
 }
 
-void TMainMenu::OnQuitButton(TVisualObject* obj) {
+void TMainMenu::OnQuitButton(std::shared_ptr<TVisualObject> obj) {
 	TGameStateMachine::Get()->PopState();
 }
 

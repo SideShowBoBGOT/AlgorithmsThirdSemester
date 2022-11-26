@@ -8,19 +8,11 @@
 #include <functional>
 #include <string>
 #include <map>
+#include <memory>
 #include <SDL2/SDL.h>
 #include "IVisual.h"
 
 class TVisualObject : public IVisual {
-	public:
-	TVisualObject()=default;
-	virtual ~TVisualObject()=default;
-	
-	public:
-	virtual void HandleEvents();
-	virtual void Render();
-	virtual void Clean();
-	
 	public:
 	enum class NState {
 		Normal=0,
@@ -28,6 +20,23 @@ class TVisualObject : public IVisual {
 		Over=2,
 		OverSelected=Selected | Over,
 	};
+
+	public:
+	TVisualObject()=default;
+	virtual ~TVisualObject() override=default;
+	
+	public:
+	virtual void HandleEvents() override;
+	virtual void Render() override;
+	virtual void Clean() override;
+	
+	public:
+	virtual void StateTexture(NState state, std::string str);
+	
+	public:
+	virtual std::shared_ptr<TVisualObject> GetThis();
+	
+	
 	
 	#define DECL(xx, type, prefix, val) \
 		protected:            \
@@ -52,15 +61,11 @@ class TVisualObject : public IVisual {
 	
 	#define INIT_HANDLER(button, type) \
     	private:\
-		std::function<void(TVisualObject* obj)> On##button##type##Handler = nullptr; \
+		std::function<void(std::shared_ptr<TVisualObject> obj)> On##button##type##Handler = nullptr; \
                                     \
 		public:\
-		virtual void On##button##type(std::function<void(TVisualObject* obj)> func) { \
-        	On##button##type##Handler = func;\
-		} \
-		virtual void On##button##type() { \
-			if(On##button##type##Handler) On##button##type##Handler(this);\
-		}
+		virtual void On##button##type(std::function<void(std::shared_ptr<TVisualObject> obj)>&& func);\
+		virtual void On##button##type();
 		
 		INIT_HANDLER(Left, Down);
 		INIT_HANDLER(Right, Down);
@@ -70,8 +75,7 @@ class TVisualObject : public IVisual {
 		INIT_HANDLER(Middle, Up);
 	#undef INIT_HANDLER
 	
-	public:
-	virtual void StateTexture(NState state, std::string str);
+	
 	
 	protected:
 	std::map<NState, std::string> m_mMap = 	{
