@@ -4,5 +4,5 @@
 
 #include "TSettings.h"
 
-namespace Logic {
-} // Logic
+namespace Core {
+} // Core

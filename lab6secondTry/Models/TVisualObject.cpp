@@ -18,6 +18,7 @@
 	DECL(Height, int, i);
 	DECL(Renderer, SDL_Renderer*, p);
 	DECL(State, NState , x);
+	DECL(UserData, std::string, s);
 #undef DECL
 
 #define BOOL_STATE(xx) \

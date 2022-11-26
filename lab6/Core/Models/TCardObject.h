@@ -2,7 +2,7 @@
 #define LAB6_TCARDOBJECT_H
 #include "NNCardGroup.h"
 #include "NNCardValue.h"
-namespace Logic {
+namespace Core {
 	class TCardObject {
 		public:
 		TCardObject() = default;

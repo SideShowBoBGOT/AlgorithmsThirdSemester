@@ -3,3 +3,7 @@
 //
 
 #include "TAI.h"
+
+void TAI::DpTurn() {
+
+}

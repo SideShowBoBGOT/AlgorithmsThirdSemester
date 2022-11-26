@@ -7,7 +7,7 @@
 #include "TBoardObject.h"
 #include "../Config/TConfig.h"
 
-namespace Logic {
+namespace Core {
 	void TBoardObject::OnGameBegin() {
 	
 	}
@@ -51,4 +51,28 @@ namespace Logic {
 		return m_vSparseCards;
 	}
 
-} // Logic
+	void TBoardObject::GivePlayerSparseCards(const std::shared_ptr<TPlayerObject>& player) {
+		if(m_vSparseCards.empty()) return;
+	
+		auto cardsPerPlayer = TConfig::Get()->CardsPerPlayer();
+		auto& pcards = player->Cards();
+		while(pcards.size()<cardsPerPlayer and not m_vSparseCards.empty()) {
+			pcards.push_back(m_vSparseCards.back());
+			m_vSparseCards.pop_back();
+		}
+	}
+	
+	void TBoardObject::GiveThreeCardsToCurrentPlayer(const std::shared_ptr<TPlayerObject>& playerObject, const std::vector<std::shared_ptr<TCardObject>>& cards) {
+		auto& c = playerObject->Cards();
+		for(const auto& card : cards) {
+			c.push_back(card);
+		}
+	}
+	
+	void TBoardObject::PutCardsIntoPlay(const std::vector<std::shared_ptr<TCardObject>>& cards) {
+		for(const auto& card : cards) {
+			m_vPlayCards.push_back(card);
+		}
+	}
+
+} // Core

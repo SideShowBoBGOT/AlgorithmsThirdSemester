@@ -1,5 +1,5 @@
 #include "TCardObject.h"
-namespace Logic {
+namespace Core {
 	TCardObject::TCardObject(NCardGroup group, NCardValue value) {
 		m_xGroup = group;
 		m_xValue = value;

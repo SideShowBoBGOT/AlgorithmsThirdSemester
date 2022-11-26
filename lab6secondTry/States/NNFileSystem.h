@@ -7,20 +7,13 @@
 
 #include <string>
 
-static std::string bmp = ".bmp";
 
 namespace NNFileSystem {
-	inline std::string AssetsImagePath(std::string asset) {
-		return "../Assets/" + asset + bmp;
-	}
-	inline int ButtonWidth() {
-		return 158;
-	}
-	
-	inline int ButtonHeight() {
-		return 35;
-	}
-};
-
+	std::string AssetsImagePath(std::string asset);
+	int ButtonWidth();
+	int ButtonHeight();
+	int CardWidth();
+	int CardHeigth();
+}
 
 #endif //UNTITLED1_NNFILESYSTEM_H

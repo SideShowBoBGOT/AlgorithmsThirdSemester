@@ -7,7 +7,8 @@
 
 
 class TGameState {
-
+	public:
+	
 };
 
 

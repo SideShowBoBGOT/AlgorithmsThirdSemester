@@ -7,7 +7,11 @@
 
 
 class TAI {
-
+	public:
+	TAI()=default;
+	virtual ~TAI()=default;
+	
+	virtual void DpTurn();
 };
 
 

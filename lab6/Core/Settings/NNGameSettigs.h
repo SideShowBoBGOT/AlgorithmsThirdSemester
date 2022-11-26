@@ -5,7 +5,7 @@
 #ifndef LAB6_NNGAMESETTIGS_H
 #define LAB6_NNGAMESETTIGS_H
 
-namespace Logic {
+namespace Core {
 	namespace NNGameSettings {
 		enum class NGameSettings {
 			Difficulty=0,

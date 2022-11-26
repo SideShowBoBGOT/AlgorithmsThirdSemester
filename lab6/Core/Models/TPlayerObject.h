@@ -9,7 +9,7 @@
 #include <memory>
 #include "TCardObject.h"
 
-namespace Logic {
+namespace Core {
 	
 	class TPlayerObject {
 		public:
@@ -21,6 +21,6 @@ namespace Logic {
 		std::vector<std::shared_ptr<TCardObject>> m_vCards;
 	};
 	
-} // Logic
+} // Core
 
 #endif //LAB6_TPLAYEROBJECT_H

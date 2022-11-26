@@ -23,6 +23,7 @@ bool TGame::Init(const char* name, int x, int y, int w, int h, int flags) {
 	SDL_SetRenderDrawColor(m_pRenderer, 102, 102, 102, 1);
 	MainMenu = new TMainMenu();
 	Settings = new TSettings();
+	BoardScreen = new TBoardScreen();
 	TGameStateMachine::Get()->PushState(MainMenu);
 	TInputHandler::Get();
 	m_bRunning = true;

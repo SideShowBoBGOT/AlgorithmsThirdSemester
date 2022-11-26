@@ -22,11 +22,22 @@ class TSettings : public IGameState {
 	TVisualObject* TwoPlayers = nullptr;
 	TVisualObject* ThreePlayers = nullptr;
 	TVisualObject* FourPlayers = nullptr;
+	TVisualObject* EasyButton = nullptr;
+	TVisualObject* MediumButton = nullptr;
+	TVisualObject* HardButton = nullptr;
 	TVisualObject* QuitButton = nullptr;
 	
 	public:
+	int GetSelectedOption();
+	
+	public:
+	TVisualObject* DifficultyLabel = nullptr;
+	TVisualObject* PlayersLabel = nullptr;
+	
+	protected:
 	void OnQuitButton(TVisualObject* obj);
 	void OnSelectPlayers(TVisualObject* obj);
+	void OnSelectDifficulty(TVisualObject* obj);
 };
 
 

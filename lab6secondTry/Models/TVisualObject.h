@@ -46,6 +46,7 @@ class TVisualObject {
 		DECL(State, NState, x, NState::Normal);
 		DECL(Selected, bool, b, false);
 		DECL(Over, bool, b, false);
+		DECL(UserData, std::string, s, "");
 	#undef DECL
 	
 	#define INIT_HANDLER(button, type) \

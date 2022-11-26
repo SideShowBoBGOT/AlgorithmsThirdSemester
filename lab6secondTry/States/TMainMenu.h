@@ -26,15 +26,15 @@ class TMainMenu : public IGameState {
 	virtual void Clean() override;
 	virtual void Render() override;
 	
+	public:
+	TVisualObject* StartButton = nullptr;
+	TVisualObject* SettingsButton = nullptr;
+	TVisualObject* QuitButton = nullptr;
+	
 	protected:
 	void OnStartButton(TVisualObject* obj);
 	void OnSettigsButton(TVisualObject* obj);
 	void OnQuitButton(TVisualObject* obj);
-	
-	protected:
-	TVisualObject* m_pStartButton = nullptr;
-	TVisualObject* m_pSettingsButton = nullptr;
-	TVisualObject* m_pQuitButton = nullptr;
 };
 
 

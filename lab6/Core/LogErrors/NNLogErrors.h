@@ -5,7 +5,7 @@
 #ifndef LAB6_NNLOGERRORS_H
 #define LAB6_NNLOGERRORS_H
 
-namespace Logic {
+namespace Core {
 	namespace NNLogErrors {
 		#define _ERROR(x) throw x
 		#define _LOG(x) printf_s(x)

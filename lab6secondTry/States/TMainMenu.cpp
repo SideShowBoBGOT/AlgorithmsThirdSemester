@@ -18,21 +18,21 @@ TMainMenu::TMainMenu() {
 	auto middle = TGame::Get()->Height() / 2 - buttonHeigth / 2;
 
 	#define INIT_BUTTON(xx, dx, dy, func) \
-    	m_p##xx = new TVisualObject();\
-		m_p##xx->Dx(dx);\
-		m_p##xx->Dy(dy);\
-		m_p##xx->Sx(0);\
-		m_p##xx->Sx(0);\
-		m_p##xx->Width(buttonWidth);\
-		m_p##xx->Height(buttonHeigth);\
-		m_p##xx->Renderer(TGame::Get()->Renderer()); \
+    	xx = new TVisualObject();\
+		xx->Dx(dx);\
+		xx->Dy(dy);\
+		xx->Sx(0);\
+		xx->Sx(0);\
+		xx->Width(buttonWidth);\
+		xx->Height(buttonHeigth);\
+		xx->Renderer(TGame::Get()->Renderer()); \
         TTextureManager::Get()->Load(NNFileSystem::AssetsImagePath(s_sMainMenuPath+#xx+"/"+"Normal").c_str(), #xx"Normal", TGame::Get()->Renderer());\
         TTextureManager::Get()->Load(NNFileSystem::AssetsImagePath(s_sMainMenuPath+#xx+"/"+"Over").c_str(), #xx"Over", TGame::Get()->Renderer());\
-		m_p##xx->StateTexture(NState::Normal, #xx"Normal");\
-		m_p##xx->StateTexture(NState::Over, #xx"Over");\
-		m_p##xx->StateTexture(NState::Selected, #xx"Normal");\
-		m_p##xx->StateTexture(NState::OverSelected, #xx"Over");\
-		m_p##xx->OnLeftDown(func);
+		xx->StateTexture(NState::Normal, #xx"Normal");\
+		xx->StateTexture(NState::Over, #xx"Over");\
+		xx->StateTexture(NState::Selected, #xx"Normal");\
+		xx->StateTexture(NState::OverSelected, #xx"Over");\
+		xx->OnLeftDown(func);
 		
 		INIT_BUTTON(StartButton, center, middle, [this](TVisualObject* obj) { OnStartButton(obj); });
 		INIT_BUTTON(SettingsButton, center, middle + buttonHeigth, [this](TVisualObject* obj) { OnSettigsButton(obj); });
@@ -41,31 +41,31 @@ TMainMenu::TMainMenu() {
 }
 
 TMainMenu::~TMainMenu() {
-	delete m_pStartButton;
-	delete m_pSettingsButton;
-	delete m_pQuitButton;
+	delete StartButton;
+	delete SettingsButton;
+	delete QuitButton;
 }
 
 void TMainMenu::HandleEvents() {
-	m_pStartButton->HandleEvents();
-	m_pSettingsButton->HandleEvents();
-	m_pQuitButton->HandleEvents();
+	StartButton->HandleEvents();
+	SettingsButton->HandleEvents();
+	QuitButton->HandleEvents();
 }
 
 void TMainMenu::Clean() {
-	m_pStartButton->Clean();
-	m_pSettingsButton->Clean();
-	m_pQuitButton->Clean();
+	StartButton->Clean();
+	SettingsButton->Clean();
+	QuitButton->Clean();
 }
 
 void TMainMenu::Render() {
-	m_pStartButton->Draw();
-	m_pSettingsButton->Draw();
-	m_pQuitButton->Draw();
+	StartButton->Draw();
+	SettingsButton->Draw();
+	QuitButton->Draw();
 }
 
 void TMainMenu::OnStartButton(TVisualObject* obj) {
-	std::cout<<"Start"<<"\n";
+	TGameStateMachine::Get()->PushState(TGame::Get()->BoardScreen);
 }
 
 void TMainMenu::OnSettigsButton(TVisualObject* obj) {

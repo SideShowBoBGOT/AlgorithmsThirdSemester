@@ -1,6 +1,6 @@
 #ifndef LAB6_NNCARDVALUE_H
 #define LAB6_NNCARDVALUE_H
-namespace Logic {
+namespace Core {
 	namespace NNCardValue {
 		enum class NCardValue {
 			None = 0,

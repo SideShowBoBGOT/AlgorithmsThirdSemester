@@ -4,8 +4,8 @@
 
 #include "TPlayerObject.h"
 
-namespace Logic {
+namespace Core {
 	std::vector<std::shared_ptr<TCardObject>>& TPlayerObject::Cards() {
 		return m_vCards;
 	}
-} // Logic
+} // Core

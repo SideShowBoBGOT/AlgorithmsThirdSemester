@@ -2,30 +2,33 @@
 // Created by choleraplague on 14.11.22.
 //
 
-#ifndef LAB6_TBOARDCONTROLLER_H
-#define LAB6_TBOARDCONTROLLER_H
+#ifndef LAB6_TINPUTHANDLER_H
+#define LAB6_TINPUTHANDLER_H
 
-#include "../Models/TBoardObject.h"
 #include "../Patterns/TSingleton.h"
 
 namespace Core {
 	
-	class TBoardController : public TSingleton<TBoardController> {
+	class TInputHandler : public TSingleton<TInputHandler> {
 		public:
-		TBoardController()=default;
-		TBoardController(const std::shared_ptr<TBoardObject>& board);
-		virtual ~TBoardController() override;
+		TInputHandler()=default;
+		virtual ~TInputHandler() override;
 		
 		public:
-		virtual void OnEnterFrame();
+		void LockUserInput();
+		void UnlockUserInput();
 		
 		public:
-		std::shared_ptr<TBoardObject>& Board();
+		void
+		bool OnMouseRight();
+		
+		public:
 		
 		protected:
-		std::shared_ptr<TBoardObject> m_pBoard = nullptr;
+		bool m_bIsUserInput = true;
 	};
+	
 	
 } // Core
 
-#endif //LAB6_TBOARDCONTROLLER_H
+#endif //LAB6_TINPUTHANDLER_H

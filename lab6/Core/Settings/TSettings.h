@@ -5,7 +5,7 @@
 #ifndef LAB6_TSETTINGS_H
 #define LAB6_TSETTINGS_H
 
-namespace Logic {
+namespace Core {
 	
 	class TSettings {
 		public:
@@ -15,6 +15,6 @@ namespace Logic {
 
 	};
 	
-} // Logic
+} // Core
 
 #endif //LAB6_TSETTINGS_H

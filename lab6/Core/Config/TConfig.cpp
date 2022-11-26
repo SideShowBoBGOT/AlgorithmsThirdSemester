@@ -6,7 +6,7 @@
 
 #include "TConfig.h"
 
-namespace Logic {
+namespace Core {
 	
 	static const std::string s_sConfigPath = "";
 	
@@ -18,4 +18,4 @@ namespace Logic {
 	void TConfig::ReadConfig() {
 	
 	}
-} // Logic
+} // Core

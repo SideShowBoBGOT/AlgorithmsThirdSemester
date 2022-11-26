@@ -8,13 +8,12 @@
 
 #include "TPlayerObject.h"
 
-namespace Logic {
+namespace Core {
 	
 	class TBoardObject {
 		public:
 		TBoardObject()=default;
 		virtual ~TBoardObject()=default;
-		
 		
 		public:
 		virtual std::shared_ptr<TPlayerObject>& CurrentPlayer();
@@ -24,7 +23,10 @@ namespace Logic {
 		virtual std::vector<std::shared_ptr<TCardObject>>&  PlayCards();
 		virtual std::vector<std::shared_ptr<TCardObject>>&  SparseCards();
 		
-
+		public:
+		virtual void GivePlayerSparseCards(const std::shared_ptr<TPlayerObject>& player);
+		virtual void GiveThreeCardsToCurrentPlayer(const std::shared_ptr<TPlayerObject>& playerObject, const std::vector<std::shared_ptr<TCardObject>>& cards);
+		virtual void PutCardsIntoPlay(const std::vector<std::shared_ptr<TCardObject>>& cards);
 		
 		public:
 		virtual void OnGameBegin();
@@ -37,7 +39,6 @@ namespace Logic {
 		protected:
 		virtual std::shared_ptr<TPlayerObject> PickPlayerToGiveCards();
 		virtual std::shared_ptr<TPlayerObject> PickNextPlayerToPlay();
-		virtual void GivePlayerSparseCards(const std::shared_ptr<TPlayerObject>& player);
 		virtual std::shared_ptr<TPlayerObject> PickPlayerToPlayFirst();
 		
 		protected:
@@ -52,6 +53,6 @@ namespace Logic {
 		std::vector<std::shared_ptr<TCardObject>> m_vAllCards;
 	};
 	
-} // Logic
+} // Core
 
 #endif //LAB6_TBOARDOBJECT_H

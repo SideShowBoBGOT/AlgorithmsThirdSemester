@@ -1,0 +1,19 @@
+# ninja log v5
+1	18	1668499526656052131	CMakeFiles/lab6.dir/logic/TCardObject.cpp.o	147ab0e51fa2f06d
+885	1036	1668703002664026375	lab6	842768ae9b8e8c42
+1	14	1668499507128051678	CMakeFiles/lab6.dir/logic/Settings/TSettings.cpp.o	77e8af61d858bb32
+2	932	1668690498972118673	CMakeFiles/lab6.dir/Core/Controllers/TBoardController.cpp.o	20e973a8406aab9b
+3	63	1668690498100118653	CMakeFiles/lab6.dir/Core/AI/TAI.cpp.o	293a0190377daec3
+1	667	1668690498704118667	CMakeFiles/lab6.dir/Core/Config/TConfig.cpp.o	80202db42bfe0a1c
+2	885	1668703002512026371	CMakeFiles/lab6.dir/Core/TCoreInstance.cpp.o	ca46238b03f8e0e8
+0	24	1668757321526129582	build.ninja	884be122e0027b85
+3	55	1668690498092118653	CMakeFiles/lab6.dir/Core/Settings/TSettings.cpp.o	c42cf7f388902dcd
+1	1149	1668690499188118678	CMakeFiles/lab6.dir/Core/Models/TBoardObject.cpp.o	23e0668fce5a7122
+2	835	1668703002464026370	CMakeFiles/lab6.dir/main.cpp.o	3c0363992f9b20d2
+1	18	1668499490252051287	CMakeFiles/lab6.dir/logic/TInputController.cpp.o	9883eb267b6176e5
+0	69	1668690498108118653	CMakeFiles/lab6.dir/Core/Models/TCardObject.cpp.o	49aad302fc4ce952
+2	795	1668690498832118670	CMakeFiles/lab6.dir/Core/Models/TPlayerObject.cpp.o	3f833a26f3262337
+1	407	1668499527044052140	CMakeFiles/lab6.dir/logic/TPlayerObject.cpp.o	9086affef8a419a7
+2	18	1668499490252051287	CMakeFiles/lab6.dir/logic/TLogicInstance.cpp.o	587853ea7a882515
+1	373	1668501931492107882	CMakeFiles/lab6.dir/logic/TConfig.cpp.o	ac8838ae402af3ea
+1	624	1668501931744107888	CMakeFiles/lab6.dir/logic/TBoardObject.cpp.o	54e77a8ce86ca0e1

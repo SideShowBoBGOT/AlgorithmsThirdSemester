@@ -1,6 +1,6 @@
 #ifndef LAB6_NNCARDGROUP_H
 #define LAB6_NNCARDGROUP_H
-namespace Logic {
+namespace Core {
 	namespace NNCardGroup {
 		enum class NCardGroup {
 			None = 0,

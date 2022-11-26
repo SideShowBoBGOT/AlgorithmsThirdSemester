@@ -9,6 +9,7 @@
 #include "TGameStateMachine.h"
 #include "../States/TMainMenu.h"
 #include "../States/TSettings.h"
+#include "../States/TBoardScreen.h"
 
 class TGame : public TSingleton<TGame> {
 	public:
@@ -43,7 +44,10 @@ class TGame : public TSingleton<TGame> {
 	public:
 	TMainMenu* MainMenu = nullptr;
 	TSettings* Settings = nullptr;
-	//TMainMenu* BoardScreen = nullptr;
+	TBoardScreen* BoardScreen = nullptr;
+	
+	public:
+	static constexpr int TotalCards = 52;
 	
 	protected:
 	SDL_Window* m_pWindow = nullptr;

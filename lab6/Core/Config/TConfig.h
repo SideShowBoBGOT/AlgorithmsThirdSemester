@@ -7,7 +7,7 @@
 
 #include "../Patterns/TSingleton.h"
 
-namespace Logic {
+namespace Core {
 	
 	class TConfig : public TSingleton<TConfig> {
 		public:
@@ -26,6 +26,6 @@ namespace Logic {
 		int m_iCardsPerPlayer = 4;
 	};
 	
-} // Logic
+} // Core
 
 #endif //LAB6_TCONFIG_H
