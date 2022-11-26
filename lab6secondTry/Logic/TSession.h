@@ -10,7 +10,7 @@
 
 class TSession {
 	public:
-	TSession()=default;
+	TSession()=delete;
 	TSession(NDifficulty diff, int playersNumber);
 	virtual ~TSession()=default;
 	
@@ -31,14 +31,14 @@ class TSession {
 		virtual type xx();
 	
 		DECL(Difficulty, NDifficulty, x, NDifficulty::Medium);
+		DECL(PlayersNumber, int, i, 2);
+		DECL(LocalPlayer, std::shared_ptr<TPlayer>, p, nullptr);
+		DECL(CurrentPlayer, std::shared_ptr<TPlayer>, p, nullptr);
 	#undef DECL
 	
 	protected:
-	int m_iPlayersNumber = 2;
-	
-	
-	
-	
+	std::shared_ptr<TPlayer> PickRandomPlayer();
+	std::shared_ptr<TPlayer> PickNextPlayer();
 };
 
 

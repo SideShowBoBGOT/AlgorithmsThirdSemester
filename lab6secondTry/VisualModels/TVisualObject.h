@@ -34,7 +34,7 @@ class TVisualObject : public IVisual {
 	virtual void StateTexture(NState state, std::string str);
 	
 	public:
-	virtual std::shared_ptr<TVisualObject> GetThis();
+	virtual TVisualObject* GetThis();
 	
 	
 	
@@ -57,14 +57,16 @@ class TVisualObject : public IVisual {
 		DECL(Selected, bool, b, false);
 		DECL(Over, bool, b, false);
 		DECL(UserData, std::string, s, "");
+		DECL(Enabled, bool, b, true);
+		DECL(Visible, bool, b, true);
 	#undef DECL
 	
 	#define INIT_HANDLER(button, type) \
     	private:\
-		std::function<void(std::shared_ptr<TVisualObject> obj)> On##button##type##Handler = nullptr; \
+		std::function<void(TVisualObject* obj)> On##button##type##Handler = nullptr; \
                                     \
 		public:\
-		virtual void On##button##type(std::function<void(std::shared_ptr<TVisualObject> obj)>&& func);\
+		virtual void On##button##type(std::function<void(TVisualObject* obj)>&& func);\
 		virtual void On##button##type();
 		
 		INIT_HANDLER(Left, Down);

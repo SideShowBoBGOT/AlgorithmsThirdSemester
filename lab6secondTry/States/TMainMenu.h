@@ -13,14 +13,14 @@ class TMainMenu : public TVisualParent {
 	virtual ~TMainMenu() override=default;
 	
 	public:
-	std::shared_ptr<TVisualObject> StartButton = nullptr;
-	std::shared_ptr<TVisualObject> SettingsButton = nullptr;
-	std::shared_ptr<TVisualObject> QuitButton = nullptr;
+	TVisualObject* StartButton = nullptr;
+	TVisualObject* SettingsButton = nullptr;
+	TVisualObject* QuitButton = nullptr;
 	
 	protected:
-	void OnStartButton(std::shared_ptr<TVisualObject> obj);
-	void OnSettigsButton(std::shared_ptr<TVisualObject> obj);
-	void OnQuitButton(std::shared_ptr<TVisualObject> obj);
+	void OnStartButton(TVisualObject* obj);
+	void OnSettigsButton(TVisualObject* obj);
+	void OnQuitButton(TVisualObject* obj);
 };
 
 

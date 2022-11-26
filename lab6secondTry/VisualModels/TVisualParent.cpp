@@ -4,6 +4,12 @@
 
 #include "TVisualParent.h"
 
+TVisualParent::~TVisualParent() {
+	for(auto& child : m_vObjectsPool) {
+		delete child;
+	}
+}
+
 void TVisualParent::Render() {
 	TVisualObject::Render();
 	for(auto& child : m_vObjectsPool) {
@@ -25,12 +31,12 @@ void TVisualParent::Clean() {
 	}
 }
 
-std::shared_ptr<TVisualObject> TVisualParent::CreateObject() {
-	auto object = std::make_shared<TVisualObject>();
+TVisualObject* TVisualParent::CreateObject() {
+	auto object = new TVisualObject();
 	m_vObjectsPool.emplace_back(object);
 	return object;
 }
 
-std::vector<std::shared_ptr<TVisualObject>>& TVisualParent::ObjectsPool() {
+std::vector<TVisualObject*>& TVisualParent::ObjectsPool() {
 	return m_vObjectsPool;
 }

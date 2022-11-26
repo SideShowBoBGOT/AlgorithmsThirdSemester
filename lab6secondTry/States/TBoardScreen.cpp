@@ -36,7 +36,7 @@ TBoardScreen::TBoardScreen() {
 	
 	auto i = 0;
 	#define INIT_BUTTON(xx, dx, dy) \
-        INIT(xx, dx, dy, 0, 0, s_iObjectWidth, s_iObjectHeigth, [this](std::shared_ptr<TVisualObject> obj) { On##xx(obj); });\
+        INIT(xx, dx, dy, 0, 0, s_iObjectWidth, s_iObjectHeigth, [this](TVisualObject* obj) { On##xx(obj); });\
 		++i;
 	
 		INIT_BUTTON(NextPageButton, s_iObjectWidth * i, heigth - s_iObjectHeigth);
@@ -50,7 +50,7 @@ TBoardScreen::TBoardScreen() {
 	
 	auto j = 0;
 	#define INIT_LABEL(xx, dx, dy) \
-		INIT(xx, dx, dy, 0, 0, s_iObjectWidth, s_iObjectHeigth, [this](std::shared_ptr<TVisualObject> obj) {}); \
+		INIT(xx, dx, dy, 0, 0, s_iObjectWidth, s_iObjectHeigth, [this](TVisualObject* obj) {}); \
 		j++;
 	
 		INIT_LABEL(AIOneLabel, s_iObjectWidth * j, 0);
@@ -61,30 +61,42 @@ TBoardScreen::TBoardScreen() {
 	#undef INIT
 }
 
-void TBoardScreen::OnQuitButton(std::shared_ptr<TVisualObject> obj) {
+void TBoardScreen::OnQuitButton(TVisualObject* obj) {
 	TGameStateMachine::Get()->PopState();
 }
 
-void TBoardScreen::OnPutButton(std::shared_ptr<TVisualObject> obj) {
+void TBoardScreen::OnPutButton(TVisualObject* obj) {
 
 }
 
-void TBoardScreen::OnTakeButton(std::shared_ptr<TVisualObject> obj) {
+void TBoardScreen::OnTakeButton(TVisualObject* obj) {
 
 }
 
-void TBoardScreen::OnEndTurnButton(std::shared_ptr<TVisualObject> obj) {
+void TBoardScreen::OnEndTurnButton(TVisualObject* obj) {
 
 }
 
-void TBoardScreen::OnNextPageButton(std::shared_ptr<TVisualObject> obj) {
+void TBoardScreen::OnNextPageButton(TVisualObject* obj) {
 
 }
 
-void TBoardScreen::OnPrevPageButton(std::shared_ptr<TVisualObject> obj) {
+void TBoardScreen::OnPrevPageButton(TVisualObject* obj) {
 
 }
 
-void TBoardScreen::OnDeselectButton(std::shared_ptr<TVisualObject> obj) {
+void TBoardScreen::OnDeselectButton(TVisualObject* obj) {
 
+}
+
+void TBoardScreen::LockInterface() {
+	for(auto& obj : m_vObjectsPool) {
+		obj->Enabled(false);
+	}
+}
+
+void TBoardScreen::UnLockInterface() {
+	for(auto& obj : m_vObjectsPool) {
+		obj->Enabled(true);
+	}
 }

@@ -33,13 +33,13 @@ TMainMenu::TMainMenu() {
 		xx->StateTexture(NState::OverSelected, #xx"Over");\
 		xx->OnLeftDown(func);
 		
-		INIT_BUTTON(StartButton, center, middle, [this](std::shared_ptr<TVisualObject> obj) { OnStartButton(obj); });
-		INIT_BUTTON(SettingsButton, center, middle + s_iButtonHeigth, [this](std::shared_ptr<TVisualObject> obj) { OnSettigsButton(obj); });
-		INIT_BUTTON(QuitButton, center, middle + 2 * s_iButtonHeigth, [this](std::shared_ptr<TVisualObject> obj) { OnQuitButton(obj); });
+		INIT_BUTTON(StartButton, center, middle, [this](TVisualObject* obj) { OnStartButton(obj); });
+		INIT_BUTTON(SettingsButton, center, middle + s_iButtonHeigth, [this](TVisualObject* obj) { OnSettigsButton(obj); });
+		INIT_BUTTON(QuitButton, center, middle + 2 * s_iButtonHeigth, [this](TVisualObject* obj) { OnQuitButton(obj); });
 	#undef INIT_BUTTON
 }
 
-void TMainMenu::OnStartButton(std::shared_ptr<TVisualObject> obj) {
+void TMainMenu::OnStartButton(TVisualObject* obj) {
 	auto& settings = TGame::Get()->Settings;
 	auto number = settings->GetNumberOfPlayers();
 	auto diff = settings->GetDifficulty();
@@ -48,11 +48,11 @@ void TMainMenu::OnStartButton(std::shared_ptr<TVisualObject> obj) {
 	TGameStateMachine::Get()->PushState(TGame::Get()->BoardScreen);
 }
 
-void TMainMenu::OnSettigsButton(std::shared_ptr<TVisualObject> obj) {
+void TMainMenu::OnSettigsButton(TVisualObject* obj) {
 	TGameStateMachine::Get()->PushState(TGame::Get()->Settings);
 }
 
-void TMainMenu::OnQuitButton(std::shared_ptr<TVisualObject> obj) {
+void TMainMenu::OnQuitButton(TVisualObject* obj) {
 	TGameStateMachine::Get()->PopState();
 }
 

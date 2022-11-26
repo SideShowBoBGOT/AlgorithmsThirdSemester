@@ -14,26 +14,26 @@ class TSettings : public TVisualParent {
 	virtual ~TSettings() override=default;
 	
 	public:
-	std::shared_ptr<TVisualObject> TwoPlayers = nullptr;
-	std::shared_ptr<TVisualObject> ThreePlayers = nullptr;
-	std::shared_ptr<TVisualObject> FourPlayers = nullptr;
-	std::shared_ptr<TVisualObject> EasyButton = nullptr;
-	std::shared_ptr<TVisualObject> MediumButton = nullptr;
-	std::shared_ptr<TVisualObject> HardButton = nullptr;
-	std::shared_ptr<TVisualObject> QuitButton = nullptr;
+	TVisualObject* TwoPlayers = nullptr;
+	TVisualObject* ThreePlayers = nullptr;
+	TVisualObject* FourPlayers = nullptr;
+	TVisualObject* EasyButton = nullptr;
+	TVisualObject* MediumButton = nullptr;
+	TVisualObject* HardButton = nullptr;
+	TVisualObject* QuitButton = nullptr;
 	
 	public:
 	int GetNumberOfPlayers();
 	NDifficulty GetDifficulty();
 	
 	public:
-	std::shared_ptr<TVisualObject> DifficultyLabel = nullptr;
-	std::shared_ptr<TVisualObject> PlayersLabel = nullptr;
+	TVisualObject* DifficultyLabel = nullptr;
+	TVisualObject* PlayersLabel = nullptr;
 	
 	protected:
-	void OnQuitButton(std::shared_ptr<TVisualObject> obj);
-	void OnSelectPlayers(std::shared_ptr<TVisualObject> obj);
-	void OnSelectDifficulty(std::shared_ptr<TVisualObject> obj);
+	void OnQuitButton(TVisualObject* obj);
+	void OnSelectPlayers(TVisualObject* obj);
+	void OnSelectDifficulty(TVisualObject* obj);
 };
 
 

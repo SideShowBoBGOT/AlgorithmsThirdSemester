@@ -19,15 +19,17 @@
 	DECL(Renderer, SDL_Renderer*, p);
 	DECL(State, NState , x);
 	DECL(UserData, std::string, s);
+	DECL(Visible, bool, b);
+	DECL(Enabled, bool, b);
 #undef DECL
 
 
 #define INIT_HANDLER(button, type) \
-	void TVisualObject::On##button##type(std::function<void(std::shared_ptr<TVisualObject> obj)>&& func) { \
+	void TVisualObject::On##button##type(std::function<void(TVisualObject* obj)>&& func) { \
 		On##button##type##Handler = std::move(func);\
 	} \
 	void TVisualObject::On##button##type() { \
-		if(On##button##type##Handler) On##button##type##Handler(GetThis());\
+		if(On##button##type##Handler) On##button##type##Handler(this);\
 	}
 	
 	INIT_HANDLER(Left, Down);
@@ -54,11 +56,13 @@
 	BOOL_STATE(Over);
 #undef BOOL_STATE
 
-std::shared_ptr<TVisualObject> TVisualObject::GetThis() {
-	return std::shared_ptr<TVisualObject>(this);
+TVisualObject* TVisualObject::GetThis() {
+	return this;
 }
 
 void TVisualObject::Render() {
+	if(not Visible()) return;
+
 	auto str = m_mMap[m_xState];
 	if(str.empty()) {
 		str = m_mMap[NState::Normal];
@@ -68,6 +72,8 @@ void TVisualObject::Render() {
 }
 
 void TVisualObject::HandleEvents() {
+	if(not Enabled()) return;
+	
 	auto x = TInputHandler::Get()->X();
 	auto y = TInputHandler::Get()->Y();
 	if( m_iDx <= x and x < m_iDx + m_iWidth

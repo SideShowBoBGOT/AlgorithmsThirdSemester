@@ -10,7 +10,7 @@
 class TVisualParent : public TVisualObject {
 	public:
 	TVisualParent()=default;
-	virtual ~TVisualParent() override=default;
+	virtual ~TVisualParent() override;
 	
 	public:
 	virtual void HandleEvents() override;
@@ -18,13 +18,13 @@ class TVisualParent : public TVisualObject {
 	virtual void Clean() override;
 	
 	public:
-	std::shared_ptr<TVisualObject> CreateObject();
+	TVisualObject* CreateObject();
 	
 	public:
-	std::vector<std::shared_ptr<TVisualObject>>& ObjectsPool();
+	std::vector<TVisualObject*>& ObjectsPool();
 	
 	protected:
-	std::vector<std::shared_ptr<TVisualObject>> m_vObjectsPool;
+	std::vector<TVisualObject*> m_vObjectsPool;
 };
 
 

@@ -47,13 +47,13 @@ TSettings::TSettings() {
 		xx->OnLeftDown(func);                  \
 		xx->UserData(userData);
 		
-		INIT_BUTTON(TwoPlayers, "2", [this](std::shared_ptr<TVisualObject> obj) { OnSelectPlayers(obj); });
-		INIT_BUTTON(ThreePlayers, "3", [this](std::shared_ptr<TVisualObject> obj) { OnSelectPlayers(obj); });
-		INIT_BUTTON(FourPlayers, "4", [this](std::shared_ptr<TVisualObject> obj) { OnSelectPlayers(obj); });
-		INIT_BUTTON(EasyButton, "1", [this](std::shared_ptr<TVisualObject> obj) { OnSelectDifficulty(obj); });
-		INIT_BUTTON(MediumButton, "2", [this](std::shared_ptr<TVisualObject> obj) { OnSelectDifficulty(obj); });
-		INIT_BUTTON(HardButton, "3", [this](std::shared_ptr<TVisualObject> obj) { OnSelectDifficulty(obj); });
-		INIT_BUTTON(QuitButton, "", [this](std::shared_ptr<TVisualObject> obj) { OnQuitButton(obj); obj->Selected(false); });
+		INIT_BUTTON(TwoPlayers, "2", [this](TVisualObject* obj) { OnSelectPlayers(obj); });
+		INIT_BUTTON(ThreePlayers, "3", [this](TVisualObject* obj) { OnSelectPlayers(obj); });
+		INIT_BUTTON(FourPlayers, "4", [this](TVisualObject* obj) { OnSelectPlayers(obj); });
+		INIT_BUTTON(EasyButton, "1", [this](TVisualObject* obj) { OnSelectDifficulty(obj); });
+		INIT_BUTTON(MediumButton, "2", [this](TVisualObject* obj) { OnSelectDifficulty(obj); });
+		INIT_BUTTON(HardButton, "3", [this](TVisualObject* obj) { OnSelectDifficulty(obj); });
+		INIT_BUTTON(QuitButton, "", [this](TVisualObject* obj) { OnQuitButton(obj); obj->Selected(false); });
 	#undef INIT_BUTTON
 	
 	#define INIT_LABEL(xx) \
@@ -87,19 +87,19 @@ NDifficulty TSettings::GetDifficulty() {
 	return NDifficulty::Medium;
 }
 
-void TSettings::OnSelectPlayers(std::shared_ptr<TVisualObject> obj) {
+void TSettings::OnSelectPlayers(TVisualObject* obj) {
 	for(auto& btn : {TwoPlayers, ThreePlayers, FourPlayers}) {
 		btn->Selected(btn==obj);
 	}
 }
 
-void TSettings::OnSelectDifficulty(std::shared_ptr<TVisualObject> obj) {
+void TSettings::OnSelectDifficulty(TVisualObject* obj) {
 	for(auto& btn : {EasyButton, MediumButton, HardButton}) {
 		btn->Selected(btn==obj);
 	}
 }
 
-void TSettings::OnQuitButton(std::shared_ptr<TVisualObject> obj) {
+void TSettings::OnQuitButton(TVisualObject* obj) {
 	TGameStateMachine::Get()->PopState();
 }
 
