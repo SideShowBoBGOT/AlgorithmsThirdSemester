@@ -33,12 +33,11 @@ class TGame : public TSingleton<TGame> {
 	#define DECL(xx, type, prefix, val) \
 		protected:            \
 		type m_##prefix##xx = val;      \
-                                \
         public:                        \
 		virtual type xx();
 	
-		DECL(Width, int, i, 0);
-		DECL(Height, int, i, 0);
+		DECL(ScreenWidth, int, i, 0);
+		DECL(ScreenHeight, int, i, 0);
 	#undef DECL
 	
 	public:

@@ -6,7 +6,7 @@
 
 #include "../GameSingletons/TGame.h"
 #include "../GameSingletons/TTextureManager.h"
-#include "../States/NNFileSystem.h"
+#include "../Other/NNFileSystem.h"
 
 #include <iostream>
 
@@ -20,8 +20,8 @@ TCardsSelector::TCardsSelector() {
 	auto buttonHeigth = 38;
 	auto cardWidth = NNFileSystem::CardWidth();
 	auto cardHeigth = NNFileSystem::CardHeigth();
-	auto width = TGame::Get()->Width();
-	auto heigth = TGame::Get()->Height();
+	auto width = TGame::Get()->ScreenWidth();
+	auto heigth = TGame::Get()->ScreenHeight();
 	
 	TTextureManager::Get()->Load(NNFileSystem::AssetsImagePath(s_sCardsPath + "cards").c_str(), "CardsNormal", TGame::Get()->Renderer());
 
@@ -95,12 +95,12 @@ void TCardsSelector::HandleEvents() {
 	}
 }
 
-void TCardsSelector::Draw() {
-	NextPage->Draw();
-	PrevPage->Draw();
-	Deselect->Draw();
+void TCardsSelector::Render() {
+	NextPage->Render();
+	PrevPage->Render();
+	Deselect->Render();
 	for(auto& card : Cards) {
-		card->Draw();
+		card->Render();
 	}
 }
 

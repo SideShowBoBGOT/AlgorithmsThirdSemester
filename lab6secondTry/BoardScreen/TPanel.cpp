@@ -5,15 +5,15 @@
 #include "TPanel.h"
 #include "../GameSingletons/TGame.h"
 #include "../GameSingletons/TTextureManager.h"
-#include "../States/NNFileSystem.h"
+#include "../Other/NNFileSystem.h"
 
 static std::string s_sBoardScreenPath = "BoardScreen/";
 
 TPanel::TPanel() {
 	auto buttonWidth = NNFileSystem::ButtonWidth();
 	auto buttonHeigth = NNFileSystem::ButtonHeight();
-	auto width = TGame::Get()->Width();
-	auto heigth = TGame::Get()->Height();
+	auto width = TGame::Get()->ScreenWidth();
+	auto heigth = TGame::Get()->ScreenHeight();
 
 	#define INIT_BUTTON(xx, dx, dy, func) \
     	xx = new TVisualObject();\
@@ -74,11 +74,11 @@ void TPanel::Clean() {
 	PlayersPanel->Clean();
 }
 
-void TPanel::Draw() {
-	TakeButton->Draw();
-	PutButton->Draw();
-	EndTurnButton->Draw();
-	QuitButton->Draw();
-	CardsSelector->Draw();
-	PlayersPanel->Draw();
+void TPanel::Render() {
+	TakeButton->Render();
+	PutButton->Render();
+	EndTurnButton->Render();
+	QuitButton->Render();
+	CardsSelector->Render();
+	PlayersPanel->Render();
 }

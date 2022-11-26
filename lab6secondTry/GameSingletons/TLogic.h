@@ -6,13 +6,14 @@
 #define UNTITLED1_TLOGIC_H
 
 #include "../Patterns/TSingleton.h"
+#include "../Logic/TSession.h"
 
-class TLogic : TSingleton<TLogic> {
+class TLogic : public TSingleton<TLogic> {
 	public:
 	TLogic()=default;
-	virtual ~TLogic()=default;
+	virtual ~TLogic() override=default;
 	
-	
+	std::shared_ptr<TSession> Session = nullptr;
 };
 
 

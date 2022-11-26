@@ -14,7 +14,7 @@ bool TTextureManager::Load(std::string fileName, std::string id, SDL_Renderer*pR
 	return true;
 }
 
-void TTextureManager::Draw(std::string id, int sx, int sy, int dx, int dy, int width, int height,
+void TTextureManager::Render(std::string id, int sx, int sy, int dx, int dy, int width, int height,
  SDL_Renderer* pRenderer, SDL_RendererFlip flip) {
 	auto srcRect = SDL_Rect();
 	auto destRect = SDL_Rect();

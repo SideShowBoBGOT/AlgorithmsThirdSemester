@@ -5,7 +5,8 @@
 #include "TMainMenu.h"
 #include "../GameSingletons/TGame.h"
 #include "../GameSingletons/TTextureManager.h"
-#include "NNFileSystem.h"
+#include "../GameSingletons/TLogic.h"
+#include "../Other/NNFileSystem.h"
 
 #include <iostream>
 
@@ -14,8 +15,8 @@ static std::string s_sMainMenuPath = "MainMenu/";
 TMainMenu::TMainMenu() {
 	auto buttonWidth = NNFileSystem::ButtonWidth();
 	auto buttonHeigth = NNFileSystem::ButtonHeight();
-	auto center = TGame::Get()->Width() / 2 - buttonWidth / 2;
-	auto middle = TGame::Get()->Height() / 2 - buttonHeigth / 2;
+	auto center = TGame::Get()->ScreenWidth() / 2 - buttonWidth / 2;
+	auto middle = TGame::Get()->ScreenHeight() / 2 - buttonHeigth / 2;
 
 	#define INIT_BUTTON(xx, dx, dy, func) \
     	xx = new TVisualObject();\
@@ -59,12 +60,17 @@ void TMainMenu::Clean() {
 }
 
 void TMainMenu::Render() {
-	StartButton->Draw();
-	SettingsButton->Draw();
-	QuitButton->Draw();
+	StartButton->Render();
+	SettingsButton->Render();
+	QuitButton->Render();
 }
 
 void TMainMenu::OnStartButton(TVisualObject* obj) {
+	auto& settings = TGame::Get()->Settings;
+	auto number = settings->GetNumberOfPlayers();
+	auto diff = settings->GetDifficulty();
+	auto& session = TLogic::Get()->Session;
+	session = std::make_shared<TSession>(diff, number);
 	TGameStateMachine::Get()->PushState(TGame::Get()->BoardScreen);
 }
 

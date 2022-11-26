@@ -4,12 +4,14 @@
 
 #include "TGame.h"
 #include "TInputHandler.h"
+#include "TTextureManager.h"
+#include "TLogic.h"
 
 #define DECL(xx, type, prefix) \
     type TGame::xx() { return m_##prefix##xx; }
 	
-	DECL(Width, int, i);
-	DECL(Height, int, i);
+	DECL(ScreenWidth, int, i);
+	DECL(ScreenHeight, int, i);
 #undef DECL
 
 bool TGame::Init(const char* name, int x, int y, int w, int h, int flags) {
@@ -25,6 +27,8 @@ bool TGame::Init(const char* name, int x, int y, int w, int h, int flags) {
 	Settings = new TSettings();
 	BoardScreen = new TBoardScreen();
 	TGameStateMachine::Get()->PushState(MainMenu);
+	TLogic::Get();
+	TTextureManager::Get();
 	TInputHandler::Get();
 	m_bRunning = true;
 	return true;

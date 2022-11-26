@@ -5,7 +5,7 @@
 #ifndef UNTITLED1_TAIPLAYERSPANEL_H
 #define UNTITLED1_TAIPLAYERSPANEL_H
 
-#include "../Models/TVisualObject.h"
+#include "../VisualModels/TVisualObject.h"
 
 class TAIPlayersPanel : TVisualObject {
 	public:
@@ -14,7 +14,7 @@ class TAIPlayersPanel : TVisualObject {
 	
 	public:
 	virtual void HandleEvents() override;
-	virtual void Draw() override;
+	virtual void Render() override;
 	virtual void Clean() override;
 	
 	#define DECL(xx, type, prefix, val) \

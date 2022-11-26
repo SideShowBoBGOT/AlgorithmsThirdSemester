@@ -5,7 +5,7 @@
 #include "TAIPlayersPanel.h"
 #include "../GameSingletons/TGame.h"
 #include "../GameSingletons/TTextureManager.h"
-#include "../States/NNFileSystem.h"
+#include "../Other/NNFileSystem.h"
 
 #define DECL(xx, type, prefix) \
     type TAIPlayersPanel::xx() { return m_##prefix##xx; }\
@@ -17,14 +17,14 @@
 static std::string s_sPlayersNumberPath = "BoardScreen/AIPlayersPanel/";
 
 TAIPlayersPanel::TAIPlayersPanel() {
-	m_iPlayersNumber = TGame::Get()->Settings->GetSelectedOption();
+	m_iPlayersNumber = TGame::Get()->Settings->GetNumberOfPlayers();
 	auto buttonWidth = NNFileSystem::ButtonWidth();
 	auto buttonHeigth = NNFileSystem::ButtonHeight();
-	auto width = TGame::Get()->Width();
-	auto heigth = TGame::Get()->Height();
+	auto width = TGame::Get()->ScreenWidth();
+	auto heigth = TGame::Get()->ScreenHeight();
 	
 	
-	for(auto i=0;i<m_iPlayersNumber;++i) {
+	for(auto i=1;i<m_iPlayersNumber;++i) {
 		auto name = "AI" + std::to_string(i+1) + "Normal";
 		auto path = NNFileSystem::AssetsImagePath(s_sPlayersNumberPath + "AI" + std::to_string(i+1)+"/" "Normal");
 		TTextureManager::Get()->Load(path.c_str(), name, TGame::Get()->Renderer());
@@ -52,14 +52,14 @@ TAIPlayersPanel::~TAIPlayersPanel() {
 void TAIPlayersPanel::HandleEvents() {
 }
 
-void TAIPlayersPanel::Draw() {
-	for(auto i=0;i<m_iPlayersNumber;++i) {
-		AIPlayers[i]->Draw();
+void TAIPlayersPanel::Render() {
+	for(auto i=1;i<m_iPlayersNumber;++i) {
+		AIPlayers[i]->Render();
 	}
 }
 
 void TAIPlayersPanel::Clean() {
-	for(auto i=0;i<m_iPlayersNumber;++i) {
+	for(auto i=1;i<m_iPlayersNumber;++i) {
 		AIPlayers[i]->Clean();
 	}
 }

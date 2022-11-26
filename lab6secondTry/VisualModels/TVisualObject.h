@@ -9,15 +9,16 @@
 #include <string>
 #include <map>
 #include <SDL2/SDL.h>
+#include "IVisual.h"
 
-class TVisualObject {
+class TVisualObject : public IVisual {
 	public:
 	TVisualObject()=default;
 	virtual ~TVisualObject()=default;
 	
 	public:
 	virtual void HandleEvents();
-	virtual void Draw();
+	virtual void Render();
 	virtual void Clean();
 	
 	public:

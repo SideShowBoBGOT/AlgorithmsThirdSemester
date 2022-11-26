@@ -37,12 +37,12 @@
 	BOOL_STATE(Over);
 #undef BOOL_STATE
 
-void TVisualObject::Draw() {
+void TVisualObject::Render() {
 	auto str = m_mMap[m_xState];
 	if(str.empty()) {
 		str = m_mMap[NState::Normal];
 	}
-	TTextureManager::Get()->Draw(str.c_str(), m_iSx, m_iSy,
+	TTextureManager::Get()->Render(str.c_str(), m_iSx, m_iSy,
 	 m_iDx, m_iDy, m_iWidth, m_iHeight, m_pRenderer);
 }
 

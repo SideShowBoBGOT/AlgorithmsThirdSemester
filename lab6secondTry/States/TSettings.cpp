@@ -5,7 +5,7 @@
 #include "TSettings.h"
 #include "../GameSingletons/TGame.h"
 #include "../GameSingletons/TTextureManager.h"
-#include "NNFileSystem.h"
+#include "../Other/NNFileSystem.h"
 
 static std::string s_sSettingsPath = "Settings/";
 
@@ -29,8 +29,8 @@ void TSettings::OnQuitButton(TVisualObject* obj) {
 TSettings::TSettings() {
 	auto buttonWidth = NNFileSystem::ButtonWidth();
 	auto buttonHeigth = NNFileSystem::ButtonHeight();
-	auto center = TGame::Get()->Width() / 2 - buttonWidth / 2;
-	auto middle = TGame::Get()->Height() / 2 - buttonHeigth / 2;
+	auto center = TGame::Get()->ScreenWidth() / 2 - buttonWidth / 2;
+	auto middle = TGame::Get()->ScreenHeight() / 2 - buttonHeigth / 2;
 	
 	#define INIT_GENERAL(xx, dx, dy) \
     	xx = new TVisualObject();\
@@ -101,7 +101,7 @@ TSettings::~TSettings() {
 	delete QuitButton;
 }
 
-int TSettings::GetSelectedOption() {
+int TSettings::GetNumberOfPlayers() {
 	for(auto& btn : {TwoPlayers, ThreePlayers, FourPlayers}) {
 		if(btn->Selected()) {
 			return atoi(btn->UserData().c_str());
@@ -109,6 +109,16 @@ int TSettings::GetSelectedOption() {
 	}
 	return 2;
 }
+
+NDifficulty TSettings::GetDifficulty() {
+	for(auto& btn : {EasyButton, MediumButton, HardButton}) {
+		if(btn->Selected()) {
+			return static_cast<NDifficulty>(atoi(btn->UserData().c_str()));
+		}
+	}
+	return NDifficulty::Medium;
+}
+
 
 
 void TSettings::Clean() {
@@ -142,16 +152,18 @@ void TSettings::HandleEvents() {
 }
 
 void TSettings::Render() {
-	TwoPlayers->Draw();
-	ThreePlayers->Draw();
-	FourPlayers->Draw();
+	TwoPlayers->Render();
+	ThreePlayers->Render();
+	FourPlayers->Render();
 	
-	EasyButton->Draw();
-	MediumButton->Draw();
-	HardButton->Draw();
+	EasyButton->Render();
+	MediumButton->Render();
+	HardButton->Render();
 	
-	DifficultyLabel->Draw();
-	PlayersLabel->Draw();
+	DifficultyLabel->Render();
+	PlayersLabel->Render();
 	
-	QuitButton->Draw();
+	QuitButton->Render();
 }
+
+

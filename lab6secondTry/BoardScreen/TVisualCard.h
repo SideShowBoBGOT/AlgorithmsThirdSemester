@@ -5,14 +5,14 @@
 #ifndef UNTITLED1_TVISUALCARD_H
 #define UNTITLED1_TVISUALCARD_H
 
-#include "../Models/TVisualObject.h"
+#include "../VisualModels/TVisualObject.h"
 
 class TVisualCard : public TVisualObject {
 	public:
 	TVisualCard()=default;
 	virtual ~TVisualCard()=default;
 	
-	virtual void Draw() override;
+	virtual void Render() override;
 	
 	#define DECL(xx, type, prefix, val) \
 		protected:            \

@@ -10,10 +10,6 @@
 
 namespace NNFileSystem {
 	std::string AssetsImagePath(std::string asset);
-	int ButtonWidth();
-	int ButtonHeight();
-	int CardWidth();
-	int CardHeigth();
 }
 
 #endif //UNTITLED1_NNFILESYSTEM_H

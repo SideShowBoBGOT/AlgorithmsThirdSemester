@@ -5,10 +5,10 @@
 #ifndef UNTITLED1_TBOARDSCREEN_H
 #define UNTITLED1_TBOARDSCREEN_H
 
-#include "../Models/TGameState.h"
-#include "../BoardScreen/TPanel.h"
+#include <memory>
+#include "../VisualModels/TVisualObject.h"
 
-class TBoardScreen : public IGameState {
+class TBoardScreen : public IVisual {
 	public:
 	TBoardScreen();
 	virtual ~TBoardScreen() override;
@@ -19,7 +19,11 @@ class TBoardScreen : public IGameState {
 	virtual void Render() override;
 	
 	public:
-	TPanel* UserPanel = nullptr;
+	std::unique_ptr<TVisualObject> PutButton = nullptr;
+	std::unique_ptr<TVisualObject> TakeButton = nullptr;
+	std::unique_ptr<TVisualObject> EndTurnButton = nullptr;
+	std::unique_ptr<TVisualObject> QuitButton = nullptr;
+	
 	
 };
 //101x144

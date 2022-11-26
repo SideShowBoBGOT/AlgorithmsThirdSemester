@@ -5,10 +5,10 @@
 #ifndef UNTITLED1_TMAINMENU_H
 #define UNTITLED1_TMAINMENU_H
 
-#include "../Models/TGameState.h"
-#include "../Models/TVisualObject.h"
+#include "../VisualModels/IVisual.h"
+#include "../VisualModels/TVisualObject.h"
 
-class TMainMenu : public IGameState {
+class TMainMenu : public IVisual {
 	
 	enum class Options {
 		StartGame=0,

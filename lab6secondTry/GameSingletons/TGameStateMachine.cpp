@@ -13,7 +13,7 @@ void TGameStateMachine::Clean() {
 void TGameStateMachine::Render() {
 	m_vStates.top()->Render();
 }
-void TGameStateMachine::PushState(IGameState* state) {
+void TGameStateMachine::PushState(IVisual* state) {
 	m_vStates.push(state);
 }
 void TGameStateMachine::PopState() {

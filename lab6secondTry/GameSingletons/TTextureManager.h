@@ -15,7 +15,7 @@ class TTextureManager : public TSingleton<TTextureManager> {
 	virtual ~TTextureManager() override=default;
 	
 	bool Load(std::string fileName, std::string id, SDL_Renderer* pRenderer);
-	void Draw(std::string id, int sx, int sy, int dx, int dy, int width,
+	void Render(std::string id, int sx, int sy, int dx, int dy, int width,
 	 int height, SDL_Renderer* pRenderer, SDL_RendererFlip flip = SDL_FLIP_NONE);
 	
 	

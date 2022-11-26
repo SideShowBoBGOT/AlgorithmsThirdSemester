@@ -8,14 +8,14 @@ untitled1
 main.cpp
 GameSingletons/TGame.cpp
 GameSingletons/TGame.h
-Models/TGameState.h
+VisualModels/IVisual.h
 States/TMainMenu.cpp
 States/TMainMenu.h
 GameSingletons/TGameStateMachine.cpp
 GameSingletons/TGameStateMachine.h
 Patterns/TSingleton.h
-Models/TVisualObject.cpp
-Models/TVisualObject.h
+VisualModels/TVisualObject.cpp
+VisualModels/TVisualObject.h
 GameSingletons/TTextureManager.cpp
 GameSingletons/TTextureManager.h
 GameSingletons/TInputHandler.cpp
@@ -26,8 +26,8 @@ States/TBoardScreen.cpp
 States/TBoardScreen.h
 BoardScreen/TPanel.cpp
 BoardScreen/TPanel.h
-States/NNFileSystem.cpp
-States/NNFileSystem.h
+        Other/NNFileSystem.cpp
+        Other/NNFileSystem.h
 BoardScreen/TCardsSelector.cpp
 BoardScreen/TCardsSelector.h
 BoardScreen/TAIPlayersPanel.h
@@ -41,6 +41,9 @@ Logic/TSession.h
 Logic/TPlayer.cpp
 Logic/TPlayer.h
 Logic/TCard.cpp
-Logic/TCard.h)
+Logic/TCard.h
+Logic/NNCardType.h
+Logic/NNCardValue.h
+Logic/NNDifficulty.h)
 
 target_link_libraries(untitled1 SDL2main SDL2 GL)

@@ -14,7 +14,7 @@
 	DECL(ShiftY, int, i);
 #undef DECL
 
-void TVisualCard::Draw() {
+void TVisualCard::Render() {
 	if(static_cast<int>(m_xState) & static_cast<int>(NState::Selected)) {
 		Dx(DefaultX() + ShiftX());
 		Dy(DefaultY() + ShiftY());
@@ -22,5 +22,5 @@ void TVisualCard::Draw() {
 		Dx(DefaultX());
 		Dy(DefaultY());
 	}
-	TVisualObject::Draw();
+	TVisualObject::Render();
 }

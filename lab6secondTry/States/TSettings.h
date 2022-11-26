@@ -5,10 +5,11 @@
 #ifndef UNTITLED1_TSETTINGS_H
 #define UNTITLED1_TSETTINGS_H
 
-#include "../Models/TGameState.h"
-#include "../Models/TVisualObject.h"
+#include "../VisualModels/IVisual.h"
+#include "../VisualModels/TVisualObject.h"
+#include "../Logic/NNDifficulty.h"
 
-class TSettings : public IGameState {
+class TSettings : public IVisual {
 	public:
 	TSettings();
 	virtual ~TSettings() override;
@@ -28,7 +29,8 @@ class TSettings : public IGameState {
 	TVisualObject* QuitButton = nullptr;
 	
 	public:
-	int GetSelectedOption();
+	int GetNumberOfPlayers();
+	NDifficulty GetDifficulty();
 	
 	public:
 	TVisualObject* DifficultyLabel = nullptr;

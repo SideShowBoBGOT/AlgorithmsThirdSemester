@@ -15,7 +15,7 @@ class TCardsSelector : TVisualObject {
 	
 	public:
 	virtual void HandleEvents() override;
-	virtual void Draw() override;
+	virtual void Render() override;
 	virtual void Clean() override;
 	
 	public:
