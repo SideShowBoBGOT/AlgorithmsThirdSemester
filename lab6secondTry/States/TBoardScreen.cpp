@@ -56,7 +56,6 @@ TBoardScreen::TBoardScreen() {
 		INIT_LABEL(AIOneLabel, s_iObjectWidth * j, 0);
 		INIT_LABEL(AITwoLabel, s_iObjectWidth * j, 0);
 		INIT_LABEL(AIThreeLabel, s_iObjectWidth * j, 0);
-	
 	#undef INIT_LABEL
 	
 	#undef INIT

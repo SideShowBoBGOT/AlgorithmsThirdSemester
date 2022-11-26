@@ -28,8 +28,6 @@ States/TBoardScreen.cpp
 States/TBoardScreen.h
 Other/NNFileSystem.cpp
 Other/NNFileSystem.h
-BoardScreen/TCardsSelector.cpp
-BoardScreen/TCardsSelector.h
         BoardScreen/TVisualCard.cpp
 BoardScreen/TVisualCard.h
 GameSingletons/TLogic.cpp

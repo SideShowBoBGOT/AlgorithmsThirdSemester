@@ -11,7 +11,7 @@
 4	2382	1669481974479937492	CMakeFiles/untitled1.dir/States/TMainMenu.cpp.o	35a37aaa7e4a4a4b
 1669	1932	1669473286310645738	untitled1	bb7d056363939b2c
 3	762	1669470612765733654	CMakeFiles/untitled1.dir/Logic/TPlayer.cpp.o	590992e86b8ebcdc
-0	29	1669487745551697601	build.ninja	a2addbd1143c82ef
+0	29	1669491131343827293	build.ninja	a2addbd1143c82ef
 739	3794	1669473235079912342	CMakeFiles/untitled1.dir/BoardScreen/TPanel.cpp.o	38c4d4026f24c2a7
 3	2498	1669481974599939233	CMakeFiles/untitled1.dir/main.cpp.o	7c130045452e827e
 3	2511	1669481974611939408	CMakeFiles/untitled1.dir/GameSingletons/TInputHandler.cpp.o	1377369e8c61894b
@@ -29,3 +29,10 @@
 4	576	1669396754284787291	CMakeFiles/untitled1.dir/States/NNFileSystem.cpp.o	cb59ed08e248895d
 4	28	1669470612029750205	CMakeFiles/untitled1.dir/Logic/TCard.cpp.o	7371e7025e579a89
 2	2347	1669481974447937027	CMakeFiles/untitled1.dir/GameSingletons/TGame.cpp.o	86d3cb88e309b315
+4	2287	1669491134267575912	CMakeFiles/untitled1.dir/GameSingletons/TInputHandler.cpp.o	1377369e8c61894b
+3	2326	1669491134303572817	CMakeFiles/untitled1.dir/main.cpp.o	7c130045452e827e
+2	2370	1669491134347569034	CMakeFiles/untitled1.dir/GameSingletons/TGame.cpp.o	86d3cb88e309b315
+4	2982	1669491134959516419	CMakeFiles/untitled1.dir/States/TSettings.cpp.o	28f8a6603c3c2bd0
+3	3037	1669491135015511605	CMakeFiles/untitled1.dir/States/TMainMenu.cpp.o	35a37aaa7e4a4a4b
+4	3236	1669491135215494410	CMakeFiles/untitled1.dir/States/TBoardScreen.cpp.o	52151d646c79bae1
+3236	3539	1669491135515468619	untitled1	3b344d2dee0d8767

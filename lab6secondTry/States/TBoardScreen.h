@@ -5,7 +5,7 @@
 #ifndef UNTITLED1_TBOARDSCREEN_H
 #define UNTITLED1_TBOARDSCREEN_H
 
-#include <memory>
+#include <array>
 #include "../VisualModels/TVisualParent.h"
 
 class TBoardScreen : public TVisualParent {
@@ -27,6 +27,9 @@ class TBoardScreen : public TVisualParent {
 	std::shared_ptr<TVisualObject> AITwoLabel 		= nullptr;
 	std::shared_ptr<TVisualObject> AIThreeLabel 	= nullptr;
 	
+	protected:
+	static constexpr int CardSlotSize = 8;
+	std::array<std::shared_ptr<TVisualObject>, CardSlotSize> CardSlots;
 	
 	protected:
 	void OnPutButton(std::shared_ptr<TVisualObject> obj);
