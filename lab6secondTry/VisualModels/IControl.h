@@ -6,10 +6,10 @@
 #define UNTITLED1_IVisual_H
 
 
-class IVisual {
+class IControl {
 	public:
-	IVisual()=default;
-	virtual ~IVisual()=default;
+	IControl()=default;
+	virtual ~IControl()=default;
 	
 	public:
 	virtual void HandleEvents()=0;

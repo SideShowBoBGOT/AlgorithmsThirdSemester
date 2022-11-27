@@ -5,22 +5,22 @@
 #ifndef UNTITLED1_TMAINMENU_H
 #define UNTITLED1_TMAINMENU_H
 
-#include "../VisualModels/TVisualParent.h"
+#include "../VisualModels/TParent.h"
 
-class TMainMenu : public TVisualParent {
+class TMainMenu : public TParent {
 	public:
 	TMainMenu();
 	virtual ~TMainMenu() override=default;
 	
 	public:
-	TVisualObject* StartButton = nullptr;
-	TVisualObject* SettingsButton = nullptr;
-	TVisualObject* QuitButton = nullptr;
+	TControl* StartButton = nullptr;
+	TControl* SettingsButton = nullptr;
+	TControl* QuitButton = nullptr;
 	
 	protected:
-	void OnStartButton(TVisualObject* obj);
-	void OnSettigsButton(TVisualObject* obj);
-	void OnQuitButton(TVisualObject* obj);
+	void OnStartButton(TControl* obj);
+	void OnSettigsButton(TControl* obj);
+	void OnQuitButton(TControl* obj);
 };
 
 

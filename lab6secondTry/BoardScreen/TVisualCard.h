@@ -5,9 +5,9 @@
 #ifndef UNTITLED1_TVISUALCARD_H
 #define UNTITLED1_TVISUALCARD_H
 
-#include "../VisualModels/TVisualObject.h"
+#include "../VisualModels/TControl.h"
 
-class TVisualCard : public TVisualObject {
+class TVisualCard : public TControl {
 	public:
 	TVisualCard()=default;
 	virtual ~TVisualCard()=default;

@@ -8,16 +8,20 @@ untitled1
 main.cpp
 GameSingletons/TGame.cpp
 GameSingletons/TGame.h
-VisualModels/IVisual.h
 States/TMainMenu.cpp
 States/TMainMenu.h
 GameSingletons/TGameStateMachine.cpp
 GameSingletons/TGameStateMachine.h
 Patterns/TSingleton.h
-VisualModels/TVisualObject.cpp
-VisualModels/TVisualObject.h
-VisualModels/TVisualParent.cpp
-VisualModels/TVisualParent.h
+VisualModels/Enums/NNState.h
+VisualModels/Enums/NNAlign.h
+VisualModels/IControl.h
+VisualModels/TControl.cpp
+VisualModels/TControl.h
+VisualModels/TParent.cpp
+VisualModels/TParent.h
+VisualModels/TAutoAlignArea.cpp
+VisualModels/TAutoAlignArea.h
 GameSingletons/TTextureManager.cpp
 GameSingletons/TTextureManager.h
 GameSingletons/TInputHandler.cpp
@@ -28,7 +32,7 @@ States/TBoardScreen.cpp
 States/TBoardScreen.h
 Other/NNFileSystem.cpp
 Other/NNFileSystem.h
-        BoardScreen/TVisualCard.cpp
+BoardScreen/TVisualCard.cpp
 BoardScreen/TVisualCard.h
 GameSingletons/TLogic.cpp
 GameSingletons/TLogic.h

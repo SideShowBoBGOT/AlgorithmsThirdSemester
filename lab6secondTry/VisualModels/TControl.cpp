@@ -2,16 +2,14 @@
 // Created by choleraplague on 18.11.22.
 //
 #include <iostream>
-#include "TVisualObject.h"
+#include "TControl.h"
 #include "../GameSingletons/TTextureManager.h"
 #include "../GameSingletons/TInputHandler.h"
 
 #define DECL(xx, type, prefix) \
-	void TVisualObject::xx(type vv) { m_##prefix##xx = vv; } \
-    type TVisualObject::xx() { return m_##prefix##xx; }
+	void TControl::xx(type vv) { m_##prefix##xx = vv; } \
+    type TControl::xx() { return m_##prefix##xx; }
 	
-	DECL(Dx, int, i);
-	DECL(Dy, int, i);
 	DECL(Sx, int, i);
 	DECL(Sy, int, i);
 	DECL(Width, int, i);
@@ -21,27 +19,39 @@
 	DECL(UserData, std::string, s);
 	DECL(Visible, bool, b);
 	DECL(Enabled, bool, b);
+	DECL(Parent, TControl*, p);
 #undef DECL
 
+void TControl::Dx(int vv) {
+	m_iDx = m_pParent->Dx() + vv;
+}
 
-#define INIT_HANDLER(button, type) \
-	void TVisualObject::On##button##type(std::function<void(TVisualObject* obj)>&& func) { \
+int TControl::Dx() { return m_iDx; }
+
+void TControl::Dy(int vv) {
+	m_iDy = m_pParent->Dy() + vv;
+}
+
+int TControl::Dy() { return m_iDy; }
+
+#define INIT_BUTTON_HANDLER(button, type) \
+	void TControl::On##button##type(std::function<void(TControl* obj)>&& func) { \
 		On##button##type##Handler = std::move(func);\
 	} \
-	void TVisualObject::On##button##type() { \
+	void TControl::On##button##type() { \
 		if(On##button##type##Handler) On##button##type##Handler(this);\
 	}
 	
-	INIT_HANDLER(Left, Down);
-	INIT_HANDLER(Right, Down);
-	INIT_HANDLER(Middle, Down);
-	INIT_HANDLER(Left, Up);
-	INIT_HANDLER(Right, Up);
-	INIT_HANDLER(Middle, Up);
-#undef INIT_HANDLER
+	INIT_BUTTON_HANDLER(Left, Down);
+	INIT_BUTTON_HANDLER(Right, Down);
+	INIT_BUTTON_HANDLER(Middle, Down);
+	INIT_BUTTON_HANDLER(Left, Up);
+	INIT_BUTTON_HANDLER(Right, Up);
+	INIT_BUTTON_HANDLER(Middle, Up);
+#undef INIT_BUTTON_HANDLER
 
 #define BOOL_STATE(xx) \
-	void TVisualObject::xx(bool vv) { \
+	void TControl::xx(bool vv) { \
         m_b##xx = vv;\
 		if(m_b##xx) {\
 			m_xState = static_cast<NState>(static_cast<int>(m_xState) | static_cast<int>(NState::xx));\
@@ -50,17 +60,17 @@
 		m_xState = static_cast<NState>(static_cast<int>(m_xState) & ~static_cast<int>(NState::xx));\
                \
     }\
-	bool TVisualObject::xx() { return m_b##xx; }
+	bool TControl::xx() { return m_b##xx; }
 
 	BOOL_STATE(Selected);
 	BOOL_STATE(Over);
 #undef BOOL_STATE
 
-TVisualObject* TVisualObject::GetThis() {
+TControl* TControl::GetThis() {
 	return this;
 }
 
-void TVisualObject::Render() {
+void TControl::Render() {
 	if(not Visible()) return;
 
 	auto str = m_mMap[m_xState];
@@ -71,7 +81,7 @@ void TVisualObject::Render() {
 	 m_iDx, m_iDy, m_iWidth, m_iHeight, m_pRenderer);
 }
 
-void TVisualObject::HandleEvents() {
+void TControl::HandleEvents() {
 	if(not Enabled()) return;
 	
 	auto x = TInputHandler::Get()->X();
@@ -82,24 +92,24 @@ void TVisualObject::HandleEvents() {
 		if(TInputHandler::Get()->Downs(NMouseButton::Left)) {
 			Selected(not Selected());
 		}
-		#define INIT_HANDLER(button, type) \
+		#define INIT_BUTTON_HANDLER(button, type) \
 			if(TInputHandler::Get()->type##s(NMouseButton::button)) {\
 				On##button##type();\
 			}
 		
-		INIT_HANDLER(Left, Down);
-		INIT_HANDLER(Right, Down);
-		INIT_HANDLER(Middle, Down);
-		INIT_HANDLER(Left, Up);
-		INIT_HANDLER(Right, Up);
-		INIT_HANDLER(Middle, Up);
-		#undef INIT_HANDLER
+		INIT_BUTTON_HANDLER(Left, Down);
+		INIT_BUTTON_HANDLER(Right, Down);
+		INIT_BUTTON_HANDLER(Middle, Down);
+		INIT_BUTTON_HANDLER(Left, Up);
+		INIT_BUTTON_HANDLER(Right, Up);
+		INIT_BUTTON_HANDLER(Middle, Up);
+		#undef INIT_BUTTON_HANDLER
 	} else {
 		//m_xState = NState::Normal;
 		m_xState = static_cast<NState>(static_cast<int>(m_xState) & ~static_cast<int>(NState::Over));
 	}
 }
 
-void TVisualObject::Clean() { return; }
+void TControl::Clean() { return; }
 
-void TVisualObject::StateTexture(NState state, std::string textureID) { m_mMap[state] = textureID; }
+void TControl::StateTexture(NState state, std::string textureID) { m_mMap[state] = textureID; }

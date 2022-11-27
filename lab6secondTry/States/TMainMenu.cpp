@@ -9,21 +9,21 @@
 #include "../Other/NNFileSystem.h"
 
 static int constexpr s_iButtonWidth = 158;
-static int constexpr s_iButtonHeigth = 35;
+static int constexpr s_iButtonheight = 35;
 static std::string s_sMainMenuPath = "MainMenu/";
 
 TMainMenu::TMainMenu() {
 	auto center = TGame::Get()->ScreenWidth() / 2 - s_iButtonWidth / 2;
-	auto middle = TGame::Get()->ScreenHeight() / 2 - s_iButtonHeigth / 2;
+	auto middle = TGame::Get()->ScreenHeight() / 2 - s_iButtonheight / 2;
 
 	#define INIT_BUTTON(xx, dx, dy, func) \
-    	xx = CreateObject();\
+    	xx = CreateObject<TControl>();\
 		xx->Dx(dx);\
 		xx->Dy(dy);\
 		xx->Sx(0);\
 		xx->Sx(0);\
 		xx->Width(s_iButtonWidth);\
-		xx->Height(s_iButtonHeigth);\
+		xx->Height(s_iButtonheight);\
 		xx->Renderer(TGame::Get()->Renderer()); \
         TTextureManager::Get()->Load(NNFileSystem::AssetsImagePath(s_sMainMenuPath+#xx+"/"+"Normal").c_str(), #xx"Normal", TGame::Get()->Renderer());\
         TTextureManager::Get()->Load(NNFileSystem::AssetsImagePath(s_sMainMenuPath+#xx+"/"+"Over").c_str(), #xx"Over", TGame::Get()->Renderer());\
@@ -33,13 +33,13 @@ TMainMenu::TMainMenu() {
 		xx->StateTexture(NState::OverSelected, #xx"Over");\
 		xx->OnLeftDown(func);
 		
-		INIT_BUTTON(StartButton, center, middle, [this](TVisualObject* obj) { OnStartButton(obj); });
-		INIT_BUTTON(SettingsButton, center, middle + s_iButtonHeigth, [this](TVisualObject* obj) { OnSettigsButton(obj); });
-		INIT_BUTTON(QuitButton, center, middle + 2 * s_iButtonHeigth, [this](TVisualObject* obj) { OnQuitButton(obj); });
+		INIT_BUTTON(StartButton, center, middle, [this](TControl* obj) { OnStartButton(obj); });
+		INIT_BUTTON(SettingsButton, center, middle + s_iButtonheight, [this](TControl* obj) { OnSettigsButton(obj); });
+		INIT_BUTTON(QuitButton, center, middle + 2 * s_iButtonheight, [this](TControl* obj) { OnQuitButton(obj); });
 	#undef INIT_BUTTON
 }
 
-void TMainMenu::OnStartButton(TVisualObject* obj) {
+void TMainMenu::OnStartButton(TControl* obj) {
 	auto& settings = TGame::Get()->Settings;
 	auto number = settings->GetNumberOfPlayers();
 	auto diff = settings->GetDifficulty();
@@ -48,11 +48,11 @@ void TMainMenu::OnStartButton(TVisualObject* obj) {
 	TGameStateMachine::Get()->PushState(TGame::Get()->BoardScreen);
 }
 
-void TMainMenu::OnSettigsButton(TVisualObject* obj) {
+void TMainMenu::OnSettigsButton(TControl* obj) {
 	TGameStateMachine::Get()->PushState(TGame::Get()->Settings);
 }
 
-void TMainMenu::OnQuitButton(TVisualObject* obj) {
+void TMainMenu::OnQuitButton(TControl* obj) {
 	TGameStateMachine::Get()->PopState();
 }
 

@@ -15,7 +15,12 @@
 #define DECL(xx, type, prefix) \
     type TSession::xx() { return m_##prefix##xx; }\
 	
-	DECL(Difficulty, NDifficulty, x)
+	DECL(Difficulty, NDifficulty, x);
+	DECL(PlayersNumber, int, i);
+	DECL(LocalPlayer, std::shared_ptr<TPlayer>, p);
+	DECL(CurrentPlayer, std::shared_ptr<TPlayer>, p);
+
+#undef DECL
 
 TSession::TSession(NDifficulty diff, int playersNumber) {
 	m_xDifficulty = diff;
@@ -30,7 +35,7 @@ TSession::TSession(NDifficulty diff, int playersNumber) {
 std::shared_ptr<TPlayer> TSession::PickRandomPlayer() {
 	std::random_device dev;
     std::mt19937 rng(dev());
-    std::uniform_int_distribution<std::mt19937::result_type> dist(1,PlayersNumber());
+    std::uniform_int_distribution<std::mt19937::result_type> dist(0,PlayersNumber() - 1);
 	return Players()[dist(rng)];
 }
 

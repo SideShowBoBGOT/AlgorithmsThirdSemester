@@ -5,35 +5,35 @@
 #ifndef UNTITLED1_TSETTINGS_H
 #define UNTITLED1_TSETTINGS_H
 
-#include "../VisualModels/TVisualParent.h"
+#include "../VisualModels/TParent.h"
 #include "../Logic/NNDifficulty.h"
 
-class TSettings : public TVisualParent {
+class TSettings : public TParent {
 	public:
 	TSettings();
 	virtual ~TSettings() override=default;
 	
 	public:
-	TVisualObject* TwoPlayers = nullptr;
-	TVisualObject* ThreePlayers = nullptr;
-	TVisualObject* FourPlayers = nullptr;
-	TVisualObject* EasyButton = nullptr;
-	TVisualObject* MediumButton = nullptr;
-	TVisualObject* HardButton = nullptr;
-	TVisualObject* QuitButton = nullptr;
+	TControl* TwoPlayers = nullptr;
+	TControl* ThreePlayers = nullptr;
+	TControl* FourPlayers = nullptr;
+	TControl* EasyButton = nullptr;
+	TControl* MediumButton = nullptr;
+	TControl* HardButton = nullptr;
+	TControl* QuitButton = nullptr;
 	
 	public:
 	int GetNumberOfPlayers();
 	NDifficulty GetDifficulty();
 	
 	public:
-	TVisualObject* DifficultyLabel = nullptr;
-	TVisualObject* PlayersLabel = nullptr;
+	TControl* DifficultyLabel = nullptr;
+	TControl* PlayersLabel = nullptr;
 	
 	protected:
-	void OnQuitButton(TVisualObject* obj);
-	void OnSelectPlayers(TVisualObject* obj);
-	void OnSelectDifficulty(TVisualObject* obj);
+	void OnQuitButton(TControl* obj);
+	void OnSelectPlayers(TControl* obj);
+	void OnSelectDifficulty(TControl* obj);
 };
 
 

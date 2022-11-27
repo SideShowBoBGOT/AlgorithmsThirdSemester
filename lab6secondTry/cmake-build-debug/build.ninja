@@ -73,14 +73,20 @@ build CMakeFiles/untitled1.dir/GameSingletons/TGameStateMachine.cpp.o: CXX_COMPI
   OBJECT_DIR = CMakeFiles/untitled1.dir
   OBJECT_FILE_DIR = CMakeFiles/untitled1.dir/GameSingletons
 
-build CMakeFiles/untitled1.dir/VisualModels/TVisualObject.cpp.o: CXX_COMPILER__untitled1_Debug /home/choleraplague/university/Algorithms_KPI_2_Year/lab6secondTry/VisualModels/TVisualObject.cpp || cmake_object_order_depends_target_untitled1
-  DEP_FILE = CMakeFiles/untitled1.dir/VisualModels/TVisualObject.cpp.o.d
+build CMakeFiles/untitled1.dir/VisualModels/TControl.cpp.o: CXX_COMPILER__untitled1_Debug /home/choleraplague/university/Algorithms_KPI_2_Year/lab6secondTry/VisualModels/TControl.cpp || cmake_object_order_depends_target_untitled1
+  DEP_FILE = CMakeFiles/untitled1.dir/VisualModels/TControl.cpp.o.d
   FLAGS = -g -std=gnu++20
   OBJECT_DIR = CMakeFiles/untitled1.dir
   OBJECT_FILE_DIR = CMakeFiles/untitled1.dir/VisualModels
 
-build CMakeFiles/untitled1.dir/VisualModels/TVisualParent.cpp.o: CXX_COMPILER__untitled1_Debug /home/choleraplague/university/Algorithms_KPI_2_Year/lab6secondTry/VisualModels/TVisualParent.cpp || cmake_object_order_depends_target_untitled1
-  DEP_FILE = CMakeFiles/untitled1.dir/VisualModels/TVisualParent.cpp.o.d
+build CMakeFiles/untitled1.dir/VisualModels/TParent.cpp.o: CXX_COMPILER__untitled1_Debug /home/choleraplague/university/Algorithms_KPI_2_Year/lab6secondTry/VisualModels/TParent.cpp || cmake_object_order_depends_target_untitled1
+  DEP_FILE = CMakeFiles/untitled1.dir/VisualModels/TParent.cpp.o.d
+  FLAGS = -g -std=gnu++20
+  OBJECT_DIR = CMakeFiles/untitled1.dir
+  OBJECT_FILE_DIR = CMakeFiles/untitled1.dir/VisualModels
+
+build CMakeFiles/untitled1.dir/VisualModels/TAutoAlignArea.cpp.o: CXX_COMPILER__untitled1_Debug /home/choleraplague/university/Algorithms_KPI_2_Year/lab6secondTry/VisualModels/TAutoAlignArea.cpp || cmake_object_order_depends_target_untitled1
+  DEP_FILE = CMakeFiles/untitled1.dir/VisualModels/TAutoAlignArea.cpp.o.d
   FLAGS = -g -std=gnu++20
   OBJECT_DIR = CMakeFiles/untitled1.dir
   OBJECT_FILE_DIR = CMakeFiles/untitled1.dir/VisualModels
@@ -153,7 +159,7 @@ build CMakeFiles/untitled1.dir/Logic/TCard.cpp.o: CXX_COMPILER__untitled1_Debug 
 #############################################
 # Link the executable untitled1
 
-build untitled1: CXX_EXECUTABLE_LINKER__untitled1_Debug CMakeFiles/untitled1.dir/main.cpp.o CMakeFiles/untitled1.dir/GameSingletons/TGame.cpp.o CMakeFiles/untitled1.dir/States/TMainMenu.cpp.o CMakeFiles/untitled1.dir/GameSingletons/TGameStateMachine.cpp.o CMakeFiles/untitled1.dir/VisualModels/TVisualObject.cpp.o CMakeFiles/untitled1.dir/VisualModels/TVisualParent.cpp.o CMakeFiles/untitled1.dir/GameSingletons/TTextureManager.cpp.o CMakeFiles/untitled1.dir/GameSingletons/TInputHandler.cpp.o CMakeFiles/untitled1.dir/States/TSettings.cpp.o CMakeFiles/untitled1.dir/States/TBoardScreen.cpp.o CMakeFiles/untitled1.dir/Other/NNFileSystem.cpp.o CMakeFiles/untitled1.dir/BoardScreen/TVisualCard.cpp.o CMakeFiles/untitled1.dir/GameSingletons/TLogic.cpp.o CMakeFiles/untitled1.dir/Logic/TSession.cpp.o CMakeFiles/untitled1.dir/Logic/TPlayer.cpp.o CMakeFiles/untitled1.dir/Logic/TCard.cpp.o
+build untitled1: CXX_EXECUTABLE_LINKER__untitled1_Debug CMakeFiles/untitled1.dir/main.cpp.o CMakeFiles/untitled1.dir/GameSingletons/TGame.cpp.o CMakeFiles/untitled1.dir/States/TMainMenu.cpp.o CMakeFiles/untitled1.dir/GameSingletons/TGameStateMachine.cpp.o CMakeFiles/untitled1.dir/VisualModels/TControl.cpp.o CMakeFiles/untitled1.dir/VisualModels/TParent.cpp.o CMakeFiles/untitled1.dir/VisualModels/TAutoAlignArea.cpp.o CMakeFiles/untitled1.dir/GameSingletons/TTextureManager.cpp.o CMakeFiles/untitled1.dir/GameSingletons/TInputHandler.cpp.o CMakeFiles/untitled1.dir/States/TSettings.cpp.o CMakeFiles/untitled1.dir/States/TBoardScreen.cpp.o CMakeFiles/untitled1.dir/Other/NNFileSystem.cpp.o CMakeFiles/untitled1.dir/BoardScreen/TVisualCard.cpp.o CMakeFiles/untitled1.dir/GameSingletons/TLogic.cpp.o CMakeFiles/untitled1.dir/Logic/TSession.cpp.o CMakeFiles/untitled1.dir/Logic/TPlayer.cpp.o CMakeFiles/untitled1.dir/Logic/TCard.cpp.o
   FLAGS = -g
   LINK_LIBRARIES = -lSDL2main  -lSDL2  -lGL
   OBJECT_DIR = CMakeFiles/untitled1.dir

@@ -7,9 +7,9 @@
 
 #include <stack>
 #include "../Patterns/TSingleton.h"
-#include "../VisualModels/IVisual.h"
+#include "../VisualModels/IControl.h"
 
-class TGameStateMachine : public IVisual, public TSingleton<TGameStateMachine> {
+class TGameStateMachine : public IControl, public TSingleton<TGameStateMachine> {
 	public:
 	TGameStateMachine()=default;
 	virtual ~TGameStateMachine() override=default;
@@ -20,11 +20,11 @@ class TGameStateMachine : public IVisual, public TSingleton<TGameStateMachine> {
 	virtual void Render() override;
 	
 	public:
-	virtual void PushState(IVisual* state);
+	virtual void PushState(IControl* state);
 	virtual void PopState();
 	
 	protected:
-	std::stack<IVisual*> m_vStates;
+	std::stack<IControl*> m_vStates;
 };
 
 

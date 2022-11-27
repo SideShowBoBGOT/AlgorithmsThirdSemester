@@ -22,5 +22,5 @@ void TVisualCard::Render() {
 		Dx(DefaultX());
 		Dy(DefaultY());
 	}
-	TVisualObject::Render();
+	TControl::Render();
 }

@@ -2,28 +2,21 @@
 // Created by choleraplague on 18.11.22.
 //
 
-#ifndef UNTITLED1_TVISUALOBJECT_H
-#define UNTITLED1_TVISUALOBJECT_H
+#ifndef UNTITLED1_TCONTROL_H
+#define UNTITLED1_TCONTROL_H
 
 #include <functional>
 #include <string>
 #include <map>
 #include <memory>
 #include <SDL2/SDL.h>
-#include "IVisual.h"
+#include "IControl.h"
+#include "Enums/NNState.h"
 
-class TVisualObject : public IVisual {
+class TControl : public IControl {
 	public:
-	enum class NState {
-		Normal=0,
-		Selected=1,
-		Over=2,
-		OverSelected=Selected | Over,
-	};
-
-	public:
-	TVisualObject()=default;
-	virtual ~TVisualObject() override=default;
+	TControl()=default;
+	virtual ~TControl() override=default;
 	
 	public:
 	virtual void HandleEvents() override;
@@ -34,7 +27,7 @@ class TVisualObject : public IVisual {
 	virtual void StateTexture(NState state, std::string str);
 	
 	public:
-	virtual TVisualObject* GetThis();
+	virtual TControl* GetThis();
 	
 	
 	
@@ -59,23 +52,24 @@ class TVisualObject : public IVisual {
 		DECL(UserData, std::string, s, "");
 		DECL(Enabled, bool, b, true);
 		DECL(Visible, bool, b, true);
+		DECL(Parent, TControl*, p, nullptr);
 	#undef DECL
 	
-	#define INIT_HANDLER(button, type) \
+	#define INIT_BUTTON_HANDLER(button, type) \
     	private:\
-		std::function<void(TVisualObject* obj)> On##button##type##Handler = nullptr; \
+		std::function<void(TControl* obj)> On##button##type##Handler = nullptr; \
                                     \
 		public:\
-		virtual void On##button##type(std::function<void(TVisualObject* obj)>&& func);\
+		virtual void On##button##type(std::function<void(TControl* obj)>&& func);\
 		virtual void On##button##type();
 		
-		INIT_HANDLER(Left, Down);
-		INIT_HANDLER(Right, Down);
-		INIT_HANDLER(Middle, Down);
-		INIT_HANDLER(Left, Up);
-		INIT_HANDLER(Right, Up);
-		INIT_HANDLER(Middle, Up);
-	#undef INIT_HANDLER
+		INIT_BUTTON_HANDLER(Left, Down);
+		INIT_BUTTON_HANDLER(Right, Down);
+		INIT_BUTTON_HANDLER(Middle, Down);
+		INIT_BUTTON_HANDLER(Left, Up);
+		INIT_BUTTON_HANDLER(Right, Up);
+		INIT_BUTTON_HANDLER(Middle, Up);
+	#undef INIT_BUTTON_HANDLER
 	
 	
 	
@@ -87,6 +81,4 @@ class TVisualObject : public IVisual {
 												{NState::Selected, ""}
 											};
 };
-using NState = TVisualObject::NState;
-
-#endif //UNTITLED1_TVISUALOBJECT_H
+#endif //UNTITLED1_TCONTROL_H

@@ -8,15 +8,15 @@
 #include "../Other/NNFileSystem.h"
 
 static int constexpr s_iObjectWidth = 158;
-static int constexpr s_iObjectHeigth = 35;
+static int constexpr s_iObjectHeight = 35;
 static const std::string s_sBoardScreenPath = "BoardScreen/";
 
 TBoardScreen::TBoardScreen() {
 	auto width = TGame::Get()->ScreenWidth();
-	auto heigth = TGame::Get()->ScreenHeight();
+	auto height = TGame::Get()->ScreenHeight();
 	
-	#define INIT(xx, dx, dy, sx, sy, w, h, func) \
-		xx = CreateObject();\
+	#define INIT(xx, parent, type, dx, dy, sx, sy, w, h, func) \
+		xx = parent->CreateObject<type>();\
 		xx->Dx(dx);\
 		xx->Dy(dy);\
 		xx->Sx(sx);\
@@ -34,58 +34,60 @@ TBoardScreen::TBoardScreen() {
 		xx->StateTexture(NState::OverSelected, #xx"OverSelected");\
 		xx->OnLeftDown(func);
 	
-	auto i = 0;
-	#define INIT_BUTTON(xx, dx, dy) \
-        INIT(xx, dx, dy, 0, 0, s_iObjectWidth, s_iObjectHeigth, [this](TVisualObject* obj) { On##xx(obj); });\
-		++i;
-	
-		INIT_BUTTON(NextPageButton, s_iObjectWidth * i, heigth - s_iObjectHeigth);
-		INIT_BUTTON(PrevPageButton, s_iObjectWidth * i, heigth - s_iObjectHeigth);
-		INIT_BUTTON(TakeButton, s_iObjectWidth * i, heigth - s_iObjectHeigth);
-		INIT_BUTTON(PutButton, s_iObjectWidth * i, heigth - s_iObjectHeigth);
-		INIT_BUTTON(EndTurnButton, s_iObjectWidth * i, heigth - s_iObjectHeigth);
-		INIT_BUTTON(DeselectButton, s_iObjectWidth * i, heigth - s_iObjectHeigth);
-		INIT_BUTTON(QuitButton, width - s_iObjectWidth, heigth - s_iObjectHeigth);
-	#undef INIT_BUTTON
-	
-	auto j = 0;
-	#define INIT_LABEL(xx, dx, dy) \
-		INIT(xx, dx, dy, 0, 0, s_iObjectWidth, s_iObjectHeigth, [this](TVisualObject* obj) {}); \
-		j++;
-	
-		INIT_LABEL(AIOneLabel, s_iObjectWidth * j, 0);
-		INIT_LABEL(AITwoLabel, s_iObjectWidth * j, 0);
-		INIT_LABEL(AIThreeLabel, s_iObjectWidth * j, 0);
-	#undef INIT_LABEL
+		INIT(ButtonPanel, this, TAutoAlignArea, 0, height - s_iObjectHeight, 0, 0, width, s_iObjectHeight, [](TControl* obj) {});
+		INIT(AIPanel, this, TAutoAlignArea, 0, 0, 0, 0, width, s_iObjectHeight, [](TControl* obj) {});
+
+		#define INIT_BUTTON(xx) \
+				INIT(xx, ButtonPanel, TControl, 0, 0, 0, 0, s_iObjectWidth, s_iObjectHeight, [this](TControl* obj) { On##xx(obj); });\
+			
+				INIT_BUTTON(NextPageButton);
+				INIT_BUTTON(PrevPageButton);
+				INIT_BUTTON(TakeButton);
+				INIT_BUTTON(PutButton);
+				INIT_BUTTON(EndTurnButton);
+				INIT_BUTTON(DeselectButton);
+				INIT_BUTTON(QuitButton);
+		#undef INIT_BUTTON
+		
+		#define INIT_LABEL(xx) \
+			INIT(xx, AIPanel, TControl, 0, 0, 0, 0, s_iObjectWidth, s_iObjectHeight, [this](TControl* obj) {}); \
+		
+			INIT_LABEL(AIOneLabel);
+			INIT_LABEL(AITwoLabel);
+			INIT_LABEL(AIThreeLabel);
+		#undef INIT_LABEL
 	
 	#undef INIT
+	
+	ButtonPanel->ALignObjects();
+	AIPanel->ALignObjects();
 }
 
-void TBoardScreen::OnQuitButton(TVisualObject* obj) {
+void TBoardScreen::OnQuitButton(TControl* obj) {
 	TGameStateMachine::Get()->PopState();
 }
 
-void TBoardScreen::OnPutButton(TVisualObject* obj) {
+void TBoardScreen::OnPutButton(TControl* obj) {
 
 }
 
-void TBoardScreen::OnTakeButton(TVisualObject* obj) {
+void TBoardScreen::OnTakeButton(TControl* obj) {
 
 }
 
-void TBoardScreen::OnEndTurnButton(TVisualObject* obj) {
+void TBoardScreen::OnEndTurnButton(TControl* obj) {
 
 }
 
-void TBoardScreen::OnNextPageButton(TVisualObject* obj) {
+void TBoardScreen::OnNextPageButton(TControl* obj) {
 
 }
 
-void TBoardScreen::OnPrevPageButton(TVisualObject* obj) {
+void TBoardScreen::OnPrevPageButton(TControl* obj) {
 
 }
 
-void TBoardScreen::OnDeselectButton(TVisualObject* obj) {
+void TBoardScreen::OnDeselectButton(TControl* obj) {
 
 }
 
