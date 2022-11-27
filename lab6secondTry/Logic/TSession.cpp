@@ -29,18 +29,23 @@ TSession::TSession(NDifficulty diff, int playersNumber) {
 		m_vPlayers.emplace_back(std::make_shared<TPlayer>());
 	}
 	m_pLocalPlayer = m_vPlayers[0];
-	m_pCurrentPlayer = PickRandomPlayer();
+	RandomPlayer();
+	NextPlayer();
 }
 
-std::shared_ptr<TPlayer> TSession::PickRandomPlayer() {
+void TSession::RandomPlayer() {
 	std::random_device dev;
     std::mt19937 rng(dev());
     std::uniform_int_distribution<std::mt19937::result_type> dist(0,PlayersNumber() - 1);
-	return Players()[dist(rng)];
+	m_pCurrentPlayer = Players()[dist(rng)];
 }
 
-std::shared_ptr<TPlayer> TSession::PickNextPlayer() {
+void TSession::NextPlayer() {
 	auto curPlIt = std::find(m_vPlayers.begin(), m_vPlayers.end(), CurrentPlayer());
-	return  *((curPlIt + 1 == m_vPlayers.end()) ? (m_vPlayers.begin()) : (curPlIt + 1));
+	m_pCurrentPlayer = *((curPlIt + 1 == m_vPlayers.end()) ? (m_vPlayers.begin()) : (curPlIt + 1));
+}
+
+void TSession::NextTurn() {
+
 };
 #undef DECL

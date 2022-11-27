@@ -324,12 +324,12 @@
 		{
 			"backtrace" : 1,
 			"compileGroupIndex" : 0,
-			"path" : "BoardScreen/TVisualCard.cpp",
+			"path" : "VisualModels/TVisualCard.cpp",
 			"sourceGroupIndex" : 0
 		},
 		{
 			"backtrace" : 1,
-			"path" : "BoardScreen/TVisualCard.h",
+			"path" : "VisualModels/TVisualCard.h",
 			"sourceGroupIndex" : 1
 		},
 		{

@@ -7,6 +7,7 @@
 
 #include <array>
 #include "../VisualModels/TAutoAlignArea.h"
+#include "../VisualModels/TVisualCard.h"
 
 class TBoardScreen : public TParent {
 	public:
@@ -19,8 +20,6 @@ class TBoardScreen : public TParent {
 	TControl* TakeButton 		= nullptr;
 	TControl* EndTurnButton 	= nullptr;
 	TControl* QuitButton 		= nullptr;
-	TControl* NextPageButton 	= nullptr;
-	TControl* PrevPageButton 	= nullptr;
 	TControl* DeselectButton 	= nullptr;
 	
 	public:
@@ -29,22 +28,22 @@ class TBoardScreen : public TParent {
 	TControl* AITwoLabel 		= nullptr;
 	TControl* AIThreeLabel 		= nullptr;
 	
-	protected:
-	static constexpr int CardSlotSize = 8;
-	std::array<TControl*, CardSlotSize> CardSlots;
+	public:
+	std::vector<TVisualCard*> VisualCards;
+	TAutoAlignArea* LocalCards 	= nullptr;
+	TAutoAlignArea* PlayCards 	= nullptr;
 	
 	protected:
 	void OnPutButton(TControl* obj);
 	void OnTakeButton(TControl* obj);
 	void OnEndTurnButton(TControl* obj);
 	void OnQuitButton(TControl* obj);
-	void OnNextPageButton(TControl* obj);
-	void OnPrevPageButton(TControl* obj);
 	void OnDeselectButton(TControl* obj);
 	
 	protected:
 	void LockInterface();
 	void UnLockInterface();
+	void OnChangeCardsArea(TControl* c);
 };
 //101x144
 

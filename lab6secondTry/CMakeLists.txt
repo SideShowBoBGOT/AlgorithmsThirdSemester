@@ -29,11 +29,11 @@ GameSingletons/TInputHandler.h
 States/TSettings.cpp
 States/TSettings.h
 States/TBoardScreen.cpp
-States/TBoardScreen.h
+        States/TBoardScreen.h
 Other/NNFileSystem.cpp
 Other/NNFileSystem.h
-BoardScreen/TVisualCard.cpp
-BoardScreen/TVisualCard.h
+        VisualModels/TVisualCard.cpp
+        VisualModels/TVisualCard.h
 GameSingletons/TLogic.cpp
 GameSingletons/TLogic.h
 Logic/TSession.cpp

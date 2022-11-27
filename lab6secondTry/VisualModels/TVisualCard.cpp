@@ -15,12 +15,12 @@
 #undef DECL
 
 void TVisualCard::Render() {
-	if(static_cast<int>(m_xState) & static_cast<int>(NState::Selected)) {
-		Dx(DefaultX() + ShiftX());
-		Dy(DefaultY() + ShiftY());
-	} else {
-		Dx(DefaultX());
-		Dy(DefaultY());
-	}
+//	if(static_cast<int>(m_xState) & static_cast<int>(NState::Selected)) {
+//		Dx(DefaultX() + ShiftX());
+//		Dy(DefaultY() + ShiftY());
+//	} else {
+//		Dx(DefaultX());
+//		Dy(DefaultY());
+//	}
 	TControl::Render();
 }

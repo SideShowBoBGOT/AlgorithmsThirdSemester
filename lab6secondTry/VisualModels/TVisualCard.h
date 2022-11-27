@@ -5,7 +5,7 @@
 #ifndef UNTITLED1_TVISUALCARD_H
 #define UNTITLED1_TVISUALCARD_H
 
-#include "../VisualModels/TControl.h"
+#include "TControl.h"
 
 class TVisualCard : public TControl {
 	public:

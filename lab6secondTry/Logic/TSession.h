@@ -36,9 +36,12 @@ class TSession {
 		DECL(CurrentPlayer, std::shared_ptr<TPlayer>, p, nullptr);
 	#undef DECL
 	
+	public:
+	void NextTurn();
+	void NextPlayer();
+
 	protected:
-	std::shared_ptr<TPlayer> PickRandomPlayer();
-	std::shared_ptr<TPlayer> PickNextPlayer();
+	void RandomPlayer();
 };
 
 

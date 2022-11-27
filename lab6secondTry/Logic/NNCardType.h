@@ -6,11 +6,12 @@
 #define UNTITLED1_NNCARDTYPE_H
 
 namespace NNCardType {
-	enum class NCardType {
+	enum NCardType {
 		Hearts=0,
-		Clubs=1,
+		Spades=1,
 		Diamonds=2,
-		Spades=3
+		Clubs=3,
+		Size=4
 	};
 }
 typedef NNCardType::NCardType NCardType;

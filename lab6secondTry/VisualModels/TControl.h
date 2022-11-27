@@ -54,24 +54,23 @@ class TControl : public IControl {
 		DECL(Visible, bool, b, true);
 		DECL(Parent, TControl*, p, nullptr);
 	#undef DECL
-	
-	#define INIT_BUTTON_HANDLER(button, type) \
-    	private:\
-		std::function<void(TControl* obj)> On##button##type##Handler = nullptr; \
+		
+	#define INIT_HANDLER(xx) \
+    	protected:\
+		std::function<void(TControl* obj)> On##xx##Handler = nullptr; \
                                     \
 		public:\
-		virtual void On##button##type(std::function<void(TControl* obj)>&& func);\
-		virtual void On##button##type();
+		virtual void On##xx(std::function<void(TControl* obj)>&& func);\
+		virtual void On##xx();
 		
-		INIT_BUTTON_HANDLER(Left, Down);
-		INIT_BUTTON_HANDLER(Right, Down);
-		INIT_BUTTON_HANDLER(Middle, Down);
-		INIT_BUTTON_HANDLER(Left, Up);
-		INIT_BUTTON_HANDLER(Right, Up);
-		INIT_BUTTON_HANDLER(Middle, Up);
-	#undef INIT_BUTTON_HANDLER
-	
-	
+		INIT_HANDLER(LeftDown);
+		INIT_HANDLER(RightDown);
+		INIT_HANDLER(MiddleDown);
+		INIT_HANDLER(LeftUp);
+		INIT_HANDLER(RightUp);
+		INIT_HANDLER(MiddleUp);
+		INIT_HANDLER(Change);
+	#undef INIT_HANDLER
 	
 	protected:
 	std::map<NState, std::string> m_mMap = 	{

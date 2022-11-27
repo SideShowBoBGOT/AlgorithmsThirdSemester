@@ -7,7 +7,11 @@
 #include "../GameSingletons/TInputHandler.h"
 
 #define DECL(xx, type, prefix) \
-	void TControl::xx(type vv) { m_##prefix##xx = vv; } \
+	void TControl::xx(type vv) {  \
+		m_##prefix##xx = vv;          \
+		if(m_pParent) m_pParent->OnChange(); \
+		OnChange();\
+	} \
     type TControl::xx() { return m_##prefix##xx; }
 	
 	DECL(Sx, int, i);
@@ -34,20 +38,21 @@ void TControl::Dy(int vv) {
 
 int TControl::Dy() { return m_iDy; }
 
-#define INIT_BUTTON_HANDLER(button, type) \
-	void TControl::On##button##type(std::function<void(TControl* obj)>&& func) { \
-		On##button##type##Handler = std::move(func);\
+#define INIT_BUTTON_HANDLER(xx) \
+	void TControl::On##xx(std::function<void(TControl* obj)>&& func) { \
+		On##xx##Handler = std::move(func);\
 	} \
-	void TControl::On##button##type() { \
-		if(On##button##type##Handler) On##button##type##Handler(this);\
+	void TControl::On##xx() { \
+		if(On##xx##Handler) On##xx##Handler(this);\
 	}
 	
-	INIT_BUTTON_HANDLER(Left, Down);
-	INIT_BUTTON_HANDLER(Right, Down);
-	INIT_BUTTON_HANDLER(Middle, Down);
-	INIT_BUTTON_HANDLER(Left, Up);
-	INIT_BUTTON_HANDLER(Right, Up);
-	INIT_BUTTON_HANDLER(Middle, Up);
+	INIT_BUTTON_HANDLER(LeftDown);
+	INIT_BUTTON_HANDLER(RightDown);
+	INIT_BUTTON_HANDLER(MiddleDown);
+	INIT_BUTTON_HANDLER(LeftUp);
+	INIT_BUTTON_HANDLER(RightUp);
+	INIT_BUTTON_HANDLER(MiddleUp);
+	INIT_BUTTON_HANDLER(Change);
 #undef INIT_BUTTON_HANDLER
 
 #define BOOL_STATE(xx) \
