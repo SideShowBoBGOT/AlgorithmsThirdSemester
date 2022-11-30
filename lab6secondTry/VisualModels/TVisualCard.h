@@ -5,14 +5,24 @@
 #ifndef UNTITLED1_TVISUALCARD_H
 #define UNTITLED1_TVISUALCARD_H
 
-#include "TControl.h"
+#include "TParent.h"
 
-class TVisualCard : public TControl {
+class TVisualCard : public TParent {
 	public:
-	TVisualCard()=default;
-	virtual ~TVisualCard()=default;
+	TVisualCard();
+	virtual ~TVisualCard() override;
 	
 	virtual void Render() override;
+	
+	public:
+	TControl* Content = nullptr;
+	
+	#define DECL_OVERRIDE(xx, type) \
+        public:                        \
+		virtual void xx(type vv) override; \
+	
+		DECL_OVERRIDE(Dx, int);
+	#undef DECL_OVERRIDE
 	
 	#define DECL(xx, type, prefix, val) \
 		protected:            \
@@ -22,9 +32,6 @@ class TVisualCard : public TControl {
 		virtual void xx(type vv); \
 		virtual type xx();
 	
-		DECL(DefaultY, int, i, 0);
-		DECL(DefaultX, int, i, 0);
-		DECL(ShiftX, int, i, 0);
 		DECL(ShiftY, int, i, 0);
 	#undef DECL
 };

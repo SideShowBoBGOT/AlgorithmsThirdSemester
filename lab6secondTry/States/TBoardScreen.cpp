@@ -12,13 +12,15 @@ static int constexpr s_iObjectWidth = 158;
 static int constexpr s_iObjectHeight = 35;
 static int constexpr s_iCardWidth = 101;
 static int constexpr s_iCardHeight = 144;
+static int constexpr s_iCardsPanelWidht= 200;
+static int constexpr s_iShiftY = -90;
+static int constexpr s_iPadding = 90;
 static const std::string s_sBoardScreenPath = "BoardScreen/";
 static const std::string s_sCardsId = "CardsNormal";
 
 TBoardScreen::TBoardScreen() {
 	auto width = TGame::Get()->ScreenWidth();
 	auto height = TGame::Get()->ScreenHeight();
-	
 	
 	#define INIT(xx, parent, type, dx, dy, sx, sy, w, h, func) \
 		xx = parent->CreateObject<type>();\
@@ -41,11 +43,8 @@ TBoardScreen::TBoardScreen() {
 	
 		INIT(ButtonPanel, this, TAutoAlignArea, 0, height - s_iObjectHeight, 0, 0, width, s_iObjectHeight, [](TControl* obj) {});
 		INIT(AIPanel, this, TAutoAlignArea, 0, 0, 0, 0, width, s_iObjectHeight, [](TControl* obj) {});
-		INIT(LocalCards, this, TAutoAlignArea, 100, height - s_iObjectHeight - s_iCardHeight - 20, 0, 0, width - 200, height / 2, [](TControl* obj) {});
-		INIT(PlayCards, this, TAutoAlignArea, 0, s_iObjectHeight + 30, 0, 0, width, height / 2, [](TControl* obj) {});
-	
-		LocalCards->OnChange([this](TControl* c) { OnChangeCardsArea(c); });
-		PlayCards->OnChange([this](TControl* c) { OnChangeCardsArea(c); });
+		INIT(LocalCards, this, TAutoAlignArea, s_iCardWidth, height - s_iObjectHeight - s_iCardHeight - 20, 0, 0, width - 2 * s_iCardWidth, height / 2, [](TControl* obj) {});
+		INIT(PlayCards, this, TAutoAlignArea, s_iCardWidth, s_iObjectHeight + 30, 0, 0, width - 2 * s_iCardWidth, height / 2, [](TControl* obj) {});
 		
 		#define INIT_BUTTON(xx) \
 				INIT(xx, ButtonPanel, TControl, 0, 0, 0, 0, s_iObjectWidth, s_iObjectHeight, [this](TControl* obj) { On##xx(obj); });\
@@ -71,7 +70,7 @@ TBoardScreen::TBoardScreen() {
 	TTextureManager::Get()->Load(NNFileSystem::AssetsImagePath(s_sBoardScreenPath + "Cards/Normal").c_str(), s_sCardsId.c_str(), TGame::Get()->Renderer());\
 	
 	auto& cards = TLogic::Get()->Cards;
-	for(auto& c : cards) {
+	for(auto& c : cards) /*if(c->Type()==NCardType::Hearts and c->Value() < NCardValue::Eight)*/ {
 		auto row = static_cast<int>(c->Value());
 		auto column = static_cast<int>(c->Type())*2;
 		if(row > NCardValue::Eight) {
@@ -84,21 +83,31 @@ TBoardScreen::TBoardScreen() {
 		auto vis = LocalCards->CreateObject<TVisualCard>();
 		vis->Dx(0);
 		vis->Dy(0);
-		vis->Sx(column);
-		vis->Sy(row);
+		vis->Content->Dx(0);
+		vis->Content->Dy(0);
+		vis->Content->Sx(column);
+		vis->Content->Sy(row);
+		vis->ShiftY(s_iShiftY);
 		vis->Width(s_iCardWidth);
+		vis->Content->Width(s_iCardWidth);
+		vis->Content->Height(s_iCardHeight);
 		vis->Height(s_iCardHeight);
 		vis->Renderer(TGame::Get()->Renderer());
-		vis->StateTexture(NState::Normal, s_sCardsId);
-		vis->StateTexture(NState::Over, s_sCardsId);
-		vis->StateTexture(NState::Selected, s_sCardsId);
-		vis->StateTexture(NState::OverSelected, s_sCardsId);
+		vis->Content->Renderer(TGame::Get()->Renderer());
+		vis->Content->StateTexture(NState::Normal, s_sCardsId);
+		vis->Content->StateTexture(NState::Over, s_sCardsId);
+		vis->Content->StateTexture(NState::Selected, s_sCardsId);
+		vis->Content->StateTexture(NState::OverSelected, s_sCardsId);
+		//vis->ControlChildState(true);
 		VisualCards.emplace_back(vis);
 	}
-	
-	ButtonPanel->ALignObjects();
-	AIPanel->ALignObjects();
+	LocalCards->Align(NAlign::Central);
+	PlayCards->Align(NAlign::Central);
 	LocalCards->ALignObjects();
+	PlayCards->ALignObjects();
+//	LocalCards->ControlChildState(true);
+//	PlayCards->ControlChildState(true);
+//	ButtonPanel->ControlChildState(true);
 }
 
 void TBoardScreen::OnQuitButton(TControl* obj) {
@@ -142,7 +151,14 @@ void TBoardScreen::UnLockInterface() {
 	}
 }
 
-void TBoardScreen::OnChangeCardsArea(TControl* c) {
-	auto area = dynamic_cast<TAutoAlignArea*>(c);
-	area->ALignObjects();
+void TBoardScreen::NumberOfVisibleAILabels() {
+	auto number = TLogic::Get()->Session->PlayersNumber() - 1;
+	auto i = 0;
+	for(auto& aiLabel : {AIOneLabel, AITwoLabel, AIThreeLabel}) {
+		auto isHidden = i < number;
+		aiLabel->Visible(isHidden);
+		aiLabel->Enabled(isHidden);
+		++i;
+	}
+	
 }

@@ -27,9 +27,7 @@ class TControl : public IControl {
 	virtual void StateTexture(NState state, std::string str);
 	
 	public:
-	virtual TControl* GetThis();
-	
-	
+	virtual bool IsMouseOn();
 	
 	#define DECL(xx, type, prefix, val) \
 		protected:            \
@@ -53,6 +51,7 @@ class TControl : public IControl {
 		DECL(Enabled, bool, b, true);
 		DECL(Visible, bool, b, true);
 		DECL(Parent, TControl*, p, nullptr);
+		DECL(ZIndex, int, i, 0);
 	#undef DECL
 		
 	#define INIT_HANDLER(xx) \
@@ -71,6 +70,10 @@ class TControl : public IControl {
 		INIT_HANDLER(MiddleUp);
 		INIT_HANDLER(Change);
 	#undef INIT_HANDLER
+	
+	public:
+	virtual int AbsoluteDx();
+	virtual int AbsoluteDy();
 	
 	protected:
 	std::map<NState, std::string> m_mMap = 	{

@@ -9,8 +9,6 @@
 #define DECL(xx, type, prefix) \
 	void TControl::xx(type vv) {  \
 		m_##prefix##xx = vv;          \
-		if(m_pParent) m_pParent->OnChange(); \
-		OnChange();\
 	} \
     type TControl::xx() { return m_##prefix##xx; }
 	
@@ -24,16 +22,17 @@
 	DECL(Visible, bool, b);
 	DECL(Enabled, bool, b);
 	DECL(Parent, TControl*, p);
+	DECL(ZIndex, int, i);
 #undef DECL
 
 void TControl::Dx(int vv) {
-	m_iDx = m_pParent->Dx() + vv;
+	m_iDx = vv;
 }
 
 int TControl::Dx() { return m_iDx; }
 
 void TControl::Dy(int vv) {
-	m_iDy = m_pParent->Dy() + vv;
+	m_iDy = vv;
 }
 
 int TControl::Dy() { return m_iDy; }
@@ -59,10 +58,10 @@ int TControl::Dy() { return m_iDy; }
 	void TControl::xx(bool vv) { \
         m_b##xx = vv;\
 		if(m_b##xx) {\
-			m_xState = static_cast<NState>(static_cast<int>(m_xState) | static_cast<int>(NState::xx));\
+			State(static_cast<NState>(static_cast<int>(State()) | static_cast<int>(NState::xx)));\
 			return;\
 		}\
-		m_xState = static_cast<NState>(static_cast<int>(m_xState) & ~static_cast<int>(NState::xx));\
+		State(static_cast<NState>(static_cast<int>(State()) & ~static_cast<int>(NState::xx)));\
                \
     }\
 	bool TControl::xx() { return m_b##xx; }
@@ -71,9 +70,15 @@ int TControl::Dy() { return m_iDy; }
 	BOOL_STATE(Over);
 #undef BOOL_STATE
 
-TControl* TControl::GetThis() {
-	return this;
+bool TControl::IsMouseOn() {
+	auto x = TInputHandler::Get()->X();
+	auto y = TInputHandler::Get()->Y();
+	auto dx = AbsoluteDx();
+	auto dy = AbsoluteDy();
+	return dx <= x and x < dx + m_iWidth
+		and dy <= y and y < dy + m_iHeight;
 }
+
 
 void TControl::Render() {
 	if(not Visible()) return;
@@ -82,18 +87,17 @@ void TControl::Render() {
 	if(str.empty()) {
 		str = m_mMap[NState::Normal];
 	}
+	auto dx = AbsoluteDx();
+	auto dy = AbsoluteDy();
 	TTextureManager::Get()->Render(str.c_str(), m_iSx, m_iSy,
-	 m_iDx, m_iDy, m_iWidth, m_iHeight, m_pRenderer);
+	 dx, dy, m_iWidth, m_iHeight, m_pRenderer);
 }
 
 void TControl::HandleEvents() {
 	if(not Enabled()) return;
 	
-	auto x = TInputHandler::Get()->X();
-	auto y = TInputHandler::Get()->Y();
-	if( m_iDx <= x and x < m_iDx + m_iWidth
-		and m_iDy <= y and y < m_iDy + m_iHeight ) {
-		m_xState = static_cast<NState>(static_cast<int>(m_xState) | static_cast<int>(NState::Over));
+	if(IsMouseOn()) {
+		State(static_cast<NState>(static_cast<int>(State()) | static_cast<int>(NState::Over)));
 		if(TInputHandler::Get()->Downs(NMouseButton::Left)) {
 			Selected(not Selected());
 		}
@@ -118,3 +122,14 @@ void TControl::HandleEvents() {
 void TControl::Clean() { return; }
 
 void TControl::StateTexture(NState state, std::string textureID) { m_mMap[state] = textureID; }
+
+int TControl::AbsoluteDx() {
+	if(not m_pParent) return 0;
+	return m_iDx + m_pParent->AbsoluteDx();
+}
+
+int TControl::AbsoluteDy() {
+	if(not m_pParent) return 0;
+	return m_iDy + m_pParent->AbsoluteDy();
+}
+

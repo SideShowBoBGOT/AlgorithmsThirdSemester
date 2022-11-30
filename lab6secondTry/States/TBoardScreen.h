@@ -33,6 +33,9 @@ class TBoardScreen : public TParent {
 	TAutoAlignArea* LocalCards 	= nullptr;
 	TAutoAlignArea* PlayCards 	= nullptr;
 	
+	public:
+	void NumberOfVisibleAILabels();
+	
 	protected:
 	void OnPutButton(TControl* obj);
 	void OnTakeButton(TControl* obj);
@@ -43,7 +46,6 @@ class TBoardScreen : public TParent {
 	protected:
 	void LockInterface();
 	void UnLockInterface();
-	void OnChangeCardsArea(TControl* c);
 };
 //101x144
 

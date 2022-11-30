@@ -22,7 +22,7 @@ VisualModels/TParent.cpp
 VisualModels/TParent.h
 VisualModels/TAutoAlignArea.cpp
 VisualModels/TAutoAlignArea.h
-GameSingletons/TTextureManager.cpp
+        GameSingletons/TTextureManager.cpp
 GameSingletons/TTextureManager.h
 GameSingletons/TInputHandler.cpp
 GameSingletons/TInputHandler.h

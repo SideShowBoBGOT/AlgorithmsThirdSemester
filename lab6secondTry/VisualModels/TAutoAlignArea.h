@@ -10,7 +10,7 @@
 
 class TAutoAlignArea : public TParent {
 	public:
-	TAutoAlignArea()=default;
+	TAutoAlignArea();
 	virtual ~TAutoAlignArea() override=default;
 	
 	#define DECL(xx, type, prefix, val) \
@@ -20,12 +20,16 @@ class TAutoAlignArea : public TParent {
         public:                        \
 		virtual void xx(type vv); \
 		virtual type xx();
-	
-	DECL(Align, NAlign, x, NAlign::Horizontal);
+		
+		DECL(Padding, int, i, 0);
+		DECL(Align, NAlign, x, NAlign::Horizontal);
 	#undef DECL
 	
 	public:
 	virtual void ALignObjects();
+	
+	public:
+	virtual void OnChange(std::function<void(TControl* obj)>&& func) override;
 };
 
 

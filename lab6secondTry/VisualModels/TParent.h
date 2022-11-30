@@ -17,6 +17,27 @@ class TParent : public TControl {
 	virtual void Render() override;
 	virtual void Clean() override;
 	
+	#define DECL_OVERRIDE(xx, type) \
+        public:                        \
+		virtual void xx(type vv) override; \
+	
+		DECL_OVERRIDE(State, NState);
+		DECL_OVERRIDE(Enabled, bool);
+		DECL_OVERRIDE(Visible, bool);
+	#undef DECL_OVERRIDE
+	
+	#define DECL(xx, type, prefix, val) \
+		protected:            \
+		type m_##prefix##xx = val;      \
+								\
+		public:                        \
+		virtual void xx(type vv); \
+		virtual type xx();
+	
+		DECL(ControlChildState, bool, b, false);
+	#undef DECL
+	
+	
 	public:
 	template<typename T>
 	T* CreateObject() {
@@ -28,6 +49,7 @@ class TParent : public TControl {
 	}
 	
 	public:
+	virtual void AddObject(TControl* c);
 	std::vector<TControl*>& ObjectsPool();
 	
 	protected:

@@ -46,6 +46,11 @@ void TInputHandler::Clean() {
 	}
 }
 
+void TInputHandler::CleanMousePosition() {
+	m_iX = -1;
+	m_iY = -1;
+}
+
 bool TInputHandler::Downs(TInputHandler::NMouseButton btn) { return m_vDowns[btn]; }
 
 bool TInputHandler::Ups(TInputHandler::NMouseButton btn) { return m_vUps[btn]; }

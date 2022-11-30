@@ -45,7 +45,9 @@ void TMainMenu::OnStartButton(TControl* obj) {
 	auto diff = settings->GetDifficulty();
 	auto& session = TLogic::Get()->Session;
 	session = std::make_shared<TSession>(diff, number);
-	TGameStateMachine::Get()->PushState(TGame::Get()->BoardScreen);
+	auto& boardScreen = TGame::Get()->BoardScreen;
+	boardScreen->NumberOfVisibleAILabels();
+	TGameStateMachine::Get()->PushState(boardScreen);
 }
 
 void TMainMenu::OnSettigsButton(TControl* obj) {

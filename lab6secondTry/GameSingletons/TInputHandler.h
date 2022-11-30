@@ -23,6 +23,7 @@ class TInputHandler : public TSingleton<TInputHandler> {
 	public:
 	virtual void Update();
 	virtual void Clean();
+	virtual void CleanMousePosition();
 	
 	public:
 	virtual bool Downs(NMouseButton btn);
