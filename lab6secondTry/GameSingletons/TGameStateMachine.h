@@ -15,9 +15,9 @@ class TGameStateMachine : public IControl, public TSingleton<TGameStateMachine> 
 	virtual ~TGameStateMachine() override=default;
 	
 	public:
-	virtual void HandleEvents() override;
-	virtual void Clean() override;
-	virtual void Render() override;
+	virtual bool HandleEvents() override;
+	virtual bool Clean() override;
+	virtual bool Render() override;
 	
 	public:
 	virtual void PushState(IControl* state);

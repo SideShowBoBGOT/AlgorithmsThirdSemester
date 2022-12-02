@@ -12,7 +12,7 @@ class TVisualCard : public TParent {
 	TVisualCard();
 	virtual ~TVisualCard() override;
 	
-	virtual void Render() override;
+	virtual bool Render() override;
 	
 	public:
 	TControl* Content = nullptr;

@@ -24,7 +24,7 @@ TVisualCard::~TVisualCard() {
 	delete Content;
 }
 
-void TVisualCard::Render() {
+bool TVisualCard::Render() {
 	if(static_cast<int>(m_xState) & static_cast<int>(NState::OverSelected)) {
 		Content->Dy(ShiftY());
 	} else {

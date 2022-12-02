@@ -26,6 +26,18 @@ class TAutoAlignArea : public TParent {
 	#undef DECL
 	
 	public:
+	template<typename T>
+	T* CreateObject() {
+		auto object = new T();
+		auto ctrl = dynamic_cast<TControl*>(object);
+		AddChild(ctrl);
+		return object;
+	}
+	
+	public:
+	virtual void AddChild(TControl* child) override;
+	
+	public:
 	virtual void ALignObjects();
 	
 	public:

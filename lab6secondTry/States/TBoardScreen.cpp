@@ -22,6 +22,7 @@ TBoardScreen::TBoardScreen() {
 	auto width = TGame::Get()->ScreenWidth();
 	auto height = TGame::Get()->ScreenHeight();
 	
+	
 	#define INIT(xx, parent, type, dx, dy, sx, sy, w, h, func) \
 		xx = parent->CreateObject<type>();\
 		xx->Dx(dx);\
@@ -46,23 +47,33 @@ TBoardScreen::TBoardScreen() {
 		INIT(LocalCards, this, TAutoAlignArea, s_iCardWidth, height - s_iObjectHeight - s_iCardHeight - 20, 0, 0, width - 2 * s_iCardWidth, height / 2, [](TControl* obj) {});
 		INIT(PlayCards, this, TAutoAlignArea, s_iCardWidth, s_iObjectHeight + 30, 0, 0, width - 2 * s_iCardWidth, height / 2, [](TControl* obj) {});
 		
+		LocalCards->Align(NAlign::Central);
+		PlayCards->Align(NAlign::Central);
+		
 		#define INIT_BUTTON(xx) \
-				INIT(xx, ButtonPanel, TControl, 0, 0, 0, 0, s_iObjectWidth, s_iObjectHeight, [this](TControl* obj) { On##xx(obj); });\
-		
-				INIT_BUTTON(TakeButton);
-				INIT_BUTTON(PutButton);
-				INIT_BUTTON(EndTurnButton);
-				INIT_BUTTON(DeselectButton);
-				INIT_BUTTON(QuitButton);
+			INIT(xx, ButtonPanel, TControl, 0, 0, 0, 0, s_iObjectWidth, s_iObjectHeight, [this](TControl* obj) { On##xx(obj); });\
+	
+			INIT_BUTTON(TakeButton);
+			INIT_BUTTON(PutButton);
+			INIT_BUTTON(EndTurnButton);
+			INIT_BUTTON(DeselectButton);
+			INIT_BUTTON(QuitButton);
 		#undef INIT_BUTTON
+	
+		#define TO_STR(xx) std::string(#xx)
 		
-		#define INIT_LABEL(xx) \
-			INIT(xx, AIPanel, TControl, 0, 0, 0, 0, s_iObjectWidth, s_iObjectHeight, [this](TControl* obj) {}); \
-		
-			INIT_LABEL(AIOneLabel);
-			INIT_LABEL(AITwoLabel);
-			INIT_LABEL(AIThreeLabel);
+		#define INIT_LABEL(parent, xx) \
+			xx = new TAIBlock(TO_STR(xx));\
+            xx->Dx(0);                     \
+			xx->Dy(0);                    \
+            xx->Renderer(TGame::Get()->Renderer());                     \
+			parent->AddChild(xx);
+			
+			INIT_LABEL(AIPanel, AIOneLabel);
+			INIT_LABEL(AIPanel, AITwoLabel);
+			INIT_LABEL(AIPanel, AIThreeLabel);
 		#undef INIT_LABEL
+		#undef TO_STR
 	
 	#undef INIT
 
@@ -80,7 +91,7 @@ TBoardScreen::TBoardScreen() {
 		row *= s_iCardHeight;
 		column *= s_iCardWidth;
 		
-		auto vis = LocalCards->CreateObject<TVisualCard>();
+		auto vis = new TVisualCard();
 		vis->Dx(0);
 		vis->Dy(0);
 		vis->Content->Dx(0);
@@ -100,14 +111,45 @@ TBoardScreen::TBoardScreen() {
 		vis->Content->StateTexture(NState::OverSelected, s_sCardsId);
 		//vis->ControlChildState(true);
 		VisualCards.emplace_back(vis);
+		LocalCards->AddChild(vis);
 	}
-	LocalCards->Align(NAlign::Central);
-	PlayCards->Align(NAlign::Central);
-	LocalCards->ALignObjects();
-	PlayCards->ALignObjects();
-//	LocalCards->ControlChildState(true);
-//	PlayCards->ControlChildState(true);
-//	ButtonPanel->ControlChildState(true);
+	
+	
+	for(auto& c : cards) if(c->Type()==NCardType::Hearts and c->Value() < NCardValue::Seven) {
+		auto row = static_cast<int>(c->Value());
+		auto column = static_cast<int>(c->Type())*2;
+		if(row > NCardValue::Eight) {
+			++column;
+			row -= static_cast<int>(NCardValue::Nine);
+		}
+		row *= s_iCardHeight;
+		column *= s_iCardWidth;
+		
+		auto vis = new TVisualCard();
+		vis->Content->Dx(0);
+		vis->Content->Dy(0);
+		vis->Content->Sx(column);
+		vis->Content->Sy(row);
+		vis->ShiftY(s_iShiftY);
+		vis->Width(s_iCardWidth);
+		vis->Content->Width(s_iCardWidth);
+		vis->Content->Height(s_iCardHeight);
+		vis->Height(s_iCardHeight);
+		vis->Renderer(TGame::Get()->Renderer());
+		vis->Content->Renderer(TGame::Get()->Renderer());
+		vis->Content->StateTexture(NState::Normal, s_sCardsId);
+		vis->Content->StateTexture(NState::Over, s_sCardsId);
+		vis->Content->StateTexture(NState::Selected, s_sCardsId);
+		vis->Content->StateTexture(NState::OverSelected, s_sCardsId);
+		//vis->ControlChildState(true);
+		VisualCards.emplace_back(vis);
+		AIOneLabel->Cards->AddChild(vis);
+	}
+//	ButtonPanel->ALignObjects();
+//	AIPanel->ALignObjects();
+//
+//	LocalCards->ALignObjects();
+//	PlayCards->ALignObjects();
 }
 
 void TBoardScreen::OnQuitButton(TControl* obj) {
@@ -160,5 +202,5 @@ void TBoardScreen::NumberOfVisibleAILabels() {
 		aiLabel->Enabled(isHidden);
 		++i;
 	}
-	
+	AIPanel->ALignObjects();
 }

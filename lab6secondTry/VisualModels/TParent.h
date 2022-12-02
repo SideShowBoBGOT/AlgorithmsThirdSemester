@@ -13,15 +13,15 @@ class TParent : public TControl {
 	virtual ~TParent() override;
 	
 	public:
-	virtual void HandleEvents() override;
-	virtual void Render() override;
-	virtual void Clean() override;
+	virtual bool HandleEvents() override;
+	virtual bool Render() override;
+	virtual bool Clean() override;
 	
 	#define DECL_OVERRIDE(xx, type) \
         public:                        \
 		virtual void xx(type vv) override; \
 	
-		DECL_OVERRIDE(State, NState);
+		DECL_OVERRIDE(Over, bool);
 		DECL_OVERRIDE(Enabled, bool);
 		DECL_OVERRIDE(Visible, bool);
 	#undef DECL_OVERRIDE
@@ -37,19 +37,19 @@ class TParent : public TControl {
 		DECL(ControlChildState, bool, b, false);
 	#undef DECL
 	
-	
 	public:
 	template<typename T>
 	T* CreateObject() {
 		auto object = new T();
 		auto ctrl = dynamic_cast<TControl*>(object);
-		ctrl->Parent(this);
-		m_vObjectsPool.emplace_back(ctrl);
+		AddChild(ctrl);
 		return object;
 	}
 	
 	public:
-	virtual void AddObject(TControl* c);
+	virtual void AddChild(TControl* child);
+	virtual void RemoveChild(TControl* child);
+	
 	std::vector<TControl*>& ObjectsPool();
 	
 	protected:

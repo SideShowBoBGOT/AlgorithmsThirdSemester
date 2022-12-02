@@ -80,8 +80,8 @@ bool TControl::IsMouseOn() {
 }
 
 
-void TControl::Render() {
-	if(not Visible()) return;
+bool TControl::Render() {
+	if(not Visible()) return false;
 
 	auto str = m_mMap[m_xState];
 	if(str.empty()) {
@@ -91,13 +91,15 @@ void TControl::Render() {
 	auto dy = AbsoluteDy();
 	TTextureManager::Get()->Render(str.c_str(), m_iSx, m_iSy,
 	 dx, dy, m_iWidth, m_iHeight, m_pRenderer);
+	return true;
 }
 
-void TControl::HandleEvents() {
-	if(not Enabled()) return;
+bool TControl::HandleEvents() {
+	if(not Enabled()) return false;
+	
+	Over(IsMouseOn());
 	
 	if(IsMouseOn()) {
-		State(static_cast<NState>(static_cast<int>(State()) | static_cast<int>(NState::Over)));
 		if(TInputHandler::Get()->Downs(NMouseButton::Left)) {
 			Selected(not Selected());
 		}
@@ -113,13 +115,11 @@ void TControl::HandleEvents() {
 		INIT_BUTTON_HANDLER(Right, Up);
 		INIT_BUTTON_HANDLER(Middle, Up);
 		#undef INIT_BUTTON_HANDLER
-	} else {
-		//m_xState = NState::Normal;
-		m_xState = static_cast<NState>(static_cast<int>(m_xState) & ~static_cast<int>(NState::Over));
 	}
+	return true;
 }
 
-void TControl::Clean() { return; }
+bool TControl::Clean() { return true; }
 
 void TControl::StateTexture(NState state, std::string textureID) { m_mMap[state] = textureID; }
 

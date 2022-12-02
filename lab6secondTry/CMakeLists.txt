@@ -22,18 +22,20 @@ VisualModels/TParent.cpp
 VisualModels/TParent.h
 VisualModels/TAutoAlignArea.cpp
 VisualModels/TAutoAlignArea.h
-        GameSingletons/TTextureManager.cpp
+VisualModels/TAIBlock.cpp
+VisualModels/TAIBlock.h
+GameSingletons/TTextureManager.cpp
 GameSingletons/TTextureManager.h
 GameSingletons/TInputHandler.cpp
 GameSingletons/TInputHandler.h
 States/TSettings.cpp
 States/TSettings.h
 States/TBoardScreen.cpp
-        States/TBoardScreen.h
+States/TBoardScreen.h
 Other/NNFileSystem.cpp
 Other/NNFileSystem.h
-        VisualModels/TVisualCard.cpp
-        VisualModels/TVisualCard.h
+VisualModels/TVisualCard.cpp
+VisualModels/TVisualCard.h
 GameSingletons/TLogic.cpp
 GameSingletons/TLogic.h
 Logic/TSession.cpp

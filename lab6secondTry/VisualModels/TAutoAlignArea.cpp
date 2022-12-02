@@ -30,11 +30,11 @@ void TAutoAlignArea::ALignObjects() {
 			return ctrl->Visible();\
 		});                  \
         if(parts==0) return;               \
-		auto unit = (yy() - Padding()) / parts;\
+		auto unit = yy() / parts;\
 		for(auto i=0, j=0;i<m_vObjectsPool.size();++i) {\
 			auto& obj = m_vObjectsPool[i];\
 			if(obj->Visible()) {\
-				obj->D##xx((unit - obj->yy() + Padding()) / 2 + unit * j);\
+				obj->D##xx((unit - obj->yy()) / 2 + unit * j);\
 				j++;\
 			}                   \
         	obj->ZIndex(i);               \
@@ -44,7 +44,7 @@ void TAutoAlignArea::ALignObjects() {
         auto total = 0;           \
         auto vis = std::vector<TControl*>();                              \
     	for(auto i=0;i<m_vObjectsPool.size();++i) { \
-			auto& obj = m_vObjectsPool[i];\
+			auto& obj = m_vObjectsPool[i];     \
 			if(obj->Visible()) {               \
 				vis.emplace_back(obj);\
             	total += obj->yy();                         \
@@ -65,7 +65,7 @@ void TAutoAlignArea::ALignObjects() {
         }                             \
 		delta /= parts;\
 		for(auto i=1;i<parts;++i) {   \
-			vis[i]->D##xx(vis[0]->D##xx() + delta * i);	                        \
+			vis[i]->D##xx(vis[0]->D##xx() + delta * i);\
 		}
 	
 		auto align = Align();
@@ -94,4 +94,9 @@ void TAutoAlignArea::OnChange(std::function<void(TControl*)>&& func) {
 		f(obj);
 		ALignObjects();
 	};
+}
+
+void TAutoAlignArea::AddChild(TControl* child) {
+	TParent::AddChild(child);
+	ALignObjects();
 }

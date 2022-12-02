@@ -19,9 +19,9 @@ class TControl : public IControl {
 	virtual ~TControl() override=default;
 	
 	public:
-	virtual void HandleEvents() override;
-	virtual void Render() override;
-	virtual void Clean() override;
+	virtual bool HandleEvents() override;
+	virtual bool Render() override;
+	virtual bool Clean() override;
 	
 	public:
 	virtual void StateTexture(NState state, std::string str);

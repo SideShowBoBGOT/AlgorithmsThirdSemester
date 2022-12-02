@@ -8,8 +8,6 @@
 #define DECL_WITH_CHILD_STATE(xx, type, prefix) \
 	void TParent::xx(type vv) {  \
         m_##prefix##xx = vv;          \
-        if(m_pParent) m_pParent->OnChange(); \
-        OnChange();                  \
         if(ControlChildState()) {                  \
             for(auto& c : m_vObjectsPool) {       \
                 c->xx(TControl::xx());                    \
@@ -17,7 +15,6 @@
 		}                           \
 	}
 
-	DECL_WITH_CHILD_STATE(State, NState, x);
 	DECL_WITH_CHILD_STATE(Visible, bool, b);
 	DECL_WITH_CHILD_STATE(Enabled, bool, b);
 #undef DECL_WITH_CHILD_STATE
@@ -33,6 +30,14 @@
 	DECL(ControlChildState, bool, b);
 #undef DECL
 
+void TParent::Over(bool vv) {
+	TControl::Over(vv);
+	if(not vv) {
+		for(auto& child : m_vObjectsPool) {
+			child->Over(false);
+		}
+	}
+}
 
 TParent::~TParent() {
 	for(auto& child : m_vObjectsPool) {
@@ -40,52 +45,70 @@ TParent::~TParent() {
 	}
 }
 
-void TParent::Render() {
-	TControl::Render();
-	for(auto& child : m_vObjectsPool) {
-		child->Render();
-	}
-}
-
-void TParent::HandleEvents() {
-	TControl::HandleEvents();
+bool TParent::Render() {
+	auto res = TControl::Render();
 	
-	auto controls = std::vector<TControl*>();
-	for(auto& child : m_vObjectsPool) {
-		if(child->IsMouseOn()) {
-			controls.emplace_back(child);
+	if(res) {
+		for(auto& child:m_vObjectsPool) {
+			child->Render();
 		}
 	}
-	TControl* onTop = nullptr;
-	if(not controls.empty()) {
-		onTop = controls[0];
-		for(auto& c:controls) {
-			if(c->ZIndex() > onTop->ZIndex()) {
-				onTop = c;
+	return res;
+}
+
+bool TParent::HandleEvents() {
+	auto res = TControl::HandleEvents();
+	if(res) {
+		auto controls = std::vector<TControl*>();
+		for(auto& child:m_vObjectsPool) {
+			if(child->IsMouseOn()) {
+				controls.emplace_back(child);
 			}
 		}
-		onTop->HandleEvents();
-	}
-	for(auto& c : m_vObjectsPool) {
-		if(c!=onTop) {
-			c->Over(false);
+		TControl*onTop = nullptr;
+		if(not controls.empty()) {
+			onTop = controls[0];
+			for(auto& c:controls) {
+				if(c->ZIndex() > onTop->ZIndex()) {
+					onTop = c;
+				}
+			}
+			onTop->HandleEvents();
+		}
+		for(auto& c:m_vObjectsPool) {
+			if(c != onTop) {
+				c->Over(false);
+			}
 		}
 	}
+	return res;
 }
 
-void TParent::Clean() {
-	TControl::Clean();
-	for(auto& child : m_vObjectsPool) {
-		child->Clean();
+bool TParent::Clean() {
+	auto res = TControl::Clean();
+	if(res) {
+		for(auto& child:m_vObjectsPool) {
+			child->Clean();
+		}
 	}
+	return res;
 }
 
 std::vector<TControl*>& TParent::ObjectsPool() {
 	return m_vObjectsPool;
 }
 
-void TParent::AddObject(TControl*c) {
-	m_vObjectsPool.push_back(c);
-	c->Parent(this);
-	OnChangeHandler(this);
+void TParent::AddChild(TControl* child) {
+	child->Parent(this);
+	child->State(NState::Normal);
+	child->Dx(0);
+	child->Dy(0);
+	child->ZIndex(0);
+	m_vObjectsPool.push_back(child);
+}
+
+void TParent::RemoveChild(TControl* child) {
+	child->Parent(nullptr);
+	auto& p = m_vObjectsPool;
+	p.erase(std::remove(p.begin(), p.end(), child), p.end());
 }

@@ -6,7 +6,7 @@
 #define UNTITLED1_TBOARDSCREEN_H
 
 #include <array>
-#include "../VisualModels/TAutoAlignArea.h"
+#include "../VisualModels/TAIBlock.h"
 #include "../VisualModels/TVisualCard.h"
 
 class TBoardScreen : public TParent {
@@ -24,9 +24,9 @@ class TBoardScreen : public TParent {
 	
 	public:
 	TAutoAlignArea* AIPanel 	= nullptr;
-	TControl* AIOneLabel 		= nullptr;
-	TControl* AITwoLabel 		= nullptr;
-	TControl* AIThreeLabel 		= nullptr;
+	TAIBlock* AIOneLabel 		= nullptr;
+	TAIBlock* AITwoLabel 		= nullptr;
+	TAIBlock* AIThreeLabel 		= nullptr;
 	
 	public:
 	std::vector<TVisualCard*> VisualCards;

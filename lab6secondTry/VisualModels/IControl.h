@@ -12,9 +12,9 @@ class IControl {
 	virtual ~IControl()=default;
 	
 	public:
-	virtual void HandleEvents()=0;
-	virtual void Clean()=0;
-	virtual void Render()=0;
+	virtual bool HandleEvents()=0;
+	virtual bool Clean()=0;
+	virtual bool Render()=0;
 };
 
 
