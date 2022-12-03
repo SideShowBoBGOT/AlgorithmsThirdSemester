@@ -16,7 +16,7 @@ static const std::string s_sBoardScreenPath = "BoardScreen/";
 
 
 TAIBlock::TAIBlock(std::string name) {
-	auto width = 3*s_iCardWidth;
+	auto width = 4*s_iCardWidth;
 	auto height = s_iObjectHeight + 10 + s_iCardHeight;
 	
 	Width(width);

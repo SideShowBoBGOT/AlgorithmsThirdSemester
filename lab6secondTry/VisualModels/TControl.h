@@ -16,7 +16,7 @@
 class TControl : public IControl {
 	public:
 	TControl()=default;
-	virtual ~TControl() override=default;
+	virtual ~TControl() override;
 	
 	public:
 	virtual bool HandleEvents() override;

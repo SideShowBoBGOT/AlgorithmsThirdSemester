@@ -40,9 +40,10 @@ void TParent::Over(bool vv) {
 }
 
 TParent::~TParent() {
-	for(auto& child : m_vObjectsPool) {
+	for(auto child : m_vObjectsPool) {
 		delete child;
 	}
+	m_vObjectsPool.clear();
 }
 
 bool TParent::Render() {
@@ -100,10 +101,6 @@ std::vector<TControl*>& TParent::ObjectsPool() {
 
 void TParent::AddChild(TControl* child) {
 	child->Parent(this);
-	child->State(NState::Normal);
-	child->Dx(0);
-	child->Dy(0);
-	child->ZIndex(0);
 	m_vObjectsPool.push_back(child);
 }
 

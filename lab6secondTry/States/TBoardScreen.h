@@ -8,6 +8,7 @@
 #include <array>
 #include "../VisualModels/TAIBlock.h"
 #include "../VisualModels/TVisualCard.h"
+#include "../Logic/TCard.h"
 
 class TBoardScreen : public TParent {
 	public:
@@ -29,12 +30,11 @@ class TBoardScreen : public TParent {
 	TAIBlock* AIThreeLabel 		= nullptr;
 	
 	public:
-	std::vector<TVisualCard*> VisualCards;
 	TAutoAlignArea* LocalCards 	= nullptr;
 	TAutoAlignArea* PlayCards 	= nullptr;
 	
 	public:
-	void NumberOfVisibleAILabels();
+	void StartGame();
 	
 	protected:
 	void OnPutButton(TControl* obj);
@@ -44,8 +44,19 @@ class TBoardScreen : public TParent {
 	void OnDeselectButton(TControl* obj);
 	
 	protected:
+	void UpdateVisuals();
+	void UpdateCards(TAutoAlignArea* area, const std::vector<std::shared_ptr<TCard>>& cards);
+	void SetVisibleAILabels();
+	void SetVisualCards();
 	void LockInterface();
 	void UnLockInterface();
+	
+	protected:
+	std::vector<std::shared_ptr<TCard>> FromVisToLogCards(const std::vector<TControl*>& vis);
+	std::vector<TControl*> FilterSelectedCards(const std::vector<TControl*>& vis);
+	
+	protected:
+	std::vector<std::pair<TVisualCard*, std::shared_ptr<TCard>>> m_vVisLogPairs;
 };
 //101x144
 

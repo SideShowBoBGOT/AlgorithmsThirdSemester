@@ -10,7 +10,7 @@
 class TVisualCard : public TParent {
 	public:
 	TVisualCard();
-	virtual ~TVisualCard() override;
+	virtual ~TVisualCard() override=default;
 	
 	virtual bool Render() override;
 	

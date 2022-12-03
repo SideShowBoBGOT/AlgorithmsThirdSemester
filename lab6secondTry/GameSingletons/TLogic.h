@@ -10,11 +10,10 @@
 
 class TLogic : public TSingleton<TLogic> {
 	public:
-	TLogic();
+	TLogic()=default;
 	virtual ~TLogic() override=default;
 	
 	public:
-	std::vector<std::shared_ptr<TCard>> Cards;
 	std::shared_ptr<TSession> Session = nullptr;
 };
 

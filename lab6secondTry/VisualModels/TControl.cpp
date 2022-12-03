@@ -133,3 +133,5 @@ int TControl::AbsoluteDy() {
 	return m_iDy + m_pParent->AbsoluteDy();
 }
 
+TControl::~TControl() { return; }
+

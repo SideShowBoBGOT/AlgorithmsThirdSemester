@@ -20,10 +20,6 @@ TVisualCard::TVisualCard() {
 	Content = CreateObject<TControl>();
 }
 
-TVisualCard::~TVisualCard() {
-	delete Content;
-}
-
 bool TVisualCard::Render() {
 	if(static_cast<int>(m_xState) & static_cast<int>(NState::OverSelected)) {
 		Content->Dy(ShiftY());

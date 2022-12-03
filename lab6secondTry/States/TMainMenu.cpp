@@ -46,8 +46,8 @@ void TMainMenu::OnStartButton(TControl* obj) {
 	auto& session = TLogic::Get()->Session;
 	session = std::make_shared<TSession>(diff, number);
 	auto& boardScreen = TGame::Get()->BoardScreen;
-	boardScreen->NumberOfVisibleAILabels();
 	TGameStateMachine::Get()->PushState(boardScreen);
+	boardScreen->StartGame();
 }
 
 void TMainMenu::OnSettigsButton(TControl* obj) {
@@ -56,6 +56,7 @@ void TMainMenu::OnSettigsButton(TControl* obj) {
 
 void TMainMenu::OnQuitButton(TControl* obj) {
 	TGameStateMachine::Get()->PopState();
+	TLogic::Get()->Session = nullptr;
 }
 
 
