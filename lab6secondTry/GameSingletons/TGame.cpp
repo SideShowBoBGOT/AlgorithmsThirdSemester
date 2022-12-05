@@ -27,11 +27,14 @@ bool TGame::Init(const char* name, int x, int y, int w, int h, int flags) {
 	Settings = new TSettings();
 	BoardScreen = new TBoardScreen();
 	TGameStateMachine::Get()->PushState(MainMenu);
-	TLogic::Get();
-	TTextureManager::Get();
-	TInputHandler::Get();
 	m_bRunning = true;
 	return true;
+}
+
+TGame::~TGame() {
+	delete BoardScreen;
+	delete MainMenu;
+	delete Settings;
 }
 
 SDL_Renderer* TGame::Renderer() {

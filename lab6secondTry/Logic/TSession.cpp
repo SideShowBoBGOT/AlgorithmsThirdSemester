@@ -12,6 +12,7 @@
 	DECL_VECTOR(Cards, std::vector<std::shared_ptr<TCard>>, v);
 	DECL_VECTOR(PlayCards, std::vector<std::shared_ptr<TCard>>, v);
 	DECL_VECTOR(SparseCards, std::vector<std::shared_ptr<TCard>>, v);
+	DECL_VECTOR(UnusedCards, std::vector<std::shared_ptr<TCard>>, v);
 #undef DECL
 
 #define DECL(xx, type, prefix) \
@@ -26,14 +27,8 @@
 
 TSession::TSession(NDifficulty diff, int playersNumber) {
 
-	for(auto i=0;i<NCardType::Size;++i) {
-		for(auto j=0;j<NCardValue::Size;++j) {
-			auto card = std::make_shared<TCard>();
-			card->Type(static_cast<NCardType>(i));
-			card->Value(static_cast<NCardValue>(j));
-			m_vCards.emplace_back(std::move(card));
-		}
-	}
+	CreateCards();
+	TossCards();
 
 	m_xDifficulty = diff;
 	m_iPlayersNumber = playersNumber;
@@ -43,8 +38,35 @@ TSession::TSession(NDifficulty diff, int playersNumber) {
 	
 	DistributeCardsAmongPlayers();
 	m_pLocalPlayer = m_vPlayers[0];
+	//m_vPlayCards = m_vUnusedCards;
 	RandomPlayer();
 	NextPlayer();
+}
+
+void TSession::CreateCards() {
+	for(auto i=0;i<NCardType::Size;++i) {
+		for(auto j=0;j<NCardValue::Size - 1;++j) {
+			auto card = std::make_shared<TCard>();
+			card->Type(static_cast<NCardType>(i));
+			card->Value(static_cast<NCardValue>(j));
+			m_vCards.emplace_back(std::move(card));
+		}
+	}
+}
+
+void TSession::TossCards() {
+	std::random_device dev;
+    std::mt19937 rng(dev());
+    std::uniform_int_distribution<std::mt19937::result_type> dist(0, m_vCards.size() - 1);
+	for(auto i=0;i<100000;++i) {
+		auto one = 0u;
+		auto two = 0u;
+		while(one == two) {
+			one = dist(rng);
+			two = dist(rng);
+		}
+		std::swap(m_vCards[one], m_vCards[two]);
+	}
 }
 
 void TSession::RandomPlayer() {
@@ -55,10 +77,10 @@ void TSession::RandomPlayer() {
 }
 
 void TSession::NextPlayer() {
-	m_pCurrentPlayer->IsActive(false);
+	m_pCurrentPlayer->Active(false);
 	auto curPlIt = std::find(m_vPlayers.begin(), m_vPlayers.end(), CurrentPlayer());
 	m_pCurrentPlayer = *((curPlIt + 1 == m_vPlayers.end()) ? (m_vPlayers.begin()) : (curPlIt + 1));
-	m_pCurrentPlayer->IsActive(true);
+	m_pCurrentPlayer->Active(true);
 }
 
 void TSession::NextTurn() {
@@ -72,51 +94,76 @@ void TSession::DistributeCardsAmongPlayers() {
 	for(auto i=0;i<m_iPlayersNumber;++i) {
 		auto& pcards = m_vPlayers[i]->Cards();
 		for(auto k = 0;k < 4; ++k) {
-			std::shared_ptr<TCard> c = nullptr;
-			auto isHas = true;
-			//check if one of the players already has this card
-			while(isHas) {
-				isHas = false;
+			auto c = m_vCards[dist(rng)];
+			while(IsAnyPlayerHasCard(c)) {
 				c = m_vCards[dist(rng)];
-				for(auto j = 0;j < m_iPlayersNumber;++j) {
-					auto& p = m_vPlayers[j];
-					auto& cc = p->Cards();
-					isHas = std::find(cc.begin(), cc.end(), c) != cc.end();
-					if(isHas) {
-						break;
-					}
-				}
 			}
 			pcards.push_back(c);
 		}
 	}
+	for(auto& c : m_vCards) {
+		if(not IsAnyPlayerHasCard(c)) {
+			m_vUnusedCards.emplace_back(c);
+		}
+	}
+}
+
+bool TSession::IsAnyPlayerHasCard(const std::shared_ptr<TCard>& c) {
+	for(auto j = 0;j < m_iPlayersNumber;++j) {
+		auto& p = m_vPlayers[j];
+		auto& cc = p->Cards();
+		if(std::find(cc.begin(), cc.end(), c) != cc.end()) {
+			return true;
+		}
+	}
+	return false;
 }
 
 bool TSession::TryTake(const std::vector<std::shared_ptr<TCard>>& selectedOwnCards,
 					const std::vector<std::shared_ptr<TCard>>& selectedPlayCards) {
+	if(CurrentPlayer()->FirstMove()) return false;
 	const auto& soc = selectedOwnCards;
 	const auto& spc = selectedPlayCards;
 	if(not CheckSelected(soc)
-		and CheckSelected(spc)
-		and soc.size()==spc.size()
-		and soc[0]->Value() > spc[0]->Value()) {
+		or not CheckSelected(spc)
+		or soc.size() != spc.size()
+		or soc[0]->Value() < spc[0]->Value()) {
 			return false;
 	}
-	auto& cpc = CurrentPlayer()->Cards();
+	auto curpl = CurrentPlayer();
+	auto& cpc = curpl->Cards();
 	VectorCardDifference(cpc, soc);
 	auto& pc = m_vPlayCards;
 	VectorCardDifference(pc, spc);
 	for(auto& c : soc) m_vSparseCards.emplace_back(c);
 	for(auto& c : spc) m_vSparseCards.emplace_back(c);
+	curpl->Score(curpl->Score() + 1);
 	return true;
 }
 
 bool TSession::TryPut(const std::vector<std::shared_ptr<TCard>>& selectedOwnCards) {
-	if(not CheckSelected(selectedOwnCards)) {
+	auto& soc = selectedOwnCards;
+	if(soc.empty()) {
 		return false;
 	}
-	for(auto& c : selectedOwnCards) m_vPlayCards.emplace_back(c);
+	auto cp = CurrentPlayer();
+	if(cp->FirstMove() and soc.size() > 1) {
+		return false;
+	}
+	if(soc.size() > 4) {
+		return false;
+	}
+	auto& plc = CurrentPlayer()->Cards();
+	VectorCardDifference(plc, soc);
+	for(auto& c : selectedOwnCards) {
+		m_vPlayCards.emplace_back(c);
+	}
+	cp->FirstMove(false);
 	return true;
+}
+
+void TSession::GiveCards() {
+
 }
 
 bool TSession::CheckSelected(const std::vector<std::shared_ptr<TCard>>& selectedCards) {

@@ -23,6 +23,7 @@ class TSession {
 		DECL_VECTOR(Players, std::vector<std::shared_ptr<TPlayer>>, v);
 		DECL_VECTOR(PlayCards, std::vector<std::shared_ptr<TCard>>, v);
 		DECL_VECTOR(SparseCards, std::vector<std::shared_ptr<TCard>>, v);
+		DECL_VECTOR(UnusedCards, std::vector<std::shared_ptr<TCard>>, v);
 		DECL_VECTOR(Cards, std::vector<std::shared_ptr<TCard>>, v);
 	#undef DECL_VECTOR
 	
@@ -44,12 +45,15 @@ class TSession {
 	bool TryTake(const std::vector<std::shared_ptr<TCard>>& selectedOwnCards, const std::vector<std::shared_ptr<TCard>>& selectedPlayCards);
 	bool TryPut(const std::vector<std::shared_ptr<TCard>>& selectedOwnCards);
 
-	public:
-	void DistributeCardsAmongPlayers();
-	
 	protected:
+	void DistributeCardsAmongPlayers();
+	void CreateCards();
+	void TossCards();
+	void GiveCards();
+	
 	static void VectorCardDifference(std::vector<std::shared_ptr<TCard>>& vOne, const std::vector<std::shared_ptr<TCard>>& vTwo);
 	static bool CheckSelected(const std::vector<std::shared_ptr<TCard>>& selectedCards);
+	bool IsAnyPlayerHasCard(const std::shared_ptr<TCard>& c);
 	void RandomPlayer();
 };
 

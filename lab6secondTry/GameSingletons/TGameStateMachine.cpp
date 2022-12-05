@@ -5,13 +5,16 @@
 #include "TGameStateMachine.h"
 
 bool TGameStateMachine::HandleEvents() {
-	m_vStates.top()->HandleEvents();
+	if(m_vStates.empty()) return false;
+	return m_vStates.top()->HandleEvents();
 }
 bool TGameStateMachine::Clean() {
-	m_vStates.top()->Clean();
+	if(m_vStates.empty()) return false;
+	return m_vStates.top()->Clean();
 }
 bool TGameStateMachine::Render() {
-	m_vStates.top()->Render();
+	if(m_vStates.empty()) return false;
+	return m_vStates.top()->Render();
 }
 void TGameStateMachine::PushState(IControl* state) {
 	m_vStates.push(state);

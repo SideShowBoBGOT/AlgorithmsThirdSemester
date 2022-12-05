@@ -14,7 +14,7 @@
 class TGame : public TSingleton<TGame> {
 	public:
 	TGame()=default;
-	virtual ~TGame() override=default;
+	virtual ~TGame() override;
 	
 	virtual bool Init(const char* name, int x, int y, int w, int h, int flags);
 	

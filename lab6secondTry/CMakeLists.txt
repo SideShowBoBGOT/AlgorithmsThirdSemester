@@ -46,6 +46,6 @@ Logic/TCard.cpp
 Logic/TCard.h
 Logic/NNCardType.h
 Logic/NNCardValue.h
-Logic/NNDifficulty.h)
+Logic/NNDifficulty.h VisualModels/TAnimationControl.h VisualModels/TAnimationControl.cpp Other/TTimer.h Other/TTimer.cpp)
 
 target_link_libraries(untitled1 SDL2main SDL2 GL)

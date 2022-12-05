@@ -20,7 +20,8 @@ namespace NNCardValue {
 		Queen = 10,
 		King = 11,
 		Ace = 12,
-		Size = 13
+		Unknown = 13,
+		Size = 14
 	};
 }
 typedef NNCardValue::NCardValue NCardValue;

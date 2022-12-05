@@ -40,11 +40,7 @@ TMainMenu::TMainMenu() {
 }
 
 void TMainMenu::OnStartButton(TControl* obj) {
-	auto& settings = TGame::Get()->Settings;
-	auto number = settings->GetNumberOfPlayers();
-	auto diff = settings->GetDifficulty();
-	auto& session = TLogic::Get()->Session;
-	session = std::make_shared<TSession>(diff, number);
+	
 	auto& boardScreen = TGame::Get()->BoardScreen;
 	TGameStateMachine::Get()->PushState(boardScreen);
 	boardScreen->StartGame();
@@ -57,6 +53,7 @@ void TMainMenu::OnSettigsButton(TControl* obj) {
 void TMainMenu::OnQuitButton(TControl* obj) {
 	TGameStateMachine::Get()->PopState();
 	TLogic::Get()->Session = nullptr;
+	TGame::Get()->Quit();
 }
 
 

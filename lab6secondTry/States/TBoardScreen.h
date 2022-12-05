@@ -8,12 +8,13 @@
 #include <array>
 #include "../VisualModels/TAIBlock.h"
 #include "../VisualModels/TVisualCard.h"
+#include "../VisualModels/TAnimationControl.h"
 #include "../Logic/TCard.h"
 
 class TBoardScreen : public TParent {
 	public:
 	TBoardScreen();
-	virtual ~TBoardScreen() override=default;
+	virtual ~TBoardScreen() override;
 	
 	public:
 	TAutoAlignArea* ButtonPanel = nullptr;
@@ -30,8 +31,17 @@ class TBoardScreen : public TParent {
 	TAIBlock* AIThreeLabel 		= nullptr;
 	
 	public:
-	TAutoAlignArea* LocalCards 	= nullptr;
-	TAutoAlignArea* PlayCards 	= nullptr;
+	TAutoAlignArea* LocalCards 		= nullptr;
+	TAutoAlignArea* PlayCards 		= nullptr;
+	TAutoAlignArea* UnknownCards 	= nullptr;
+	TAutoAlignArea* TrumpCard		= nullptr;
+	
+	public:
+	TControl* YouWin  				= nullptr;
+	TControl* YouLose 				= nullptr;
+	
+	public:
+	TAnimationControl* Clock 		= nullptr;
 	
 	public:
 	void StartGame();
@@ -44,16 +54,26 @@ class TBoardScreen : public TParent {
 	void OnDeselectButton(TControl* obj);
 	
 	protected:
+	void CreateSession();
 	void UpdateVisuals();
 	void UpdateCards(TAutoAlignArea* area, const std::vector<std::shared_ptr<TCard>>& cards);
+	void UpdateHiddenCards(TAutoAlignArea* area, int num);
 	void SetVisibleAILabels();
+	static TVisualCard* CreateCard(NCardType type, NCardValue val);
 	void SetVisualCards();
 	void LockInterface();
 	void UnLockInterface();
 	
 	protected:
+	std::shared_ptr<TCard> FindCardByVis(TControl* vis);
+	TControl* FindVisByCard(std::shared_ptr<TCard> c);
 	std::vector<std::shared_ptr<TCard>> FromVisToLogCards(const std::vector<TControl*>& vis);
 	std::vector<TControl*> FilterSelectedCards(const std::vector<TControl*>& vis);
+	
+	protected:
+	
+	protected:
+	std::vector<TVisualCard*> m_vUnknownCardsCash;
 	
 	protected:
 	std::vector<std::pair<TVisualCard*, std::shared_ptr<TCard>>> m_vVisLogPairs;
