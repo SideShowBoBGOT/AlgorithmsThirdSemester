@@ -1,3 +1,3 @@
-/home/choleraplague/university/Algorithms_KPI_2_Year/lab6/cmake-build-debug/CMakeFiles/lab6.dir
+/home/choleraplague/university/Algorithms_KPI_2_Year/lab6/cmake-build-debug/CMakeFiles/untitled1.dir
 /home/choleraplague/university/Algorithms_KPI_2_Year/lab6/cmake-build-debug/CMakeFiles/edit_cache.dir
 /home/choleraplague/university/Algorithms_KPI_2_Year/lab6/cmake-build-debug/CMakeFiles/rebuild_cache.dir
