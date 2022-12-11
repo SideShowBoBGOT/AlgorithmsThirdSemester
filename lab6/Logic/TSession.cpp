@@ -5,6 +5,7 @@
 
 #include "TSession.h"
 #include "Notify/SNextTurnNotify.h"
+#include "AI/TAI.h"
 
 #define DECL_VECTOR(xx, type) \
     type& TSession::xx() { return m_v##xx; }\
@@ -26,11 +27,7 @@
 	DECL(Trump, NCardType, x);
 #undef DECL
 
-
-static int constexpr s_iPlayCards = 4;
-
 TSession::TSession(NDifficulty diff, int playersNumber) {
-	m_pAI = std::make_shared<TAI>();
 	CreateCards();
 	TossCards();
 
@@ -87,8 +84,7 @@ void TSession::RandomPlayer() {
 void TSession::NextTurn() {
 	GiveCards();
 	m_pCurrentPlayer->Active(false);
-	auto curPlIt = std::find(m_vPlayers.begin(), m_vPlayers.end(), CurrentPlayer());
-	m_pCurrentPlayer = *((curPlIt + 1 == m_vPlayers.end()) ? (m_vPlayers.begin()) : (curPlIt + 1));
+	m_pCurrentPlayer = NextPlayer(m_pCurrentPlayer);
 	m_pCurrentPlayer->Active(true);
 	
 	auto isAI = m_pCurrentPlayer->IsAI();
@@ -99,9 +95,14 @@ void TSession::NextTurn() {
 	}
 }
 
+std::shared_ptr<TPlayer> TSession::NextPlayer(const std::shared_ptr<TPlayer>& player) {
+	auto it = std::find(m_vPlayers.begin(), m_vPlayers.end(), player);
+	return *((it + 1 == m_vPlayers.end()) ? (m_vPlayers.begin()) : (it + 1));
+};
+
 void TSession::GiveCards() {
 	auto& cc =  CurrentPlayer()->Cards();
-	while(cc.size() < s_iPlayCards and not m_vUnusedCards.empty()) {
+	while(cc.size() < PlayCardsNum() and not m_vUnusedCards.empty()) {
 		cc.emplace_back(m_vUnusedCards.back());
 		m_vUnusedCards.pop_back();
 	}
@@ -113,7 +114,7 @@ void TSession::DistributeCardsAmongPlayers() {
     std::uniform_int_distribution<std::mt19937::result_type> dist(0, m_vCards.size() - 1);
 	for(auto i=0;i<m_iPlayersNumber;++i) {
 		auto& pcards = m_vPlayers[i]->Cards();
-		for(auto k = 0;k < s_iPlayCards; ++k) {
+		for(auto k = 0;k < PlayCardsNum(); ++k) {
 			auto c = m_vCards[dist(rng)];
 			while(IsAnyPlayerHasCard(c)) {
 				c = m_vCards[dist(rng)];
@@ -186,6 +187,15 @@ bool TSession::TryPut(const std::vector<std::shared_ptr<TCard>>& selectedOwnCard
 	return true;
 }
 
+bool TSession::TryBack(std::vector<std::shared_ptr<TCard>>& selectedPlayCards) {
+	if(selectedPlayCards.empty()) return false;
+	auto& spc = selectedPlayCards;
+	auto& pc = m_vPlayCards;
+	VectorCardDifference(pc, spc);
+	std::copy(spc.begin(), spc.end(), std::back_inserter(LocalPlayer()->Cards()));
+	return true;
+}
+
 bool TSession::CheckSelected(const std::vector<std::shared_ptr<TCard>>& selectedCards) {
 	auto size = static_cast<int>(selectedCards.size());
 	if(not (size==3 or size==4)) {
@@ -219,6 +229,12 @@ void TSession::SendNotify(const std::shared_ptr<INotify>& n) {
 }
 
 void TSession::CalculateAI() {
-	m_pAI->Move();
-};
+	TAI::Get()->Move();
+}
+
+constexpr int TSession::PlayCardsNum() {
+	return 4;
+}
+
+
 #undef DECL

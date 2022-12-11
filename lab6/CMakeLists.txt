@@ -46,6 +46,6 @@ Logic/TCard.cpp
 Logic/TCard.h
         Logic/Enums/NNCardType.h
         Logic/Enums/NNCardValue.h
-        Logic/Enums/NNDifficulty.h VisualModels/TAnimationControl.h VisualModels/TAnimationControl.cpp Other/TTimer.h Other/TTimer.cpp Logic/Notify/INotify.h Logic/AI/TAI.h Logic/AI/TAI.cpp Logic/Notify/SNextTurnNotify.h Logic/Notify/SNextTurnNotify.cpp Logic/Notify/SAIEndTurn.h Logic/Notify/SAIEndTurn.cpp Other/TThreadSafeQueue.h)
+        Logic/Enums/NNDifficulty.h VisualModels/TAnimationControl.h VisualModels/TAnimationControl.cpp Other/TTimer.h Other/TTimer.cpp Logic/Notify/INotify.h Logic/AI/TAI.h Logic/AI/TAI.cpp Logic/Notify/SNextTurnNotify.h Logic/Notify/SNextTurnNotify.cpp Logic/Notify/SAIEndTurn.h Logic/Notify/SAIEndTurn.cpp Other/TThreadSafeQueue.h Other/TPermutator.h)
 
 target_link_libraries(untitled1 SDL2main SDL2 GL)

@@ -6,10 +6,10 @@
 #define UNTITLED1_NNDIFFICULTY_H
 
 namespace NNDifficulty {
-	enum class NDifficulty {
-		Easy=0,
-		Medium=1,
-		Hard=2
+	enum NDifficulty {
+		Easy=3,
+		Medium=4,
+		Hard=5
 	};
 }
 typedef NNDifficulty::NDifficulty NDifficulty;

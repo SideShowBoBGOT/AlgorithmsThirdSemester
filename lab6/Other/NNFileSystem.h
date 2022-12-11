@@ -7,9 +7,12 @@
 
 #include <string>
 
+static std::string bmp = ".bmp";
 
 namespace NNFileSystem {
-	std::string AssetsImagePath(std::string asset);
+	inline std::string AssetsImagePath(const std::string& asset) {
+		return "../Assets/" + asset + bmp;
+	}
 }
 
 #endif //UNTITLED1_NNFILESYSTEM_H

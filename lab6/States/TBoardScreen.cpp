@@ -74,15 +74,16 @@ TBoardScreen::TBoardScreen() {
 		TrumpCard->Enabled(false);
 		
 		#define INIT_BUTTON(xx) \
-			INIT(xx, ButtonPanel, TControl, 0, 0, 0, 0, s_iObjectWidth, s_iObjectHeight);\
-			xx->OnLeftDown([this](TControl* obj) { On##xx(obj); });                                     \
+			INIT(xx##Button, ButtonPanel, TControl, 0, 0, 0, 0, s_iObjectWidth, s_iObjectHeight);\
+			xx##Button->OnLeftDown([this](TControl* obj) { On##xx##Button(obj); });                                     \
 			
 		
-			INIT_BUTTON(TakeButton);
-			INIT_BUTTON(PutButton);
-			INIT_BUTTON(EndTurnButton);
-			INIT_BUTTON(DeselectButton);
-			INIT_BUTTON(QuitButton);
+			INIT_BUTTON(Take);
+			INIT_BUTTON(Put);
+			INIT_BUTTON(Back);
+			INIT_BUTTON(EndTurn);
+			INIT_BUTTON(Deselect);
+			INIT_BUTTON(Quit);
 		#undef INIT_BUTTON
 	
 		#define TO_STR(xx) std::string(#xx)
@@ -153,6 +154,15 @@ void TBoardScreen::OnPutButton(TControl* obj) {
 	auto lc = FromVisToLogCards(FilterSelectedCards(LocalCards->ObjectsPool()));
 	
 	if(ss->TryPut(lc)) {
+		UpdateVisuals();
+	}
+}
+
+void TBoardScreen::OnBackButton(TControl* obj) {
+	auto& ss = TLogic::Get()->Session;
+	auto lc = FromVisToLogCards(FilterSelectedCards(PlayCards->ObjectsPool()));
+	
+	if(ss->TryBack(lc)) {
 		UpdateVisuals();
 	}
 }
@@ -298,6 +308,7 @@ void TBoardScreen::UpdateCards(TAutoAlignArea*area, const std::vector<std::share
 	area->ObjectsPool().clear();
 	for(auto& c : cards) {
 		auto vis = FindVisByCard(c);
+		vis->Selected(false);
 		area->AddChild(vis);
 	}
 }

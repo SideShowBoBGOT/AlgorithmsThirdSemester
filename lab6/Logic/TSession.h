@@ -19,6 +19,8 @@ class TSession {
 	TSession(NDifficulty diff, int playersNumber);
 	virtual ~TSession()=default;
 	
+	constexpr int PlayCardsNum();
+	
 	#define DECL_VECTOR(xx, type) \
 		protected:            \
 		type m_v##xx;      \
@@ -52,8 +54,10 @@ class TSession {
 	
 	public:
 	void NextTurn();
+	std::shared_ptr<TPlayer> NextPlayer(const std::shared_ptr<TPlayer>& player);
 	bool TryTake(const std::vector<std::shared_ptr<TCard>>& selectedOwnCards, const std::vector<std::shared_ptr<TCard>>& selectedPlayCards);
 	bool TryPut(const std::vector<std::shared_ptr<TCard>>& selectedOwnCards);
+	bool TryBack(std::vector<std::shared_ptr<TCard>>& selectedPlayCards);
 	void SendNotify(const std::shared_ptr<INotify>& n);
 
 	protected:
@@ -69,7 +73,6 @@ class TSession {
 	void RandomPlayer();
 	
 	protected:
-	std::shared_ptr<TAI> m_pAI = nullptr;
 	std::mutex m_xNotifiesMutex;
 };
 

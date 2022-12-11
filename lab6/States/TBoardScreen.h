@@ -20,11 +20,19 @@ class TBoardScreen : public TParent {
 	
 	public:
 	TAutoAlignArea* ButtonPanel = nullptr;
-	TControl* PutButton 		= nullptr;
-	TControl* TakeButton 		= nullptr;
-	TControl* EndTurnButton 	= nullptr;
-	TControl* QuitButton 		= nullptr;
-	TControl* DeselectButton 	= nullptr;
+	#define DECL_BUTTON(name)\
+		public:\
+		TControl* name##Button = nullptr;\
+		protected:              \
+		void On##name##Button(TControl* c);
+	
+		DECL_BUTTON(Take);
+		DECL_BUTTON(Put);
+		DECL_BUTTON(Back);
+		DECL_BUTTON(EndTurn);
+		DECL_BUTTON(Quit);
+		DECL_BUTTON(Deselect);
+	#undef DECL_BUTTON
 	
 	public:
 	TAutoAlignArea* AIPanel 	= nullptr;
@@ -50,13 +58,6 @@ class TBoardScreen : public TParent {
 	
 	protected:
 	void ProcessNotifies();
-	
-	protected:
-	void OnPutButton(TControl* obj);
-	void OnTakeButton(TControl* obj);
-	void OnEndTurnButton(TControl* obj);
-	void OnQuitButton(TControl* obj);
-	void OnDeselectButton(TControl* obj);
 	
 	protected:
 	void CreateSession();

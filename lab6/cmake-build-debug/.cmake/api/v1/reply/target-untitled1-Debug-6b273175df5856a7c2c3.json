@@ -188,7 +188,8 @@
 				47,
 				49,
 				51,
-				53
+				53,
+				54
 			]
 		}
 	],
@@ -485,6 +486,11 @@
 		{
 			"backtrace" : 1,
 			"path" : "Other/TThreadSafeQueue.h",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"path" : "Other/TPermutator.h",
 			"sourceGroupIndex" : 1
 		}
 	],
