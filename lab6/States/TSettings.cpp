@@ -51,9 +51,9 @@ TSettings::TSettings() {
 		INIT_BUTTON(TwoPlayers, "2", [this](TControl* obj) { OnSelectPlayers(obj); });
 		INIT_BUTTON(ThreePlayers, "3", [this](TControl* obj) { OnSelectPlayers(obj); });
 		INIT_BUTTON(FourPlayers, "4", [this](TControl* obj) { OnSelectPlayers(obj); });
-		INIT_BUTTON(EasyButton, "1", [this](TControl* obj) { OnSelectDifficulty(obj); });
-		INIT_BUTTON(MediumButton, "2", [this](TControl* obj) { OnSelectDifficulty(obj); });
-		INIT_BUTTON(HardButton, "3", [this](TControl* obj) { OnSelectDifficulty(obj); });
+		INIT_BUTTON(EasyButton, "0", [this](TControl* obj) { OnSelectDifficulty(obj); });
+		INIT_BUTTON(MediumButton, "1", [this](TControl* obj) { OnSelectDifficulty(obj); });
+		INIT_BUTTON(HardButton, "2", [this](TControl* obj) { OnSelectDifficulty(obj); });
 		INIT_BUTTON(QuitButton, "", [this](TControl* obj) { OnQuitButton(obj); obj->Selected(false); });
 	#undef INIT_BUTTON
 	

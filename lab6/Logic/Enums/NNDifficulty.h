@@ -7,9 +7,9 @@
 
 namespace NNDifficulty {
 	enum NDifficulty {
-		Easy=3,
-		Medium=4,
-		Hard=5
+		Easy=1,
+		Medium=2,
+		Hard=3
 	};
 }
 typedef NNDifficulty::NDifficulty NDifficulty;

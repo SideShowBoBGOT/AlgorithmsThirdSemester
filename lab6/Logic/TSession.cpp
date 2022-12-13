@@ -224,7 +224,6 @@ TThreadSafeQueue<std::shared_ptr<INotify>>& TSession::Notifies() {
 }
 
 void TSession::SendNotify(const std::shared_ptr<INotify>& n) {
-	std::lock_guard<std::mutex> lock(m_xNotifiesMutex);
 	m_stNotifies.Push(n);
 }
 

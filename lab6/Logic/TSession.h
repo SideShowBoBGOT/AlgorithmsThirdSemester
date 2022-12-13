@@ -5,15 +5,15 @@
 #ifndef UNTITLED1_TSESSION_H
 #define UNTITLED1_TSESSION_H
 
-#include <mutex>
-
 #include "TPlayer.h"
 #include "Enums/NNDifficulty.h"
-#include "Notify/INotify.h"
-#include "AI/TAI.h"
 #include "../Other/TThreadSafeQueue.h"
 
+class TAI;
+class INotify;
+
 class TSession {
+	friend class TAI;
 	public:
 	TSession()=delete;
 	TSession(NDifficulty diff, int playersNumber);
@@ -72,8 +72,6 @@ class TSession {
 	bool IsAnyPlayerHasCard(const std::shared_ptr<TCard>& c);
 	void RandomPlayer();
 	
-	protected:
-	std::mutex m_xNotifiesMutex;
 };
 
 

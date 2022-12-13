@@ -253,8 +253,7 @@ void TBoardScreen::CreateSession() {
 	auto& settings = TGame::Get()->Settings;
 	auto number = settings->GetNumberOfPlayers();
 	auto diff = settings->GetDifficulty();
-	auto& session = TLogic::Get()->Session;
-	session = std::make_shared<TSession>(diff, number);
+	TLogic::Get()->Session = std::make_shared<TSession>(diff, number);
 }
 
 std::shared_ptr<TCard> TBoardScreen::FindCardByVis(TControl* vis) {
