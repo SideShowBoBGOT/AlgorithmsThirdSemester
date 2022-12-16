@@ -8,9 +8,7 @@
 namespace NNAlign {
 	enum class NAlign {
 		Horizontal=0,
-		Vertical=1,
-		Central=2,
-		Middle=3
+		Central=1,
 	};
 }
 typedef NNAlign::NAlign NAlign;

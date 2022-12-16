@@ -187,6 +187,12 @@ build CMakeFiles/untitled1.dir/Logic/Notify/SAIEndTurn.cpp.o: CXX_COMPILER__unti
   OBJECT_DIR = CMakeFiles/untitled1.dir
   OBJECT_FILE_DIR = CMakeFiles/untitled1.dir/Logic/Notify
 
+build CMakeFiles/untitled1.dir/Logic/Tests/TTakeTest.cpp.o: CXX_COMPILER__untitled1_Debug /home/choleraplague/university/Algorithms_KPI_2_Year/lab6/Logic/Tests/TTakeTest.cpp || cmake_object_order_depends_target_untitled1
+  DEP_FILE = CMakeFiles/untitled1.dir/Logic/Tests/TTakeTest.cpp.o.d
+  FLAGS = -g -fdiagnostics-color=always -std=gnu++20
+  OBJECT_DIR = CMakeFiles/untitled1.dir
+  OBJECT_FILE_DIR = CMakeFiles/untitled1.dir/Logic/Tests
+
 
 # =============================================================================
 # Link build statements for EXECUTABLE target untitled1
@@ -195,7 +201,7 @@ build CMakeFiles/untitled1.dir/Logic/Notify/SAIEndTurn.cpp.o: CXX_COMPILER__unti
 #############################################
 # Link the executable untitled1
 
-build untitled1: CXX_EXECUTABLE_LINKER__untitled1_Debug CMakeFiles/untitled1.dir/main.cpp.o CMakeFiles/untitled1.dir/GameSingletons/TGame.cpp.o CMakeFiles/untitled1.dir/States/TMainMenu.cpp.o CMakeFiles/untitled1.dir/GameSingletons/TGameStateMachine.cpp.o CMakeFiles/untitled1.dir/VisualModels/TControl.cpp.o CMakeFiles/untitled1.dir/VisualModels/TParent.cpp.o CMakeFiles/untitled1.dir/VisualModels/TAutoAlignArea.cpp.o CMakeFiles/untitled1.dir/VisualModels/TAIBlock.cpp.o CMakeFiles/untitled1.dir/GameSingletons/TTextureManager.cpp.o CMakeFiles/untitled1.dir/GameSingletons/TInputHandler.cpp.o CMakeFiles/untitled1.dir/States/TSettings.cpp.o CMakeFiles/untitled1.dir/States/TBoardScreen.cpp.o CMakeFiles/untitled1.dir/Other/NNFileSystem.cpp.o CMakeFiles/untitled1.dir/VisualModels/TVisualCard.cpp.o CMakeFiles/untitled1.dir/GameSingletons/TLogic.cpp.o CMakeFiles/untitled1.dir/Logic/TSession.cpp.o CMakeFiles/untitled1.dir/Logic/TPlayer.cpp.o CMakeFiles/untitled1.dir/Logic/TCard.cpp.o CMakeFiles/untitled1.dir/VisualModels/TAnimationControl.cpp.o CMakeFiles/untitled1.dir/Other/TTimer.cpp.o CMakeFiles/untitled1.dir/Logic/AI/TAI.cpp.o CMakeFiles/untitled1.dir/Logic/Notify/SNextTurnNotify.cpp.o CMakeFiles/untitled1.dir/Logic/Notify/SAIEndTurn.cpp.o
+build untitled1: CXX_EXECUTABLE_LINKER__untitled1_Debug CMakeFiles/untitled1.dir/main.cpp.o CMakeFiles/untitled1.dir/GameSingletons/TGame.cpp.o CMakeFiles/untitled1.dir/States/TMainMenu.cpp.o CMakeFiles/untitled1.dir/GameSingletons/TGameStateMachine.cpp.o CMakeFiles/untitled1.dir/VisualModels/TControl.cpp.o CMakeFiles/untitled1.dir/VisualModels/TParent.cpp.o CMakeFiles/untitled1.dir/VisualModels/TAutoAlignArea.cpp.o CMakeFiles/untitled1.dir/VisualModels/TAIBlock.cpp.o CMakeFiles/untitled1.dir/GameSingletons/TTextureManager.cpp.o CMakeFiles/untitled1.dir/GameSingletons/TInputHandler.cpp.o CMakeFiles/untitled1.dir/States/TSettings.cpp.o CMakeFiles/untitled1.dir/States/TBoardScreen.cpp.o CMakeFiles/untitled1.dir/Other/NNFileSystem.cpp.o CMakeFiles/untitled1.dir/VisualModels/TVisualCard.cpp.o CMakeFiles/untitled1.dir/GameSingletons/TLogic.cpp.o CMakeFiles/untitled1.dir/Logic/TSession.cpp.o CMakeFiles/untitled1.dir/Logic/TPlayer.cpp.o CMakeFiles/untitled1.dir/Logic/TCard.cpp.o CMakeFiles/untitled1.dir/VisualModels/TAnimationControl.cpp.o CMakeFiles/untitled1.dir/Other/TTimer.cpp.o CMakeFiles/untitled1.dir/Logic/AI/TAI.cpp.o CMakeFiles/untitled1.dir/Logic/Notify/SNextTurnNotify.cpp.o CMakeFiles/untitled1.dir/Logic/Notify/SAIEndTurn.cpp.o CMakeFiles/untitled1.dir/Logic/Tests/TTakeTest.cpp.o
   FLAGS = -g
   LINK_LIBRARIES = -lSDL2main  -lSDL2  -lGL
   OBJECT_DIR = CMakeFiles/untitled1.dir

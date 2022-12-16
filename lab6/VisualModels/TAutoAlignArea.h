@@ -21,7 +21,6 @@ class TAutoAlignArea : public TParent {
 		virtual void xx(type vv); \
 		virtual type xx();
 		
-		DECL(Padding, int, i, 0);
 		DECL(Align, NAlign, x, NAlign::Horizontal);
 	#undef DECL
 	
@@ -40,8 +39,14 @@ class TAutoAlignArea : public TParent {
 	public:
 	virtual void ALignObjects();
 	
-	public:
-	virtual void OnChange(std::function<void(TControl* obj)>&& func) override;
+	protected:
+	virtual void AlignHorizontal();
+	virtual void AlignCentral();
+	virtual int CountVisibleChildren();
+	virtual void DetermineZIndexes();
+	
+	protected:
+	
 };
 
 

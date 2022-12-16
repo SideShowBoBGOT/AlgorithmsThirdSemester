@@ -8,6 +8,7 @@
 #include <vector>
 #include <memory>
 #include <functional>
+#include "../Enums/NNCardValue.h"
 #include "../../Patterns/TSingleton.h"
 
 class TPlayer;
@@ -15,6 +16,7 @@ class TCard;
 class TSession;
 
 class TAI : public TSingleton<TAI> {
+	friend class TSession;
 	public:
 	TAI()=default;
 	virtual ~TAI()=default;
@@ -32,6 +34,7 @@ class TAI : public TSingleton<TAI> {
 		std::vector<std::shared_ptr<TCard>> LocalCards;
 	};
 	
+	protected:
 	struct SRoundNode {
 		SRoundNode* Parent = nullptr;
 		SPlayerHalf Previous;
@@ -39,37 +42,56 @@ class TAI : public TSingleton<TAI> {
 		std::vector<std::shared_ptr<TCard>> PlayCards;
 		std::vector<std::shared_ptr<TCard>> UnusedCards;
 		std::vector<SRoundNode*> Children;
-		std::vector<std::pair<std::shared_ptr<TPlayer>, int>> Values;
+		std::vector<std::pair<std::shared_ptr<TPlayer>, unsigned long>> Values;
 	};
 	
 	protected:
 	void MaxPowN(SRoundNode* node);
-	int Utility(SRoundNode* node);
-	
+	void Utility(SRoundNode* node);
 	
 	protected:
 	void BuildSuccessorTree();
 	void InitRoot();
-	void BuildBranches(SRoundNode* node, const int& maxDepth, int depth);
+	void BuildBranches(SRoundNode* parent, const int& maxDepth, int depth);
 	void DeleteTree(SRoundNode* node);
 	
 	protected:
-	int FindMaxValue(SRoundNode* node);
-	int FindMinValue(SRoundNode* node, const std::shared_ptr<TPlayer>& player);
-	int FindValueByPlayer(SRoundNode* node, const std::shared_ptr<TPlayer>& player);
+	unsigned long FindMaxValue(SRoundNode* node);
+	unsigned long FindMinValue(SRoundNode* node, const std::shared_ptr<TPlayer>& player);
+	unsigned long FindValueByPlayer(SRoundNode* node, const std::shared_ptr<TPlayer>& player);
+	SRoundNode* FindMaxNode(SRoundNode* node);
 	
 	protected:
-	SRoundNode* MakeNode(SRoundNode* parent,
-		std::vector<std::shared_ptr<TCard>>&& permutation);
 	void UpdatePlayers(SRoundNode* child);
-	void UpdateLocalCards(SRoundNode* child,
+	void UpdateValues(SRoundNode* node);
+	void UpdateUnusedCards(SRoundNode* node);
+	void UpdateLocalCardsCurrent(SRoundNode* node);
+	void CreateChildren(SRoundNode* node, const int& depth);
+	// PUT
+	protected:
+	void OnPutMakeNode(SRoundNode* parent,
 		std::vector<std::shared_ptr<TCard>>&& permutation);
-	void UpdateUnusedCards(SRoundNode* child);
-	void UpdatePlayCards(SRoundNode* child);
-	void UpdateValues(SRoundNode* child);
+	void OnPutUpdateLocalCards(SRoundNode* child,
+		std::vector<std::shared_ptr<TCard>>&& permutation);
+	void OnPutUpdatePlayCards(SRoundNode* node);
+	// TAKE
+	protected:
+	using InterchangablePair = std::pair<std::vector<std::shared_ptr<TCard>>, std::vector<std::shared_ptr<TCard>>>;
+	using TakeCardGroup = std::vector<std::vector<std::shared_ptr<TCard>>>;
+	std::vector<InterchangablePair> CreateInterchangablePairs(TakeCardGroup&& fromLocal, SRoundNode* node);
+	TakeCardGroup GetTakesFromPlay(SRoundNode* node);
+	SRoundNode* OnTakeMakeNode(SRoundNode* parent, InterchangablePair&& inter);
+	void OnTakeUpdateLocalCards(SRoundNode* child, std::vector<std::shared_ptr<TCard>>&& fromLocal);
+	void OnTakeUpdatePlayCards(SRoundNode* child, std::vector<std::shared_ptr<TCard>>&& fromPlay);
+	
+	protected:
+	bool CheckTake(const std::vector<std::shared_ptr<TCard>>& takeCards);
+	void ClearTakeCards();
 	
 	protected:
 	SRoundNode* m_pRoot = nullptr;
+	bool m_bIsFirstMove = true;
+	std::array<std::vector<std::shared_ptr<TCard>>, NCardValue::Size> m_vTakeCards;
 };
 
 

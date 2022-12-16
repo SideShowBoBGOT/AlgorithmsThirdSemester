@@ -5,6 +5,7 @@
 
 #include "TSession.h"
 #include "Notify/SNextTurnNotify.h"
+#include "../Logic/Notify/SNextTurnNotify.h"
 #include "AI/TAI.h"
 
 #define DECL_VECTOR(xx, type) \
@@ -49,7 +50,7 @@ TSession::TSession(NDifficulty diff, int playersNumber) {
 
 void TSession::CreateCards() {
 	for(auto i=0;i<NCardType::Size;++i) {
-		for(auto j=0;j<NCardValue::Size - 1;++j) {
+		for(auto j=0;j<NCardValue::Size;++j) {
 			auto card = std::make_shared<TCard>();
 			card->Type(static_cast<NCardType>(i));
 			card->Value(static_cast<NCardValue>(j));
@@ -145,16 +146,9 @@ bool TSession::TryTake(const std::vector<std::shared_ptr<TCard>>& selectedOwnCar
 	if(CurrentPlayer()->FirstMove()) return false;
 	const auto& soc = selectedOwnCards;
 	const auto& spc = selectedPlayCards;
-	auto trumpIt = std::find_if(soc.begin(), soc.end(), [this](const auto& c) {
-		return c->Type()==m_xTrump;
-	});
-	auto isAnyTrump = trumpIt!=soc.end();
-	if(not CheckSelected(soc)
-		or not CheckSelected(spc)
-		or soc.size() != spc.size()
-		or !isAnyTrump and soc[0]->Value() < spc[0]->Value()) {
-			return false;
-	}
+	
+	if(not CheckTryTake(soc, spc)) return false;
+	
 	auto curpl = CurrentPlayer();
 	auto& cpc = curpl->Cards();
 	VectorCardDifference(cpc, soc);
@@ -162,7 +156,6 @@ bool TSession::TryTake(const std::vector<std::shared_ptr<TCard>>& selectedOwnCar
 	VectorCardDifference(pc, spc);
 	for(auto& c : soc) m_vSparseCards.emplace_back(c);
 	for(auto& c : spc) m_vSparseCards.emplace_back(c);
-	curpl->Score(curpl->Score() + 1);
 	return true;
 }
 
@@ -183,7 +176,10 @@ bool TSession::TryPut(const std::vector<std::shared_ptr<TCard>>& selectedOwnCard
 	for(auto& c : selectedOwnCards) {
 		m_vPlayCards.emplace_back(c);
 	}
-	cp->FirstMove(false);
+	if(cp->FirstMove()) {
+		cp->FirstMove(false);
+		NextTurn();
+	}
 	return true;
 }
 
@@ -196,7 +192,7 @@ bool TSession::TryBack(std::vector<std::shared_ptr<TCard>>& selectedPlayCards) {
 	return true;
 }
 
-bool TSession::CheckSelected(const std::vector<std::shared_ptr<TCard>>& selectedCards) {
+bool TSession::CheckTake(const std::vector<std::shared_ptr<TCard>>& selectedCards) {
 	auto size = static_cast<int>(selectedCards.size());
 	if(not (size==3 or size==4)) {
 		return false;
@@ -208,6 +204,19 @@ bool TSession::CheckSelected(const std::vector<std::shared_ptr<TCard>>& selected
 		}
 	}
 	return true;
+}
+
+bool TSession::CheckTryTake(const std::vector<std::shared_ptr<TCard>>& local,
+							const std::vector<std::shared_ptr<TCard>>& play) {
+	return CheckTake(local) and CheckTake(play) and local.size() == play.size()
+		and (IsAnyTrump(local) or local[0]->Value() > play[0]->Value());
+}
+
+bool TSession::IsAnyTrump(const std::vector<std::shared_ptr<TCard>>& local) {
+	auto trumpIt = std::find_if(local.begin(), local.end(), [this](const auto& c) {
+		return c->Type()==m_xTrump;
+	});
+	return trumpIt!=local.end();
 }
 
 void TSession::VectorCardDifference(std::vector<std::shared_ptr<TCard>>& vOne,

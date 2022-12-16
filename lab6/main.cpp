@@ -2,7 +2,9 @@
 #include "GameSingletons/TInputHandler.h"
 #include "GameSingletons/TTextureManager.h"
 #include "GameSingletons/TLogic.h"
+#include "Logic/Tests/TTakeTest.h"
 int main() {
+	TTakeTest().Test();
 	auto stateMachine = TGameStateMachine::Get();
 	auto logic = TLogic::Get();
 	auto texture = TTextureManager::Get();

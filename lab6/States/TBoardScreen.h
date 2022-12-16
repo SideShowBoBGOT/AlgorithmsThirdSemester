@@ -75,6 +75,7 @@ class TBoardScreen : public TParent {
 	std::vector<TControl*> FilterSelectedCards(const std::vector<TControl*>& vis);
 	
 	protected:
+	void Test();
 	
 	protected:
 	std::vector<TVisualCard*> m_vUnknownCardsCash;

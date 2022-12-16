@@ -20,6 +20,7 @@ class TSession {
 	virtual ~TSession()=default;
 	
 	constexpr int PlayCardsNum();
+	public:
 	
 	#define DECL_VECTOR(xx, type) \
 		protected:            \
@@ -68,7 +69,9 @@ class TSession {
 	void CalculateAI();
 	
 	static void VectorCardDifference(std::vector<std::shared_ptr<TCard>>& vOne, const std::vector<std::shared_ptr<TCard>>& vTwo);
-	static bool CheckSelected(const std::vector<std::shared_ptr<TCard>>& selectedCards);
+	static bool CheckTake(const std::vector<std::shared_ptr<TCard>>& selectedCards);
+	bool CheckTryTake(const std::vector<std::shared_ptr<TCard>>& local, const std::vector<std::shared_ptr<TCard>>& play);
+	bool IsAnyTrump(const std::vector<std::shared_ptr<TCard>>& local);
 	bool IsAnyPlayerHasCard(const std::shared_ptr<TCard>& c);
 	void RandomPlayer();
 	

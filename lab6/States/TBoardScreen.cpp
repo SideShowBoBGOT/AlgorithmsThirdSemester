@@ -26,8 +26,6 @@ static int constexpr s_uLocalCardsWidth = 5*s_iCardWidth;
 TBoardScreen::TBoardScreen() {
 	auto width = TGame::Get()->ScreenWidth();
 	auto height = TGame::Get()->ScreenHeight();
-	Dx(0);
-	Dy(0);
 	Width(width);
 	Height(height);
 	
@@ -68,10 +66,14 @@ TBoardScreen::TBoardScreen() {
 		LocalCards->Align(NAlign::Central);
 		PlayCards->Align(NAlign::Central);
 		UnusedCards->Align(NAlign::Central);
+		
 		UnusedCards->ControlChildState(true);
 		UnusedCards->Enabled(true);
 		TrumpCard->ControlChildState(true);
 		TrumpCard->Enabled(false);
+		
+		AIPanel->Align(NAlign::Central);
+		AIPanel->Enabled(false);
 		
 		#define INIT_BUTTON(xx) \
 			INIT(xx##Button, ButtonPanel, TControl, 0, 0, 0, 0, s_iObjectWidth, s_iObjectHeight);\
@@ -90,9 +92,7 @@ TBoardScreen::TBoardScreen() {
 		
 		#define INIT_LABEL(parent, xx) \
 			xx = new TAIBlock(TO_STR(xx));\
-            xx->Dx(0);                     \
-			xx->Dy(0);                    \
-            xx->Renderer(TGame::Get()->Renderer());                     \
+            xx->Renderer(TGame::Get()->Renderer());\
 			parent->AddChild(xx);
 			
 			INIT_LABEL(AIPanel, AIOneLabel);
@@ -102,6 +102,8 @@ TBoardScreen::TBoardScreen() {
 		#undef TO_STR
 	
 	#undef INIT
+	
+
 	
 	TTextureManager::Get()->Load(NNFileSystem::AssetsImagePath(s_sBoardScreenPath + "Cards/Normal"), s_sCardsId, TGame::Get()->Renderer());\
 }
@@ -161,7 +163,6 @@ void TBoardScreen::OnPutButton(TControl* obj) {
 void TBoardScreen::OnBackButton(TControl* obj) {
 	auto& ss = TLogic::Get()->Session;
 	auto lc = FromVisToLogCards(FilterSelectedCards(PlayCards->ObjectsPool()));
-	
 	if(ss->TryBack(lc)) {
 		UpdateVisuals();
 	}
@@ -277,6 +278,7 @@ TControl* TBoardScreen::FindVisByCard(std::shared_ptr<TCard> c) {
 }
 
 void TBoardScreen::UpdateVisuals() {
+	//Test();
 	OnDeselectButton(DeselectButton);
 	TrumpCard->Enabled(false);
 	auto& ss = TLogic::Get()->Session;
@@ -304,10 +306,16 @@ void TBoardScreen::UpdateVisuals() {
 }
 
 void TBoardScreen::UpdateCards(TAutoAlignArea*area, const std::vector<std::shared_ptr<TCard>>& cards) {
-	area->ObjectsPool().clear();
+	auto& children = area->ObjectsPool();
+	for(auto& c : children) {
+		c->Parent(nullptr);
+	}
+	children.clear();
 	for(auto& c : cards) {
 		auto vis = FindVisByCard(c);
-		vis->Selected(false);
+		if(auto parent = dynamic_cast<TParent*>(vis->Parent())) {
+			parent->RemoveChild(vis);
+		}
 		area->AddChild(vis);
 	}
 }
@@ -329,4 +337,18 @@ std::vector<TControl*> TBoardScreen::FilterSelectedCards(const std::vector<TCont
 		}
 	}
 	return cc;
+}
+
+void TBoardScreen::Test() {
+	auto& ss = TLogic::Get()->Session;
+	auto& local = ss->LocalPlayer()->Cards();
+	auto& unused = ss->UnusedCards();
+	auto& play = ss->PlayCards();
+	auto& enemy = ss->Players()[0]->Cards();
+	for(auto& c : play) {
+		auto found = std::find(enemy.begin(), enemy.end(), c)!=enemy.end();
+		if(found) {
+			throw "Same Cards";
+		}
+	}
 }
