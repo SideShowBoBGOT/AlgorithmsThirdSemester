@@ -48,6 +48,12 @@ class TAI : public TSingleton<TAI> {
 	protected:
 	void MaxPowN(SRoundNode* node);
 	void Utility(SRoundNode* node);
+	using LocalCardsPlayerPairs = std::vector<std::pair<std::shared_ptr<TPlayer>, std::vector<std::shared_ptr<TCard>>>>;
+	LocalCardsPlayerPairs GetLocalPlayerPairsUtility(SRoundNode* node);
+	void PopulateLocalPlayPairsFromTree(LocalCardsPlayerPairs& pairs, SRoundNode* node);
+	void PopulateLocalPlayPairsOutsideTree(LocalCardsPlayerPairs& pairs);
+	int EvalueteLocalCards(const std::vector<std::shared_ptr<TCard>>& localCards);
+	int RandomValue();
 	
 	protected:
 	void BuildSuccessorTree();
@@ -79,7 +85,7 @@ class TAI : public TSingleton<TAI> {
 	using InterchangablePair = std::pair<std::vector<std::shared_ptr<TCard>>, std::vector<std::shared_ptr<TCard>>>;
 	using TakeCardGroup = std::vector<std::vector<std::shared_ptr<TCard>>>;
 	std::vector<InterchangablePair> CreateInterchangablePairs(TakeCardGroup&& fromLocal, SRoundNode* node);
-	TakeCardGroup GetTakesFromPlay(SRoundNode* node);
+	TakeCardGroup GetTakes(const std::vector<std::shared_ptr<TCard>>& cards);
 	SRoundNode* OnTakeMakeNode(SRoundNode* parent, InterchangablePair&& inter);
 	void OnTakeUpdateLocalCards(SRoundNode* child, std::vector<std::shared_ptr<TCard>>&& fromLocal);
 	void OnTakeUpdatePlayCards(SRoundNode* child, std::vector<std::shared_ptr<TCard>>&& fromPlay);

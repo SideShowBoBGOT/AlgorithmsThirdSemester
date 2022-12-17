@@ -9,6 +9,7 @@
 #include "../../Other/TPermutator.h"
 
 static constexpr std::array<int, 3> s_arrDifficulties = { 3, 4, 5 };
+static constexpr int s_iMaxEvalueate = 10000000;
 
 void TAI::Move() {
 	TLogic::Get()->AIThread = std::thread([this](){ DoMove(); });
@@ -63,13 +64,79 @@ void TAI::MaxPowN(TAI::SRoundNode* node) {
 }
 
 void TAI::Utility(SRoundNode* node) {
-	std::random_device dev;
-    std::mt19937 rng(dev());
-    std::uniform_int_distribution<std::mt19937::result_type> dist(0,10000000);
-    for(auto& [player, value] : node->Values) {
-    	value = dist(rng);
+//	std::random_device dev;
+//    std::mt19937 rng(dev());
+//    std::uniform_int_distribution<std::mt19937::result_type> dist(0,10000000);
+//    for(auto& [player, value] : node->Values) {
+//    	value = dist(rng);
+//    }
+    auto pairs = GetLocalPlayerPairsUtility(node);
+    auto& values = node->Values;
+    for(auto& [vPlayer, value] : values) {
+    	for(auto& [pPlayer, localCards] : pairs) {
+    		if(vPlayer==pPlayer) {
+    			value = EvalueteLocalCards(localCards);
+    		}
+    	}
     }
 }
+
+int TAI::EvalueteLocalCards(const std::vector<std::shared_ptr<TCard>>& localCards) {
+	if(GetTakes(localCards).empty()) {
+		return RandomValue();
+	}
+	return s_iMaxEvalueate;
+}
+
+int TAI::RandomValue() {
+	std::random_device dev;
+    std::mt19937 rng(dev());
+    std::uniform_int_distribution<std::mt19937::result_type> dist(0,s_iMaxEvalueate-1);
+	return dist(rng);
+}
+
+TAI::LocalCardsPlayerPairs TAI::GetLocalPlayerPairsUtility(TAI::SRoundNode*node){
+	LocalCardsPlayerPairs pairs;
+	PopulateLocalPlayPairsFromTree(pairs, node);
+	PopulateLocalPlayPairsOutsideTree(pairs);
+	return pairs;
+}
+
+void TAI::PopulateLocalPlayPairsFromTree(LocalCardsPlayerPairs& pairs, SRoundNode* node) {
+	auto ss = TLogic::Get()->Session;
+    auto num = ss->PlayersNumber();
+    for(auto i=0;i < num and node!=nullptr;node=node->Parent) {
+    	auto pls = std::array{node->Current.Player, node->Previous.Player};
+    	auto ls = std::array{node->Current.LocalCards, node->Previous.LocalCards};
+    	for(auto j=0;j<2;++j) if(pls[j]) {
+			auto isWasBefore = false;
+			for(auto& el:pairs) {
+				isWasBefore = pls[j] == el.first;
+				if(isWasBefore) break;
+			}
+			if(not isWasBefore) {
+				pairs.emplace_back(pls[j], ls[j]);
+				++i;
+			}
+		}
+    }
+}
+
+void TAI::PopulateLocalPlayPairsOutsideTree(LocalCardsPlayerPairs& pairs) {
+    auto ss = TLogic::Get()->Session;
+    auto& players = ss->Players();
+	for(auto& pl : players) {
+    	auto isInLocals = false;
+    	for(auto& el:pairs) {
+			isInLocals = el.first==pl;
+			if(isInLocals) break;
+		}
+		if(not isInLocals) {
+			pairs.emplace_back(pl, pl->Cards());
+		}
+    }
+}
+
 
 TAI::SRoundNode*TAI::FindMaxNode(TAI::SRoundNode*node) {
 	auto& player = node->Current.Player;
@@ -162,7 +229,7 @@ void TAI::CreateChildren(SRoundNode* parent, const int& depth) {
 std::vector<TAI::InterchangablePair> TAI::CreateInterchangablePairs(TakeCardGroup&& fromLocal, SRoundNode* node) {
 	auto& ss = TLogic::Get()->Session;
 	auto pairs = std::vector<TAI::InterchangablePair>();
-	auto fromPlay = GetTakesFromPlay(node);
+	auto fromPlay = GetTakes(node->PlayCards);
 	if(not fromPlay.empty()) {
 		for(auto& fl:fromLocal) {
 			for(auto& fp:fromPlay) {
@@ -175,8 +242,8 @@ std::vector<TAI::InterchangablePair> TAI::CreateInterchangablePairs(TakeCardGrou
 	return pairs;
 }
 
-TAI::TakeCardGroup TAI::GetTakesFromPlay(SRoundNode* node) {
-	for(auto& c : node->PlayCards) m_vTakeCards[c->Value()].emplace_back(c);
+TAI::TakeCardGroup TAI::GetTakes(const std::vector<std::shared_ptr<TCard>>& cards) {
+	for(auto& c : cards) m_vTakeCards[c->Value()].emplace_back(c);
 	auto fromPlay = TakeCardGroup();
 	for(auto& v : m_vTakeCards) {
 		if(CheckTake(v)) {
@@ -309,6 +376,7 @@ void TAI::OnTakeUpdatePlayCards(TAI::SRoundNode*child, std::vector<std::shared_p
 		}
 	}
 }
+
 
 
 
