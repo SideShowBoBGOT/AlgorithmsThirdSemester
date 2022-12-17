@@ -9,6 +9,7 @@
 #include "../Other/NNFileSystem.h"
 #include "../Logic/Notify/SNextTurnNotify.h"
 #include "../Logic/Notify/SAIEndTurn.h"
+#include "../Logic/Notify/SEndGameNotify.h"
 
 static int constexpr s_iObjectWidth = 158;
 static int constexpr s_iObjectHeight = 35;
@@ -21,7 +22,7 @@ static int constexpr s_iClockWidth = 30;
 static int constexpr s_iClockHeight = 30;
 static int constexpr s_uClockFrames = 11;
 static int constexpr s_uClockInterval = 100;
-static int constexpr s_uLocalCardsWidth = 5*s_iCardWidth;
+static int constexpr s_uLocalCardsWidth = 8*s_iCardWidth;
 
 TBoardScreen::TBoardScreen() {
 	auto width = TGame::Get()->ScreenWidth();
@@ -73,7 +74,7 @@ TBoardScreen::TBoardScreen() {
 		TrumpCard->Enabled(false);
 		
 		AIPanel->Align(NAlign::Central);
-		AIPanel->Enabled(false);
+		//AIPanel->Enabled(false);
 		
 		#define INIT_BUTTON(xx) \
 			INIT(xx##Button, ButtonPanel, TControl, 0, 0, 0, 0, s_iObjectWidth, s_iObjectHeight);\
@@ -134,6 +135,15 @@ void TBoardScreen::ProcessNotifies() {
 			log->AIThread.join();
 			ss->NextTurn();
 			ntfs.Pop();
+		} else if(auto n = std::dynamic_pointer_cast<SEndGameNotify>(ntfs.Front())) {
+			auto won = n->IsLocalPlayerWon;
+			YouWin->Visible(won);
+			YouLose->Visible(not won);
+			LockInterface(false);
+			Clock->Visible(false);
+			Clock->Animate(false);
+			UpdateVisuals();
+			ntfs.Pop();
 		}
 	}
 }
@@ -176,8 +186,8 @@ void TBoardScreen::OnTakeButton(TControl* obj) {
 }
 
 void TBoardScreen::OnEndTurnButton(TControl* obj) {
-	auto& session = TLogic::Get()->Session;
-	session->NextTurn();
+	auto& ss = TLogic::Get()->Session;
+	ss->TryEndTurn();
 }
 
 void TBoardScreen::OnDeselectButton(TControl* obj) {

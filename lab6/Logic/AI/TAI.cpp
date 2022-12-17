@@ -31,12 +31,12 @@ void TAI::DoMove() {
 		playCards = child->PlayCards;
 		localCards = child->Previous.LocalCards;
 		
-//		// Test
-//		for(auto c : localCards) {
-//			if(std::find(playCards.begin(), playCards.end(), c)!=playCards.end()) {
-//				throw "sddsd";
-//			}
-//		}
+		// Test
+		for(auto c : localCards) {
+			if(std::find(playCards.begin(), playCards.end(), c)!=playCards.end()) {
+				throw "sddsd";
+			}
+		}
 	}
 	m_pRoot->Current.Player->FirstMove(false);
 	DeleteTree(m_pRoot);
@@ -142,12 +142,13 @@ void TAI::BuildBranches(TAI::SRoundNode* parent, const int& maxDepth, int depth)
 
 void TAI::CreateChildren(SRoundNode* parent, const int& depth) {
 	auto perms = TPermutator<std::shared_ptr<TCard>>::GetPermutator(parent->Current.LocalCards);
+	perms.emplace_back(); // add empty option
 	auto takesFromLocal = TakeCardGroup();
 	
 	for(auto& p : perms) {
 		if(CheckTake(p)) takesFromLocal.emplace_back(p);
-//		if(m_bIsFirstMove and p.size()!=3) continue;
-//		OnPutMakeNode(parent, std::move(p));
+		if(m_bIsFirstMove and p.size()!=3) continue;
+		OnPutMakeNode(parent, std::move(p));
 	}
 	
 	if(not m_bIsFirstMove and not takesFromLocal.empty()) {

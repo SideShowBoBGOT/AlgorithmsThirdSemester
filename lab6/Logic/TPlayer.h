@@ -26,6 +26,7 @@ class TPlayer {
 	DECL(FirstMove, bool, b, true);
 	DECL(IsAI, bool, b, false);
 	DECL(Score, int, i, 0);
+	DECL(IsTookAction, bool, b, false);
 	
 	protected:
 	std::vector<std::shared_ptr<TCard>> m_vCards;

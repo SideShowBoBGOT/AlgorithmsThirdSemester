@@ -193,7 +193,8 @@
 				53,
 				54,
 				55,
-				57
+				57,
+				58
 			]
 		}
 	],
@@ -511,6 +512,11 @@
 		{
 			"backtrace" : 1,
 			"path" : "Logic/Tests/ITest.h",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"path" : "Logic/Notify/SEndGameNotify.h",
 			"sourceGroupIndex" : 1
 		}
 	],

@@ -4,13 +4,13 @@
 #include "GameSingletons/TLogic.h"
 #include "Logic/Tests/TTakeTest.h"
 int main() {
-	TTakeTest().Test();
+//	TTakeTest().Test();
 	auto stateMachine = TGameStateMachine::Get();
 	auto logic = TLogic::Get();
 	auto texture = TTextureManager::Get();
 	auto input = TInputHandler::Get();
 	auto game = TGame::Get();
-	if(not game->Init("LabSix", 100, 100, 1360, 720, 0)) return 1;
+	if(not game->Init("LabSix", 100, 100, 1600, 720, 0)) return 1;
 	
 	while(game->IsRunning()) {
 		game->Clean();

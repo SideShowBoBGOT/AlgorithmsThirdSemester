@@ -56,10 +56,13 @@ class TSession {
 	public:
 	void NextTurn();
 	std::shared_ptr<TPlayer> NextPlayer(const std::shared_ptr<TPlayer>& player);
+	bool TryEndTurn();
 	bool TryTake(const std::vector<std::shared_ptr<TCard>>& selectedOwnCards, const std::vector<std::shared_ptr<TCard>>& selectedPlayCards);
 	bool TryPut(const std::vector<std::shared_ptr<TCard>>& selectedOwnCards);
 	bool TryBack(std::vector<std::shared_ptr<TCard>>& selectedPlayCards);
 	void SendNotify(const std::shared_ptr<INotify>& n);
+	bool IsEndGame();
+	bool IsLocalPlayerWon();
 
 	protected:
 	void DistributeCardsAmongPlayers();

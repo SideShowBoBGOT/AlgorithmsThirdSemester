@@ -6,6 +6,7 @@
 #include "TSession.h"
 #include "Notify/SNextTurnNotify.h"
 #include "../Logic/Notify/SNextTurnNotify.h"
+#include "../Logic/Notify/SEndGameNotify.h"
 #include "AI/TAI.h"
 
 #define DECL_VECTOR(xx, type) \
@@ -83,9 +84,18 @@ void TSession::RandomPlayer() {
 }
 
 void TSession::NextTurn() {
+	LocalPlayer()->IsTookAction(false);
+	if(IsEndGame()) {
+		SendNotify(std::make_shared<SEndGameNotify>(IsLocalPlayerWon()));
+		return;
+	}
 	GiveCards();
 	m_pCurrentPlayer->Active(false);
-	m_pCurrentPlayer = NextPlayer(m_pCurrentPlayer);
+	auto nextPlayer = NextPlayer(m_pCurrentPlayer);
+	while(nextPlayer->Cards().empty()) {
+		nextPlayer = NextPlayer(nextPlayer);
+	}
+	m_pCurrentPlayer = nextPlayer;
 	m_pCurrentPlayer->Active(true);
 	
 	auto isAI = m_pCurrentPlayer->IsAI();
@@ -141,6 +151,15 @@ bool TSession::IsAnyPlayerHasCard(const std::shared_ptr<TCard>& c) {
 	return false;
 }
 
+bool TSession::TryEndTurn() {
+	if(LocalPlayer()->IsTookAction()) {
+		NextTurn();
+		return true;
+	}
+	return false;
+}
+
+
 bool TSession::TryTake(const std::vector<std::shared_ptr<TCard>>& selectedOwnCards,
 					const std::vector<std::shared_ptr<TCard>>& selectedPlayCards) {
 	if(CurrentPlayer()->FirstMove()) return false;
@@ -156,6 +175,7 @@ bool TSession::TryTake(const std::vector<std::shared_ptr<TCard>>& selectedOwnCar
 	VectorCardDifference(pc, spc);
 	for(auto& c : soc) m_vSparseCards.emplace_back(c);
 	for(auto& c : spc) m_vSparseCards.emplace_back(c);
+	LocalPlayer()->IsTookAction(true);
 	return true;
 }
 
@@ -180,6 +200,7 @@ bool TSession::TryPut(const std::vector<std::shared_ptr<TCard>>& selectedOwnCard
 		cp->FirstMove(false);
 		NextTurn();
 	}
+	LocalPlayer()->IsTookAction(true);
 	return true;
 }
 
@@ -193,13 +214,12 @@ bool TSession::TryBack(std::vector<std::shared_ptr<TCard>>& selectedPlayCards) {
 }
 
 bool TSession::CheckTake(const std::vector<std::shared_ptr<TCard>>& selectedCards) {
-	auto size = static_cast<int>(selectedCards.size());
-	if(not (size==3 or size==4)) {
-		return false;
-	}
+	auto size = int(selectedCards.size());
+	if(size!=3 and size!=4) return false;
+	
 	auto& c = selectedCards[0];
 	for(auto i=1;i<size;++i) {
-		if(c != selectedCards[i]) {
+		if(c->Value() != selectedCards[i]->Value()) {
 			return false;
 		}
 	}
@@ -243,6 +263,26 @@ void TSession::CalculateAI() {
 constexpr int TSession::PlayCardsNum() {
 	return 4;
 }
+
+bool TSession::IsEndGame() {
+	for(auto& p : m_vPlayers) {
+		if(not p->Cards().empty()) {
+			return false;
+		}
+	}
+	return true;
+}
+
+bool TSession::IsLocalPlayerWon() {
+	auto p = m_vPlayers;
+	std::sort(p.begin(), p.end(),
+		[](const auto& lhs, const auto& rhs) {
+			return lhs->Score() < rhs->Score();
+		}
+	);
+	return p.back() == LocalPlayer();
+}
+
 
 
 #undef DECL

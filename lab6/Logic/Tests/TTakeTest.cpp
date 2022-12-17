@@ -10,10 +10,10 @@ std::vector<std::shared_ptr<TCard>> TTakeTest::GetSetOfCards(NCardValue value) {
 	auto& ss = TLogic::Get()->Session;
 	auto& cards = ss->Cards();
 	auto out = std::vector<std::shared_ptr<TCard>>();
-	for(auto i=0;i<4;++i) {
+	for(auto i=0;i<NCardType::Size;++i) {
 		auto it = std::find_if(cards.begin(), cards.end(),
-			[value](const auto& c) {
-				return c->Value()==value;
+			[value, i](const auto& c) {
+				return c->Value()==value and c->Type()==NCardType(i);
 			}
 		);
 		if(it!=cards.end()) out.emplace_back(*it);
@@ -31,23 +31,22 @@ bool TTakeTest::Test() {
 		auto tens = GetSetOfCards(NCardValue::Ten);
 		
 		auto sixs = GetSetOfCards(NCardValue::Six);
-		auto sevens = GetSetOfCards(NCardValue::Valet);
-		auto queens = GetSetOfCards(NCardValue::Queen);
+		//auto sevens = GetSetOfCards(NCardValue::Valet);
+		// auto queens = GetSetOfCards(NCardValue::Queen);
 		
 		auto local = std::vector<std::shared_ptr<TCard>>();
 		std::copy(tens.begin(), tens.end(), std::back_inserter(local));
 		
 		auto play = std::vector<std::shared_ptr<TCard>>();
 		std::copy(sixs.begin(), sixs.end(), std::back_inserter(play));
-		std::copy(sevens.begin(), sevens.end(), std::back_inserter(play));
-		std::copy(queens.begin(), queens.end(), std::back_inserter(play));
+//		std::copy(sevens.begin(), sevens.end(), std::back_inserter(play));
+//		std::copy(queens.begin(), queens.end(), std::back_inserter(play));
 		
 		auto& ai = ss->Players()[1];
 		ai->Cards() = local;
 		ai->FirstMove(false);
 		ss->PlayCards() = play;
 		ss->UnusedCards().clear();
-		
 		
 		ss->NextTurn();
 		TLogic::Get()->AIThread.join();

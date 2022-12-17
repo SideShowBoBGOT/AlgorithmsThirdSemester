@@ -12,6 +12,7 @@
 	DECL(FirstMove, bool, b);
 	DECL(IsAI, bool, b);
 	DECL(Score, int, i);
+	DECL(IsTookAction, bool, b);
 #undef DECL
 
 std::vector<std::shared_ptr<TCard>>& TPlayer::Cards() {

@@ -16,8 +16,9 @@ static const std::string s_sBoardScreenPath = "BoardScreen/";
 
 
 TAIBlock::TAIBlock(std::string name) {
-	auto width = 4*s_iCardWidth;
+	auto width = 4.2*s_iCardWidth;
 	auto height = s_iObjectHeight + 10 + s_iCardHeight;
+	auto innerwidth = 4*s_iCardWidth;
 	
 	Width(width);
 	Height(height);
@@ -42,8 +43,8 @@ TAIBlock::TAIBlock(std::string name) {
 		xx->Height(h);\
 		xx->Renderer(TGame::Get()->Renderer()); \
 	
-		INIT(LabelArea, this, TAutoAlignArea, 0, 0, 0, 0, width, s_iObjectHeight);
-		INIT(Cards, this, TAutoAlignArea, 0, s_iObjectHeight + 10, 0, 0, width, s_iCardHeight);
+		INIT(LabelArea, this, TAutoAlignArea, 0, 0, 0, 0, innerwidth, s_iObjectHeight);
+		INIT(Cards, this, TAutoAlignArea, 0, s_iObjectHeight + 10, 0, 0, innerwidth, s_iCardHeight);
 		
 		#define INIT_LABEL(xx) \
 			INIT(xx, LabelArea, TControl, 0, 0, 0, 0, s_iObjectWidth, s_iObjectHeight); \
@@ -54,5 +55,7 @@ TAIBlock::TAIBlock(std::string name) {
 	#undef INIT
 	#undef INIT_TEXTURE
 	
+	Cards->Align(NAlign::Central);
+	Cards->ALignObjects();
 	LabelArea->ALignObjects();
 }
