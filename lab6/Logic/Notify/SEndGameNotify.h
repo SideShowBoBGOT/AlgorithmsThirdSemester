@@ -17,3 +17,4 @@ class SEndGameNotify : public INotify {
 };
 
 #endif //UNTITLED1_SENDGAMENOTIFY_H
+
